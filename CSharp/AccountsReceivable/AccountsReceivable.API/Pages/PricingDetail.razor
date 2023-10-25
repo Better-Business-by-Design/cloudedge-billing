@@ -1,27 +1,29 @@
 ﻿@page "/pricing/{Id}"
 
-<MudBreadcrumbs Items="@(new List<BreadcrumbItem> { new("Home", ""), new("Pricing Schedule", "pricing"), new("Details", "", true)})"></MudBreadcrumbs>
-<MudTable Dense="true" Hover="true" Outlined="true" ServerData="@(new Func<TableState, Task<TableData<Price>>>(ServerReload))" @ref="_table" T="Price">
-    <ToolBarContent>
-        @if (_schedule is not null)
-        {
-            <MudText Typo="Typo.h6">Works: <b>@_schedule.Meatwork.Name</b></MudText>
-            <MudSpacer/>
-            <MudText Typo="Typo.h6">Start Date: <b>@_schedule.StartDate.ToString("dd/MM/yyyy")</b></MudText>
-            <MudSpacer/>
-            <MudText Typo="Typo.h6">End Date: <b>@_schedule.EndDate.ToString("dd/MM/yyyy")</b></MudText>
-            <MudSpacer/>
-            <MudText Typo="Typo.h6">Status: <b>@_schedule.Status.Name</b></MudText>
-            <MudSpacer/>
-            <ApproveDeclineButtons 
-                Role="@User?.RoleId"
-                Status="@_schedule?.StatusId"
-                SetApprovedTask="new Task(SetDocumentStatusApproved)" 
-                SetDeclinedTask="new Task(SetDocumentStatusDeclined)"
-                DetailObjectType="Pricing Schedule"
-                />
-        }
-    </ToolBarContent>
+<Breadcrumb Items="_breadcrumb"/>
+@if (_schedule is not null)
+{
+    <MudToolBar Dense="true">
+
+        <MudText Typo="Typo.h6">Works: <b>@_schedule.Meatwork.Name</b></MudText>
+        <MudSpacer/>
+        <MudText Typo="Typo.h6">Start Date: <b>@_schedule.StartDate.ToString("dd/MM/yyyy")</b></MudText>
+        <MudSpacer/>
+        <MudText Typo="Typo.h6">End Date: <b>@_schedule.EndDate.ToString("dd/MM/yyyy")</b></MudText>
+        <MudSpacer/>
+        <MudText Typo="Typo.h6">Status: <b>@_schedule.Status.Name</b></MudText>
+        <MudSpacer/>
+        <ApproveDeclineButtons 
+            Role="@User?.RoleId"
+            Status="@_schedule?.StatusId"
+            SetApprovedTask="new Task(SetDocumentStatusApproved)" 
+            SetDeclinedTask="new Task(SetDocumentStatusDeclined)"
+            DetailObjectType="Pricing Schedule"
+            />
+    </MudToolBar>
+}
+
+<MudTable Dense="true" Hover="true" ServerData="@(new Func<TableState, Task<TableData<Price>>>(ServerReload))" @ref="_table" T="Price">
     <HeaderContent>
         <MudTh>
             <MudTableSortLabel SortLabel="species_field" T="Price">

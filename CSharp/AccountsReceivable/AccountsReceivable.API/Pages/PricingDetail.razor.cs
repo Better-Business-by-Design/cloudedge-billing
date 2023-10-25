@@ -15,6 +15,13 @@ partial class PricingDetail
     private string _searchString = string.Empty;
     private MudTable<Price> _table = null!;
 
+    private readonly List<BreadcrumbItem> _breadcrumb = new()
+    {
+        new BreadcrumbItem("Home", ""),
+        new BreadcrumbItem("Pricing Schedules", "pricing"),
+        new BreadcrumbItem("Detail", null, true)
+    };
+
     private int _totalItems;
 
     [CascadingParameter]

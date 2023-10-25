@@ -1,6 +1,6 @@
 ﻿namespace AccountsReceivable.BL.Models.Enum;
 
-public enum RoleId : ushort
+public enum RoleId : byte
 {
     Read = 0,
     ReadWrite = 1,

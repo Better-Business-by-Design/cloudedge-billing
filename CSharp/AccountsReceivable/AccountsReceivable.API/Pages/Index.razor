@@ -1,8 +1,10 @@
 ﻿@page "/"
 
+<Breadcrumb Items="_breadcrumb" />
+
 @if (_table.Equals("documents"))
 {
-    <MudTable Dense="true" Hover="true" Outlined="true"
+    <MudTable Dense="true" Hover="true"
               ServerData="@(new Func<TableState, Task<TableData<Document>>>(DocumentServerReload))"
               OnRowClick="DocumentRowClickEvent" T="Document"
               @ref="_documentTable">
@@ -97,7 +99,7 @@
 }
 else if (_table.Equals("schedules"))
 {
-    <MudTable Dense="true" Hover="true" Outlined="true"
+    <MudTable Dense="true" Hover="true"
               ServerData="@(new Func<TableState, Task<TableData<Schedule>>>(ScheduleServerReload))"
               OnRowClick="ScheduleRowClickEvent" T="Schedule"
               @ref="_scheduleTable">

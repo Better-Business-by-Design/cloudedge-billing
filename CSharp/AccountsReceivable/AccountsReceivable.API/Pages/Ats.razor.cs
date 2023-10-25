@@ -10,10 +10,14 @@ namespace AccountsReceivable.API.Pages;
 
 partial class Ats
 {
-    private string _searchString = string.Empty;
-
     private MudTable<Document> _table = null!;
+    private readonly List<BreadcrumbItem> _breadcrumb = new()
+    {
+        new BreadcrumbItem("Home", ""),
+        new BreadcrumbItem("Animals in Transit", null, true)
+    };
 
+    private string _searchString = string.Empty;
     private int _totalItems;
 
     [CascadingParameter]

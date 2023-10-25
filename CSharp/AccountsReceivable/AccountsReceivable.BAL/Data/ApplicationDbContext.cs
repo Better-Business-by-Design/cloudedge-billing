@@ -102,6 +102,11 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Latin1_General_100_CI_AS");
+        foreach (var property in modelBuilder.Model.GetEntityTypes().SelectMany(entity => entity.GetProperties()).Where(property => property.ClrType == typeof(decimal) || property.ClrType == typeof(decimal?)))
+        {
+            property.SetPrecision(9);
+            property.SetScale(2);
+        }
 
         #region Account
 

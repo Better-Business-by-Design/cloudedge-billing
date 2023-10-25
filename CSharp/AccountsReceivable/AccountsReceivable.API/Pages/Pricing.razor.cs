@@ -10,6 +10,11 @@ partial class Pricing
 {
     private string _searchString = string.Empty;
     private MudTable<Schedule> _table = null!;
+    private readonly List<BreadcrumbItem> _breadcrumb = new()
+    {
+        new BreadcrumbItem("Home", ""),
+        new BreadcrumbItem("Pricing Schedules", null, true)
+    };
 
     private int _totalItems;
 

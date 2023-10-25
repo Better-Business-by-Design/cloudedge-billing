@@ -14,6 +14,12 @@ partial class InvoiceDetail
     private Document? _document;
     private string _searchString = string.Empty;
     private bool _showAnimalId;
+    private readonly List<BreadcrumbItem> _breadcrumb = new()
+    {
+        new BreadcrumbItem("Home", ""),
+        new BreadcrumbItem("Buyer Created Invoices", "invoices"),
+        new BreadcrumbItem("Detail", null, true)
+    };
 
     private MudTable<Animal> _table = null!;
     /*private TableGroupDefinition<Animal> _group = new()

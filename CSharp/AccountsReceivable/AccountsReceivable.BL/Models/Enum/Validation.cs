@@ -1,6 +1,6 @@
 ﻿namespace AccountsReceivable.BL.Models.Enum;
 
-public enum ValidationId : ushort
+public enum ValidationId : byte
 {
     Pending = 0,
 

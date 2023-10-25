@@ -1,6 +1,6 @@
 ﻿namespace AccountsReceivable.BL.Models.Enum;
 
-public enum GradeId
+public enum GradeId : byte
 {
     Bobby_BV = 0,
     Bobby_COND = 1,

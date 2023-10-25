@@ -1,8 +1,10 @@
 ﻿@page "/invoices/{Id}"
 
+<Breadcrumb Items="_breadcrumb" />
+
 @if (_document is not null)
 {
-    <MudToolBar>
+    <MudToolBar Dense="true">
         <MudText Typo="Typo.h6">Farm: <b>@_document.Farm.Name</b></MudText>
         <MudSpacer/>
         <MudText Typo="Typo.h6">K/S: <b>@_document.KillSheet</b></MudText>
@@ -50,7 +52,7 @@
         </RowTemplate>
     </MudTable>
 }
-<MudTable Dense="true" Hover="true" Outlined="true" RowStyleFunc="RowStyleFunc" Class="mt-4"
+<MudTable Dense="true" Hover="true" RowStyleFunc="RowStyleFunc" Class="mt-4"
           ServerData="@(new Func<TableState, Task<TableData<Animal>>>(ServerReload))"
           @ref="_table">
     <HeaderContent>

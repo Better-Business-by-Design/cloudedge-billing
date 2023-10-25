@@ -398,17 +398,17 @@
                 </Assign.To>
                 <Assign.Value>
                   <InArgument x:TypeArguments="abma:Schedule">
-                    <CSharpValue x:TypeArguments="abma:Schedule" sap2010:WorkflowViewState.IdRef="CSharpValue`1_62" xml:space="preserve">ScheduleTable.AsEnumerable().Select(ScheduleRow =&gt; 
+                    <CSharpValue x:TypeArguments="abma:Schedule" sap2010:WorkflowViewState.IdRef="CSharpValue`1_64" xml:space="preserve">ScheduleTable.AsEnumerable().Select(ScheduleRow =&gt; 
 	new Schedule {
 		StartDate = Convert.ToDateTime(ScheduleRow["StartDate"]),
 		EndDate = Convert.ToDateTime(ScheduleRow["EndDate"]),
 		MeatworkName = Convert.ToString(ScheduleRow["Meatwork"]),
 		Prices = PricingTable.AsEnumerable().Select(PricingRow =&gt; new Price {
 			GradeId = GradeHelper.GetAll().Single(Grade =&gt; Grade.Name.Equals(Convert.ToString(PricingRow["Grade"]), StringComparison.OrdinalIgnoreCase) &amp;&amp; Grade.AnimalTypeId == AnimalTypeHelper.GetAll().Single(AnimalType =&gt; AnimalType.Name.Equals(Convert.ToString(PricingRow["AnimalType"]),  StringComparison.OrdinalIgnoreCase)).Id).Id,
-			MinWeight = Convert.ToDouble(PricingRow["MinWeight"]),
-			MaxWeight = Convert.ToDouble(PricingRow["MaxWeight"]),
-			Modifier = Convert.ToDouble(PricingRow["Modifier"]),
-			Cost = Convert.ToDouble(PricingRow["Price"])
+			MinWeight = Convert.ToDecimal(PricingRow["MinWeight"]),
+			MaxWeight = Convert.ToDecimal(PricingRow["MaxWeight"]),
+			Modifier = Convert.ToDecimal(PricingRow["Modifier"]),
+			Cost = Convert.ToDecimal(PricingRow["Price"])
 		}).ToList()
 	}
 ).Single()</CSharpValue>
