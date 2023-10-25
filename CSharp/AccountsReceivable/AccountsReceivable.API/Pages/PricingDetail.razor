@@ -13,21 +13,12 @@
             <MudSpacer/>
             <MudText Typo="Typo.h6">Status: <b>@_schedule.Status.Name</b></MudText>
             <MudSpacer/>
-            @if (User?.RoleId is (RoleId.ReadWrite or RoleId.Administrator))
-            {
-                @if (_schedule.StatusId is StatusId.Pending or StatusId.Declined)
-                {
-                    <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="OpenApproveDialog">
-                        Approve
-                    </MudButton>
-                }
-                @if (_schedule.StatusId is StatusId.Pending)
-                {
-                    <MudButton Color="Color.Error" Variant="Variant.Filled" Class="ml-2" OnClick="OpenDeclineDialog">
-                        Decline
-                    </MudButton>
-                }
-            }
+            <ApproveDeclineButtons 
+                Role="@User?.RoleId"
+                Status="@_schedule?.StatusId"
+                OpenApproveDialog="new Task(OpenApproveDialog)"
+                OpenDeclineDialog="new Task(OpenDeclineDialog)"
+                />
         }
     </ToolBarContent>
     <HeaderContent>

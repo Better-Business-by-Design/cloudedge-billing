@@ -11,24 +11,14 @@
         <MudSpacer/>
         <MudText Typo="Typo.h6">Plant: <b>@($"{_document.Plant.Name} ({_document.Plant.Meatwork.Name})")</b></MudText>
         <MudSpacer/>
-        @if (User?.RoleId is (RoleId.ReadWrite or RoleId.Administrator))
-        {
-            <MudButton Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Email">
 
-            </MudButton>
-            @if (_document.StatusId is StatusId.Pending or StatusId.Declined)
-            {
-                <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="OpenApproveDialog">
-                    Approve
-                </MudButton>
-            }
-            @if (_document.StatusId is StatusId.Pending)
-            {
-                <MudButton Color="Color.Error" Variant="Variant.Filled" Class="ml-2" OnClick="OpenDeclineDialog">
-                    Decline
-                </MudButton>
-            }
-        }
+        <ApproveDeclineButtons 
+            Role="@User?.RoleId" 
+            Status="@_document?.StatusId" 
+            OpenApproveDialog="new Task(OpenApproveDialog)" 
+            OpenDeclineDialog="new Task(OpenDeclineDialog)"
+            />
+
     </MudToolBar>
 
     var rows = new List<Tuple<string, string, string>>

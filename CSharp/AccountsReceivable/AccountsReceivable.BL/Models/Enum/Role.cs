@@ -4,7 +4,8 @@ public enum RoleId : ushort
 {
     Read = 0,
     ReadWrite = 1,
-    Administrator = 2
+    Administrator = 2,
+    Missing = 3
 }
 
 public class Role
@@ -41,6 +42,14 @@ public class RoleHelper
             {
                 Id = RoleId.Administrator,
                 Name = "Administrator"
+            }
+        },
+        {
+            RoleId.Missing,
+            new Role
+            {
+                Id = RoleId.Missing,
+                Name = "Missing"
             }
         }
     };

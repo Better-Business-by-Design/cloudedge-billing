@@ -8,7 +8,9 @@ public enum StatusId : ushort
     Declined = 2,
 
     Overridden = 3,
-    Superseded = 4
+    Superseded = 4,
+    
+    Missing = 5
 }
 
 public class Status
@@ -61,6 +63,14 @@ public class StatusHelper
             {
                 Id = StatusId.Superseded,
                 Name = "Superseded"
+            }
+        },
+        {
+            StatusId.Missing,
+            new Status()
+            {
+                Id = StatusId.Missing,
+                Name = "Missing"
             }
         }
     };

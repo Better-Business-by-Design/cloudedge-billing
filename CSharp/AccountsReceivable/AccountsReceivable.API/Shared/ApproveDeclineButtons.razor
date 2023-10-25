@@ -1,0 +1,72 @@
+@using Microsoft.Extensions.Logging
+@using AccountsReceivable.BL.Models.Enum
+@inject ILogger<ApproveDeclineButtons> Logger
+
+@if ((Role ?? RoleId.Missing) is RoleId.ReadWrite or RoleId.Administrator)
+    {
+        <MudButton
+            Color="Color.Primary"
+            Variant="Variant.Filled"
+            StartIcon="@Icons.Material.Filled.Email"
+            OnClick="@InvokeEmailButtonTask">
+        </MudButton>
+            
+        <MudButton 
+            Color="Color.Primary"
+            Variant="Variant.Filled"
+            OnClick="@InvokeOpenApproveDialog"
+            Disabled="@IsStatusNotPendingOrDeclined()">
+            Approve
+        </MudButton>
+
+        <MudButton 
+            Color="Color.Error"
+            Variant="Variant.Filled"
+            Class="ml-2"
+            OnClick="@InvokeOpenDeclineDialog"
+            Disabled="@IsStatusNotPending()">
+            Decline
+        </MudButton>
+    }
+
+@code {
+    [Parameter]
+    public RoleId? Role { get; set; }
+    
+    [Parameter]
+    public StatusId? Status { get; set; }
+    
+    [Parameter]
+    public Task? EmailButtonTask { get; set; }
+    
+    [Parameter]
+    public Task? OpenApproveDialog { get; set; }
+    
+    [Parameter]
+    public Task? OpenDeclineDialog { get; set; }
+
+    private void InvokeEmailButtonTask()
+    {
+        EmailButtonTask?.Start();
+    }
+    
+    private void InvokeOpenApproveDialog()
+    {
+        OpenApproveDialog?.Start();
+    }
+
+    private void InvokeOpenDeclineDialog()
+    {
+        OpenDeclineDialog?.Start();
+    }
+
+    private bool IsStatusNotPendingOrDeclined()
+    {
+        return (Status ?? StatusId.Missing) is not (StatusId.Pending or StatusId.Declined);
+    }
+
+    private bool IsStatusNotPending()
+    {
+        return (Status ?? StatusId.Missing) is not StatusId.Pending;
+    }
+}

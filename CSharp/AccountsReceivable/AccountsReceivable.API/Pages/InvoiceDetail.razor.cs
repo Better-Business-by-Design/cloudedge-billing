@@ -44,7 +44,7 @@ partial class InvoiceDetail
 
     private async Task<TableData<Animal>> ServerReload(TableState state)
     {
-        if (_document == null)
+        if (_document is null)
         {
             _document = await DbContext.Documents
                 .Include(document => document.Farm)
@@ -53,7 +53,7 @@ partial class InvoiceDetail
                 .Include(document => document.Plant.Meatwork)
                 .FirstOrDefaultAsync(document => document.Id == Id);
 
-            if (_document == null)
+            if (_document is null)
             {
                 Navigation.NavigateTo("invoices");
 
