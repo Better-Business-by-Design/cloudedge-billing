@@ -2,7 +2,7 @@
 
 <Breadcrumb Items="_breadcrumb" />
 
-<MudTable Dense="true" Hover="true" Outlined="true"
+<MudTable Dense="true" Hover="true"
           ServerData="@(new Func<TableState, Task<TableData<Schedule>>>(ServerReload))"
           OnRowClick="RowClickEvent" T="Schedule"
           @ref="_table">
