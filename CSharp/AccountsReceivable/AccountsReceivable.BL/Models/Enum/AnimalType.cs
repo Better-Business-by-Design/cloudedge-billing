@@ -42,7 +42,7 @@ public class AnimalTypeHelper
                 Id = AnimalTypeId.Bobby,
                 SpeciesTypeId = SpeciesTypeId.Bobby,
                 Name = "BOBBY",
-                DisplayName = "Bobby"
+                DisplayName = "Bobby Calves"
             }
         },
         {

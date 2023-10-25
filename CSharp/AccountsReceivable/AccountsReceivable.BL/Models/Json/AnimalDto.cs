@@ -7,7 +7,7 @@ public class AnimalDto
     /* Properties */
 
     [JsonPropertyName("KillAgenda")]
-    public ulong KillAgenda { get; set; }
+    public uint KillAgenda { get; set; }
 
     [JsonPropertyName("DateKilled")]
     public DateTime DateKilled { get; set; }
@@ -34,7 +34,7 @@ public class AnimalDto
     public string? CondemnedBy { get; set; }
 
     [JsonPropertyName("Weight")]
-    public double Weight { get; set; }
+    public decimal Weight { get; set; }
 
     [JsonPropertyName("Grade")]
     public string Grade { get; set; } = null!;
@@ -43,10 +43,10 @@ public class AnimalDto
     public string UnitOfPrice { get; set; } = null!;
 
     [JsonPropertyName("Price")]
-    public double Price { get; set; }
+    public decimal Price { get; set; }
 
     [JsonPropertyName("PaymentAdvicePricePaid")]
-    public double PaymentAdvicePricePaid { get; set; }
+    public decimal PaymentAdvicePricePaid { get; set; }
 
     [JsonPropertyName("SplitPaymentPercentage")]
     public string? SplitPaymentPercentage { get; set; }
@@ -61,7 +61,7 @@ public class AnimalDto
     public string? MeetsMasterGrade { get; set; }
 
     [JsonPropertyName("pH")]
-    public double Ph { get; set; }
+    public decimal Ph { get; set; }
 
     [JsonPropertyName("Presentation")]
     public string Presentation { get; set; } = null!;

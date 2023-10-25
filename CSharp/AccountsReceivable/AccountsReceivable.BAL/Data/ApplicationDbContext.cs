@@ -224,7 +224,7 @@ public class ApplicationDbContext : DbContext
             }
         );
 
-        modelBuilder.Entity<Document.AnimalTypeSummary>(entity =>
+        modelBuilder.Entity<AnimalTypeSummary>(entity =>
             {
                 entity.HasKey(advice => new
                 {
@@ -232,7 +232,7 @@ public class ApplicationDbContext : DbContext
                     advice.AnimalTypeId
                 });
 
-                entity.ToTable(nameof(Document.AnimalTypeSummary), "application");
+                entity.ToTable(nameof(AnimalTypeSummary), "application");
             }
         );
 
@@ -251,19 +251,19 @@ public class ApplicationDbContext : DbContext
             }
         );
 
-        modelBuilder.Entity<Animal.DeductionDetail>(entity =>
+        modelBuilder.Entity<DeductionDetail>(entity =>
             {
                 entity.HasKey(deduction => new { deduction.AnimalId, deduction.Code });
 
-                entity.ToTable(nameof(Animal.DeductionDetail), "application");
+                entity.ToTable(nameof(DeductionDetail), "application");
             }
         );
 
-        modelBuilder.Entity<Animal.PremiumDetail>(entity =>
+        modelBuilder.Entity<PremiumDetail>(entity =>
             {
                 entity.HasKey(premium => new { premium.AnimalId, premium.Code });
 
-                entity.ToTable(nameof(Animal.PremiumDetail), "application");
+                entity.ToTable(nameof(PremiumDetail), "application");
             }
         );
 

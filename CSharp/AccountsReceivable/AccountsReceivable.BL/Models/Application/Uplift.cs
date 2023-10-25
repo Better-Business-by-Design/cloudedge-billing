@@ -14,5 +14,5 @@ public class Uplift
     public AnimalTypeId AnimalTypeId { get; set; }
     public virtual AnimalType AnimalType { get; set; } = null!;
     
-    public double Rate { get; set; }
+    public decimal Rate { get; set; }
 }

@@ -16,8 +16,8 @@ public class AnimalPaymentSummaryDetailDto
     public string Uom { get; set; } = null!;
 
     [JsonPropertyName("Rate")]
-    public double Rate { get; set; }
+    public decimal Rate { get; set; }
 
     [JsonPropertyName("PaymentSummaryAmount")]
-    public double PaymentSummaryAmount { get; set; }
+    public decimal PaymentSummaryAmount { get; set; }
 }

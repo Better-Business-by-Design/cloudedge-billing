@@ -46,7 +46,7 @@ public class DocumentDto
     public string? DairySupplierNumber { get; set; }
 
     [JsonPropertyName("KillSheet")]
-    public ulong KillSheet { get; set; }
+    public uint KillSheet { get; set; }
 
     [JsonPropertyName("BookingRef")]
     public string? BookingRef { get; set; }
@@ -70,28 +70,28 @@ public class DocumentDto
     public int PaymentAdviceTotalStockReceived { get; set; }
 
     [JsonPropertyName("PaymentAdviceTotalMeatKg")]
-    public double PaymentAdviceTotalMeatKg { get; set; }
+    public decimal PaymentAdviceTotalMeatKg { get; set; }
 
     [JsonPropertyName("PaymentAdviceTotalPricePaid")]
-    public double PaymentAdviceTotalPricePaid { get; set; }
+    public decimal PaymentAdviceTotalPricePaid { get; set; }
 
     [JsonPropertyName("AdditionalPremiumsDeductions")]
-    public double AdditionalPremiumsDeductions { get; set; }
+    public decimal AdditionalPremiumsDeductions { get; set; }
 
     [JsonPropertyName("PaymentSummaryAdvanceTotalDeductions")]
-    public double PaymentSummaryAdvanceTotalDeductions { get; set; }
+    public decimal PaymentSummaryAdvanceTotalDeductions { get; set; }
 
     [JsonPropertyName("NetAdvance")]
-    public double NetAdvance { get; set; }
+    public decimal NetAdvance { get; set; }
 
     [JsonPropertyName("GSTOnOutputs")]
-    public double GstOnOutputs { get; set; }
+    public decimal GstOnOutputs { get; set; }
 
     [JsonPropertyName("GSTOnInputs")]
-    public double GstOnInputs { get; set; }
+    public decimal GstOnInputs { get; set; }
 
     [JsonPropertyName("Total")]
-    public double Total { get; set; }
+    public decimal Total { get; set; }
 
     [JsonPropertyName("SupplierComment")]
     public virtual ICollection<string> SupplierComment { get; set; } = null!;

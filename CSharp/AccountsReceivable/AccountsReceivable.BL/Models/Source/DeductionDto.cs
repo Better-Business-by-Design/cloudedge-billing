@@ -16,5 +16,5 @@ public class DeductionDto
 
     public string Uom { get; set; } = null!;
 
-    public double Rate { get; set; }
+    public decimal Rate { get; set; }
 }

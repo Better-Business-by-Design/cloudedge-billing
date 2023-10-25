@@ -12,11 +12,11 @@ public class Price
     public GradeId GradeId { get; set; }
     public virtual Grade Grade { get; set; } = null!;
 
-    public double MinWeight { get; set; }
+    public decimal MinWeight { get; set; }
 
-    public double MaxWeight { get; set; }
+    public decimal MaxWeight { get; set; }
 
-    public double Modifier { get; set; }
+    public decimal Modifier { get; set; }
 
-    public double Cost { get; set; }
+    public decimal Cost { get; set; }
 }

@@ -13,8 +13,8 @@ public class PaymentAdviceAnimalTypeDto
     public int AnimalTypeTotalStockReceived { get; set; }
 
     [JsonPropertyName("AnimalTypeTotalMeatKg")]
-    public double AnimalTypeTotalMeatKg { get; set; }
+    public decimal AnimalTypeTotalMeatKg { get; set; }
 
     [JsonPropertyName("AnimalTypeTotalPricePaid")]
-    public double AnimalTypeTotalPricePaid { get; set; }
+    public decimal AnimalTypeTotalPricePaid { get; set; }
 }
