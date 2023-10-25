@@ -1,0 +1,102 @@
+﻿@page "/pricing/{Id}"
+
+<MudBreadcrumbs Items="@(new List<BreadcrumbItem> { new("Home", ""), new("Pricing Schedule", "pricing"), new("Details", "", true)})"></MudBreadcrumbs>
+<MudTable Dense="true" Hover="true" Outlined="true" ServerData="@(new Func<TableState, Task<TableData<Price>>>(ServerReload))" @ref="_table" T="Price">
+    <ToolBarContent>
+        @if (_schedule is not null)
+        {
+            <MudText Typo="Typo.h6">Works: <b>@_schedule.Meatwork.Name</b></MudText>
+            <MudSpacer/>
+            <MudText Typo="Typo.h6">Start Date: <b>@_schedule.StartDate.ToString("dd/MM/yyyy")</b></MudText>
+            <MudSpacer/>
+            <MudText Typo="Typo.h6">End Date: <b>@_schedule.EndDate.ToString("dd/MM/yyyy")</b></MudText>
+            <MudSpacer/>
+            <MudText Typo="Typo.h6">Status: <b>@_schedule.Status.Name</b></MudText>
+            <MudSpacer/>
+            @if (User?.RoleId is (RoleId.ReadWrite or RoleId.Administrator))
+            {
+                @if (_schedule.StatusId is StatusId.Pending or StatusId.Declined)
+                {
+                    <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="OpenApproveDialog">
+                        Approve
+                    </MudButton>
+                }
+                @if (_schedule.StatusId is StatusId.Pending)
+                {
+                    <MudButton Color="Color.Error" Variant="Variant.Filled" Class="ml-2" OnClick="OpenDeclineDialog">
+                        Decline
+                    </MudButton>
+                }
+            }
+        }
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>
+            <MudTableSortLabel SortLabel="species_field" T="Price">
+                Species
+            </MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortLabel="animal_field" T="Price">
+                Animal Type
+            </MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortLabel="grade_field" T="Price">
+                Grade
+            </MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortLabel="min_field" T="Price">
+                Min Weight
+            </MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortLabel="max_field" T="Price">
+                Max Weight
+            </MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortLabel="modifier_field" T="Price">
+                Modifier
+            </MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortLabel="price_field" T="Price">
+                Price
+            </MudTableSortLabel>
+        </MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Species">
+            @context.Grade.AnimalType.SpeciesType.DisplayName
+        </MudTd>
+        <MudTd DataLabel="Animal Type">
+            @context.Grade.AnimalType.DisplayName
+        </MudTd>
+        <MudTd DataLabel="Grade">
+            @context.Grade.Name
+        </MudTd>
+        <MudTd DataLabel="Min Weight">
+            @context.MinWeight.ToString("0.00")
+        </MudTd>
+        <MudTd DataLabel="Max Weight">
+            @context.MaxWeight.ToString("0.00")
+        </MudTd>
+        <MudTd DataLabel="Modifier">
+            @context.Modifier.ToString("C")
+        </MudTd>
+        <MudTd DataLabel="Price">
+            @context.Cost.ToString("C")
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching Prices found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading Prices...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="new[] { 20, 40, 80 }"/>
+    </PagerContent>
+</MudTable>

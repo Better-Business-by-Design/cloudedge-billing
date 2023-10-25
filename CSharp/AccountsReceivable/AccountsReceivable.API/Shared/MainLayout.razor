@@ -1,0 +1,25 @@
+﻿@inherits LayoutComponentBase
+
+<MudLayout>
+    <CascadingValue Value="User">
+        <MudAppBar Color="Color.Dark" Fixed="true">
+            <MudLink Href="">
+                <MudImage Height="50" Src="assets/pamu-logo.png" Alt="Pāmu Logo"></MudImage>
+            </MudLink>
+            <MudSpacer/>
+            <MudLink Class="mx-4" Color="Color.Inherit" Href="pricing">Pricing Schedules</MudLink>
+            <MudLink Class="mx-4" Color="Color.Inherit" Href="invoices">Buyer Created Invoices</MudLink>
+            <MudLink Class="mx-4" Color="Color.Inherit" Href="ats">Animals in Transit</MudLink>
+            @if (User?.RoleId is RoleId.Administrator)
+            {
+                <MudLink Class="mx-4" Color="Color.Inherit" Href="management">Management</MudLink>
+            }
+            <MudSpacer/>
+            <MudText>@User?.Name</MudText>
+        </MudAppBar>
+
+        <MudMainContent>
+            @Body
+        </MudMainContent>
+    </CascadingValue>
+</MudLayout>

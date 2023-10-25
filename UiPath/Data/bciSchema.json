@@ -1,0 +1,477 @@
+{
+  "type": "object",
+  "properties": {
+    "DocumentType": {
+      "type": "string"
+    },
+    "Document": {
+      "type": "string"
+    },
+    "PreviousDocument": {
+      "type": "string"
+    },
+    "DateProcessed": {
+      "type": "string"
+    },
+    "FromDateProcessed": {
+      "type": "string"
+    },
+    "PaymentDate": {
+      "type": "string"
+    },
+    "ProceedsToBankAccount": {
+      "type": "string"
+    },
+    "ProceedsToCompanyName": {
+      "type": "string"
+    },
+    "Terms": {
+      "type": "string"
+    },
+    "GSTRegistrationNo": {
+      "type": "string"
+    },
+    "SupplierNo": {
+      "type": "string"
+    },
+    "SupplierName": {
+      "type": "string"
+    },
+    "DairySupplierNumber": {
+      "type": "string"
+    },
+    "KillSheet": {
+      "type": "integer"
+    },
+    "BookingRef": {
+      "type": "string"
+    },
+    "FieldRepName": {
+      "type": "string"
+    },
+    "CarrierName": {
+      "type": "string"
+    },
+    "PlantName": {
+      "type": "string"
+    },
+    "NaitNo": {
+      "type": "string"
+    },
+    "ConsignedFrom": {
+      "type": "string"
+    },
+    "PaymentAdviceAnimalType": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "AnimalType": {
+              "type": "string"
+            },
+            "AnimalTypeTotalStockReceived": {
+              "type": "integer"
+            },
+            "AnimalTypeTotalMeatKg": {
+              "type": "number"
+            },
+            "AnimalTypeTotalPricePaid": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "AnimalType",
+            "AnimalTypeTotalStockReceived",
+            "AnimalTypeTotalMeatKg",
+            "AnimalTypeTotalPricePaid"
+          ]
+        }
+      ]
+    },
+    "PaymentAdviceTotalStockReceived": {
+      "type": "integer"
+    },
+    "PaymentAdviceTotalMeatKg": {
+      "type": "number"
+    },
+    "PaymentAdviceTotalPricePaid": {
+      "type": "number"
+    },
+    "AdditionalPremiumsDeductions": {
+      "type": "integer"
+    },
+    "PaymentSummaryAdvanceTotalDeductions": {
+      "type": "number"
+    },
+    "NetAdvance": {
+      "type": "number"
+    },
+    "GSTOnOutputs": {
+      "type": "number"
+    },
+    "GSTOnInputs": {
+      "type": "number"
+    },
+    "Total": {
+      "type": "number"
+    },
+    "SupplierComment": {
+      "type": "array",
+      "items": {}
+    },
+    "Animal": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "KillAgenda": {
+              "type": "string"
+            },
+            "DateKilled": {
+              "type": "string"
+            },
+            "SpeciesType": {
+              "type": "string"
+            },
+            "AnimalType": {
+              "type": "string"
+            },
+            "NAITEID": {
+              "type": "string"
+            },
+            "NAITVisual": {
+              "type": "string"
+            },
+            "SFFEarTag": {
+              "type": "string"
+            },
+            "ProcessDescription": {
+              "type": "string"
+            },
+            "CondemnedBy": {
+              "type": "string"
+            },
+            "Weight": {
+              "type": "number"
+            },
+            "Grade": {
+              "type": "string"
+            },
+            "UnitOfPrice": {
+              "type": "string"
+            },
+            "Price": {
+              "type": "number"
+            },
+            "PaymentAdvicePricePaid": {
+              "type": "number"
+            },
+            "SplitPaymentPercentage": {
+              "type": "string"
+            },
+            "Retained": {
+              "type": "string"
+            },
+            "AnimalAdditionalPremiumsDeductionsDetail": {
+              "type": "array",
+              "items": {}
+            },
+            "AnimalPaymentSummaryDetail": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "Code": {
+                      "type": "string"
+                    },
+                    "Description": {
+                      "type": "string"
+                    },
+                    "UOM": {
+                      "type": "string"
+                    },
+                    "Rate": {
+                      "type": "number"
+                    },
+                    "PaymentSummaryAmount": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "Code",
+                    "Description",
+                    "UOM",
+                    "Rate",
+                    "PaymentSummaryAmount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "Code": {
+                      "type": "string"
+                    },
+                    "Description": {
+                      "type": "string"
+                    },
+                    "UOM": {
+                      "type": "string"
+                    },
+                    "Rate": {
+                      "type": "number"
+                    },
+                    "PaymentSummaryAmount": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "Code",
+                    "Description",
+                    "UOM",
+                    "Rate",
+                    "PaymentSummaryAmount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "Code": {
+                      "type": "string"
+                    },
+                    "Description": {
+                      "type": "string"
+                    },
+                    "UOM": {
+                      "type": "string"
+                    },
+                    "Rate": {
+                      "type": "number"
+                    },
+                    "PaymentSummaryAmount": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "Code",
+                    "Description",
+                    "UOM",
+                    "Rate",
+                    "PaymentSummaryAmount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "Code": {
+                      "type": "string"
+                    },
+                    "Description": {
+                      "type": "string"
+                    },
+                    "UOM": {
+                      "type": "string"
+                    },
+                    "Rate": {
+                      "type": "number"
+                    },
+                    "PaymentSummaryAmount": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "Code",
+                    "Description",
+                    "UOM",
+                    "Rate",
+                    "PaymentSummaryAmount"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "Code": {
+                      "type": "string"
+                    },
+                    "Description": {
+                      "type": "string"
+                    },
+                    "UOM": {
+                      "type": "string"
+                    },
+                    "Rate": {
+                      "type": "number"
+                    },
+                    "PaymentSummaryAmount": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "Code",
+                    "Description",
+                    "UOM",
+                    "Rate",
+                    "PaymentSummaryAmount"
+                  ]
+                }
+              ]
+            },
+            "MeetsOptimumRange": {
+              "type": "boolean"
+            },
+            "MeetsMasterGrade": {
+              "type": "string"
+            },
+            "pH": {
+              "type": "integer"
+            },
+            "Presentation": {
+              "type": "string"
+            },
+            "PresentationReason": {
+              "type": "string"
+            },
+            "TailLengthDescription": {
+              "type": "string"
+            },
+            "Defects": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "DefectDescription": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "DefectDescription"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "DefectDescription": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "DefectDescription"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "DefectDescription": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "DefectDescription"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "DefectDescription": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "DefectDescription"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "DefectDescription": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "DefectDescription"
+                  ]
+                }
+              ]
+            },
+            "FinishingContract": {
+              "type": "string"
+            },
+            "InventoryCost": {
+              "type": "integer"
+            },
+            "FinishingAmount": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "KillAgenda",
+            "DateKilled",
+            "SpeciesType",
+            "AnimalType",
+            "NAITEID",
+            "NAITVisual",
+            "SFFEarTag",
+            "ProcessDescription",
+            "CondemnedBy",
+            "Weight",
+            "Grade",
+            "UnitOfPrice",
+            "Price",
+            "PaymentAdvicePricePaid",
+            "SplitPaymentPercentage",
+            "Retained",
+            "AnimalAdditionalPremiumsDeductionsDetail",
+            "AnimalPaymentSummaryDetail",
+            "MeetsOptimumRange",
+            "MeetsMasterGrade",
+            "pH",
+            "Presentation",
+            "PresentationReason",
+            "TailLengthDescription",
+            "Defects",
+            "FinishingContract",
+            "InventoryCost",
+            "FinishingAmount"
+          ]
+        }
+      ]
+    }
+  },
+  "required": [
+    "DocumentType",
+    "Document",
+    "PreviousDocument",
+    "DateProcessed",
+    "FromDateProcessed",
+    "PaymentDate",
+    "ProceedsToBankAccount",
+    "ProceedsToCompanyName",
+    "Terms",
+    "GSTRegistrationNo",
+    "SupplierNo",
+    "SupplierName",
+    "DairySupplierNumber",
+    "KillSheet",
+    "BookingRef",
+    "FieldRepName",
+    "CarrierName",
+    "PlantName",
+    "NaitNo",
+    "ConsignedFrom",
+    "PaymentAdviceAnimalType",
+    "PaymentAdviceTotalStockReceived",
+    "PaymentAdviceTotalMeatKg",
+    "PaymentAdviceTotalPricePaid",
+    "AdditionalPremiumsDeductions",
+    "PaymentSummaryAdvanceTotalDeductions",
+    "NetAdvance",
+    "GSTOnOutputs",
+    "GSTOnInputs",
+    "Total",
+    "SupplierComment",
+    "Animal"
+  ]
+}

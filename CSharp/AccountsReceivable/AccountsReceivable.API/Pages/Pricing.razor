@@ -1,0 +1,59 @@
+﻿@page "/pricing"
+
+<MudTable Dense="true" Hover="true" Outlined="true"
+          ServerData="@(new Func<TableState, Task<TableData<Schedule>>>(ServerReload))"
+          OnRowClick="RowClickEvent" T="Schedule"
+          @ref="_table">
+    <ToolBarContent>
+        <MudText Typo="Typo.h5">Pricing Schedules</MudText>
+        <MudSpacer/>
+        <MudTextField T="string" ValueChanged="OnSearch" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0">
+        </MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>
+            <MudTableSortLabel SortLabel="start_field" T="Schedule">
+                Start Date
+            </MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortLabel="end_field" T="Schedule">
+                End Date
+            </MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortLabel="works_field" T="Schedule">
+                Works
+            </MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortLabel="status_field" T="Schedule">
+                Status
+            </MudTableSortLabel>
+        </MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="StartDate">
+            @context.StartDate.ToString("dd/MM/yyyy")
+        </MudTd>
+        <MudTd DataLabel="EndDate">
+            @context.EndDate.ToString("dd/MM/yyyy")
+        </MudTd>
+        <MudTd DataLabel="Works">
+            @context.Meatwork.Name
+        </MudTd>
+        <MudTd DataLabel="Status">
+            @context.Status.Name
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching Pricing Schedules found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading Pricing Schedules...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="new[] { 20, 40, 80 }"/>
+    </PagerContent>
+</MudTable>

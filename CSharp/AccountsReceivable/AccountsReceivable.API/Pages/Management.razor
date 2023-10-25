@@ -1,0 +1,51 @@
+﻿@page "/management"
+
+<PageInformation>
+    <Title>Management</Title>
+    <Interactions>
+        @foreach (var managementPage in Enum.GetValues<ManagementPage>())
+        {
+            <button class="btn @(_managementPage == managementPage ? "btn-success" : "btn-secondary") ms-1" onclick="@(() => LoadPage(managementPage))" role="button">
+                @managementPage
+            </button>
+        }
+    </Interactions>
+</PageInformation>
+
+
+@switch (_managementPage)
+{
+    case ManagementPage.Users:
+        <h4>User Management</h4>
+        break;
+    case ManagementPage.Upcharge:
+        <h4>Upcharge Management</h4>
+        <MudToolBar Class="gap-4">
+            <MudSelect T="Meatwork" ToStringFunc="_meatworkConverter" Label="Works">
+                @foreach (var meatwork in DbContext.Set<Meatwork>().ToList())
+                {
+                    <MudSelectItem Value="@meatwork"/>
+                }
+            </MudSelect>
+            <MudSelect Label="Animal Type" ToStringFunc="_animalTypeConverter" T="AnimalType">
+                @foreach (var animalType in DbContext.Set<AnimalType>().ToList())
+                {
+                    <MudSelectItem Value="@animalType"/>
+                }
+            </MudSelect>
+            <MudDatePicker Label="Start Date"/>
+            <MudDatePicker Label="End Date"/>
+            <MudNumericField Label="Min Weight" Format="N1" Min="0.0" Max="999.0" Step="0.5" T="double"/>
+            <MudNumericField Label="Max Weight" Format="N1" Min="0.0" Max="999.0" Step="0.5" T="double"/>
+            <MudButton Color="Color.Primary" Variant="Variant.Filled">Submit</MudButton>
+        </MudToolBar>
+        break;
+    case ManagementPage.Premiums:
+        <h4>Premiums Management</h4>
+        break;
+    case ManagementPage.Deductions:
+        <h4>Deductions Management</h4>
+        break;
+    default:
+        throw new ArgumentOutOfRangeException();
+}

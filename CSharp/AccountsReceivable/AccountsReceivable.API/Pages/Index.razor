@@ -1,0 +1,160 @@
+﻿@page "/"
+
+@if (_table.Equals("documents"))
+{
+    <MudTable Dense="true" Hover="true" Outlined="true"
+              ServerData="@(new Func<TableState, Task<TableData<Document>>>(DocumentServerReload))"
+              OnRowClick="DocumentRowClickEvent" T="Document"
+              @ref="_documentTable">
+        <ToolBarContent>
+            <MudText Typo="Typo.h5">Buyer Created Invoices</MudText>
+            <MudSpacer/>
+            <MudButton Variant="Variant.Filled" Color="@(_table!.Equals("documents") ? Color.Primary : Color.Inherit)" OnClick="@(() => SwitchTable("documents"))">
+                <MudText Color="Color.Inherit">Buyer Created Invoices (@_documentTotal)</MudText>
+            </MudButton>
+            <MudButton Variant="Variant.Filled" Color="@(_table!.Equals("schedules") ? Color.Primary : Color.Inherit)" OnClick="@(() => SwitchTable("schedules"))" Class="ml-2">
+                <MudText Color="Color.Inherit">Pricing Schedules (@_scheduleTotal)</MudText>
+            </MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>
+                <MudTableSortLabel SortLabel="date_field" T="Document">
+                    Date
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="killsheet_field" T="Document">
+                    KillSheet
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="farm_field" T="Document">
+                    Farm
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="species_field" T="Document">
+                    Species
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="stock_field" T="Document">
+                    Stock
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="plant_field" T="Document">
+                    Plant (Works)
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortLabel="status_field" T="Document">
+                    Status
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortLabel="ats_field" T="Document">
+                    ATS Status
+                </MudTableSortLabel>
+            </MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Date">
+                @context.DateProcessed.ToString("dd/MM/yyyy")
+            </MudTd>
+            <MudTd DataLabel="KillSheet">
+                @context.KillSheet
+            </MudTd>
+            <MudTd DataLabel="Farm">
+                @context.Farm.Name
+            </MudTd>
+            <MudTd DataLabel="Species">
+                @(context.SpeciesType?.DisplayName ?? "Unknown")
+            </MudTd>
+            <MudTd DataLabel="Stock">
+                @context.StockTotal.ToString() (@context.StockWeightTotal.ToString("0.00")kg)
+            </MudTd>
+            <MudTd DataLabel="Plant (Works)">
+                @($"{context.Plant.Name} ({context.Plant.Meatwork.Name})")
+            </MudTd>
+            <MudTd DataLabel="Status">
+                @context.Status.Name
+            </MudTd>
+            <MudTd DataLabel="ATS Status">
+                @(context.TransitId == null ? "Pending" : "Valid") @* Todo *@
+            </MudTd>
+        </RowTemplate>
+        <NoRecordsContent>
+            <MudText>No matching Created Invoices found</MudText>
+        </NoRecordsContent>
+        <LoadingContent>
+            <MudText>Loading Buyer Created Invoices...</MudText>
+        </LoadingContent>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new[] { 20, 40, 80 }"/>
+        </PagerContent>
+    </MudTable>
+}
+else if (_table.Equals("schedules"))
+{
+    <MudTable Dense="true" Hover="true" Outlined="true"
+              ServerData="@(new Func<TableState, Task<TableData<Schedule>>>(ScheduleServerReload))"
+              OnRowClick="ScheduleRowClickEvent" T="Schedule"
+              @ref="_scheduleTable">
+        <ToolBarContent>
+            <MudText Typo="Typo.h5">Pricing Schedules</MudText>
+            <MudSpacer/>
+            <MudButton Variant="Variant.Filled" Color="@(_table!.Equals("documents") ? Color.Primary : Color.Inherit)" OnClick="@(() => SwitchTable("documents"))">
+                <MudText Color="Color.Inherit">Buyer Created Invoices (@_documentTotal)</MudText>
+            </MudButton>
+            <MudButton Variant="Variant.Filled" Color="@(_table!.Equals("schedules") ? Color.Primary : Color.Inherit)" OnClick="@(() => SwitchTable("schedules"))" Class="ml-2">
+                <MudText Color="Color.Inherit">Pricing Schedules (@_scheduleTotal)</MudText>
+            </MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>
+                <MudTableSortLabel SortLabel="start_field" T="Schedule">
+                    Start Date
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="end_field" T="Schedule">
+                    End Date
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="works_field" T="Schedule">
+                    Works
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortLabel="status_field" T="Schedule">
+                    Status
+                </MudTableSortLabel>
+            </MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="StartDate">
+                @context.StartDate.ToString("dd/MM/yyyy")
+            </MudTd>
+            <MudTd DataLabel="EndDate">
+                @context.EndDate.ToString("dd/MM/yyyy")
+            </MudTd>
+            <MudTd DataLabel="Works">
+                @context.Meatwork.Name
+            </MudTd>
+            <MudTd DataLabel="Status">
+                @context.Status.Name
+            </MudTd>
+        </RowTemplate>
+        <NoRecordsContent>
+            <MudText>No matching Pricing Schedules found</MudText>
+        </NoRecordsContent>
+        <LoadingContent>
+            <MudText>Loading Pricing Schedules...</MudText>
+        </LoadingContent>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new[] { 20, 40, 80 }"/>
+        </PagerContent>
+    </MudTable>
+}

@@ -1,0 +1,22 @@
+﻿<MudToolBar>
+    @if (Title != null)
+    {
+        <MudText Typo="Typo.h5">
+            @Title
+        </MudText>
+    }
+
+    @if (Interactions != null)
+    {
+        <MudSpacer/>
+
+        @Interactions
+    }
+</MudToolBar>
+
+@if (Description != null)
+{
+    <p class="text-muted m-0">
+        @Description
+    </p>
+}

@@ -1,0 +1,307 @@
+﻿@page "/invoices/{Id}"
+
+@if (_document is not null)
+{
+    <MudToolBar>
+        <MudText Typo="Typo.h6">Farm: <b>@_document.Farm.Name</b></MudText>
+        <MudSpacer/>
+        <MudText Typo="Typo.h6">K/S: <b>@_document.KillSheet</b></MudText>
+        <MudSpacer/>
+        <MudText Typo="Typo.h6">Date: <b>@_document.DateProcessed.ToString("dd/MM/yyyy")</b></MudText>
+        <MudSpacer/>
+        <MudText Typo="Typo.h6">Plant: <b>@($"{_document.Plant.Name} ({_document.Plant.Meatwork.Name})")</b></MudText>
+        <MudSpacer/>
+        @if (User?.RoleId is (RoleId.ReadWrite or RoleId.Administrator))
+        {
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Email">
+
+            </MudButton>
+            @if (_document.StatusId is StatusId.Pending or StatusId.Declined)
+            {
+                <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="OpenApproveDialog">
+                    Approve
+                </MudButton>
+            }
+            @if (_document.StatusId is StatusId.Pending)
+            {
+                <MudButton Color="Color.Error" Variant="Variant.Filled" Class="ml-2" OnClick="OpenDeclineDialog">
+                    Decline
+                </MudButton>
+            }
+        }
+    </MudToolBar>
+
+    var rows = new List<Tuple<string, string, string>>
+    {
+        new("Gross Total", _document.GrossCostTotal.ToString("C"), _document.CalcGrossCostTotal.ToString("C")),
+        new("Net Total", _document.NetCostTotal.ToString("C"), _document.CalcNetCostTotal.ToString("C")),
+        new("GST", _document.GstCostTotal.ToString("C"), _document.CalcGstCostTotal.ToString("C")),
+        new("Stock Received", _document.StockTotal.ToString(), _document.CalcStockTotal.ToString()),
+        new("Stock Weight (KG)", _document.StockWeightTotal.ToString("N2"), _document.CalcStockWeightTotal.ToString("N2"))
+    };
+
+    <MudTable Items="rows" Dense="true">
+        <HeaderContent>
+            <MudTh></MudTh>
+            <MudTh>SFF</MudTh>
+            <MudTh>Calculated</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>
+                @context.Item1
+            </MudTd>
+            <MudTd>
+                @context.Item2
+            </MudTd>
+            <MudTd>
+                @context.Item3
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+}
+<MudTable Dense="true" Hover="true" Outlined="true" RowStyleFunc="RowStyleFunc" Class="mt-4"
+          ServerData="@(new Func<TableState, Task<TableData<Animal>>>(ServerReload))"
+          @ref="_table">
+    <HeaderContent>
+        @if (_showAnimalId)
+        {
+            <MudTh>
+                <MudTableSortLabel SortLabel="nait_field" T="Animal">
+                    NAIT ID
+                </MudTableSortLabel>
+            </MudTh>
+        }
+        <MudTh>
+            <MudTableSortLabel SortLabel="animal_field" T="Animal">
+                SFF Animal Type
+            </MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortLabel="grade_field" T="Animal">
+                SFF Grade
+            </MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortLabel="weight_field" T="Animal">
+                SFF Weight
+            </MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortLabel="deductions_field" T="Animal">
+                Deductions
+            </MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortLabel="total_field" T="Animal">
+                SFF Total
+            </MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortLabel="calculated_field" T="Animal">
+                Calculated Total
+            </MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="validation_field" T="Animal">
+                Validation
+            </MudTableSortLabel>
+        </MudTh>
+    </HeaderContent>
+    @*<GroupHeaderTemplate>
+        <MudTh colspan="8" >@($"{context.GroupName}: {context.Key} {context.Items.Count()}") </MudTh>
+    </GroupHeaderTemplate>*@
+    <RowTemplate>
+        @if (_showAnimalId)
+        {
+            <MudTd DataLabel="NAIT ID">
+                @context.NaitVisual (@context.NaitEid)
+            </MudTd>
+        }
+        <MudTd DataLabel="Animal Type">
+            @context.Grade?.AnimalType.DisplayName
+        </MudTd>
+        <MudTd DataLabel="Grade">
+            @context.Grade?.Name
+        </MudTd>
+        <MudTd DataLabel="Weight">
+            @context.StockWeight.ToString("0.00")
+        </MudTd>
+        <MudTd DataLabel="Deductions">
+            0
+        </MudTd>
+        <MudTd DataLabel="SFF Total">
+            @context.GrossCost.ToString("C")
+        </MudTd>
+        <MudTd DataLabel="Calculated Total">
+            @context.CalcGrossCost.ToString("C")
+        </MudTd>
+        <MudTd DataLabel="Validation">
+            @*@context.Validation?.Name*@
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching Animals found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading Animals...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="new[] { 20, 40, 80 }"/>
+    </PagerContent>
+</MudTable>
+
+@*
+<PageInformation>
+    <Title>
+        @if (_document is not null)
+        {
+            <span class="fs-4">
+                Farm: <b>@_document.Farm.Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
+                K/S: <b>@_document.KillSheet &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
+                Date: <b>@_document.DateProcessed?.ToString("dd/MM/yyyy") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
+                Works: <b>@($"{_document.Plant.Meatwork.Name} ({_document.Plant.Name})")</b>
+            </span>
+        }
+    </Title>
+    <Interactions>
+        @if (_document?.Schedule != null && User?.RoleId is (RoleId.ReadWrite or RoleId.Administrator))
+        {
+            @if (_document.StatusId is StatusId.Declined)
+            {
+                <button class="btn btn-secondary" $1$onclick="@(() => { _modal.Open("Buyer Created Invoice", ActionType.Approve, Approve); })"#1# role="button">
+                    Reprocess
+                </button>
+            }
+            <span>&nbsp;</span>
+            @if (_document.StatusId is StatusId.Pending)
+            {
+                <button class="btn btn-success" $1$onclick="@(() => { _modal.Open("Buyer Created Invoice", ActionType.Approve, Approve); })"#1# role="button">
+                    Approve
+                </button>
+                <button class="btn btn-danger" $1$onclick="@(() => { _modal.Open("Buyer Created Invoice", ActionType.Decline, Decline); })"#1# role="button">
+                    Decline
+                </button>
+            }
+        }
+    </Interactions>
+</PageInformation>
+
+@if (_document is null)
+{
+    <Loading Text="Loading Buyer Created Invoice..."/>
+}
+else
+{
+    <h5>Status - @StatusHelper.GetInfo(_document.StatusId).Name</h5>
+
+    <div class="col-12">
+        <table class="table table-bordered text-center my-1">
+            <thead>
+            <tr>
+                <th class="text-white bg-dark-subtle fw-bold col-6"></th>
+                <th class="text-white bg-dark-subtle fw-bold col-3">Submitted</th>
+                <th class="text-white bg-dark-subtle fw-bold col-3">Calculated</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            @#1#{
+                // Calculations
+                var netTotal = _document.Animal.Sum(animal => animal.Weight * _document.Schedule?.Pricing.Single(price =>
+                    price.MinWeight <= animal.Weight &&
+                    animal.Weight <= price.MaxWeight &&
+                    animal.GradeId == price.GradeId).Price + animal.AnimalAdditionalPremiumsDeductionsDetail.Sum(premium => premium.PaymentSummaryAmount)
+                    ) ?? 0;
+                var gst = netTotal * 0.15;
+                var grossTotal = netTotal + gst;
+                var stockReceived = _document.Animal.Count();
+                var stockWeight = _document.Animal.Sum(animal => animal.Weight) ?? 0;
+
+                // Submitted
+                var submittedNetTotal = _document.NetAdvance ?? 0;
+                var submittedGst = _document.GSTOnOutputs ?? 0;
+                var submittedGrossTotal = _document.Total ?? 0;
+                var submittedStockReceived = _document.PaymentAdviceTotalStockReceived ?? 0;
+                var submittedStockWeight = _document.PaymentAdviceTotalMeatKg ?? 0;
+
+                <tr>
+                    <td>Gross Total</td>
+                    <td class="@(Math.Abs(grossTotal - submittedGrossTotal) > 0.001 ? "bg-danger-subtle" : "")">@submittedGrossTotal.ToString("C")</td>
+                    <td>@grossTotal.ToString("C")</td>
+                </tr>
+                <tr>
+                    <td>Net Total</td>
+                    <td class="@(Math.Abs(netTotal - submittedNetTotal) > 0.001 ? "bg-danger-subtle" : "")">@submittedNetTotal.ToString("C")</td>
+                    <td>@netTotal.ToString("C")</td>
+                </tr>
+                <tr>
+                    <td>GST</td>
+                    <td class="@(Math.Abs(gst - submittedGst) > 0.001 ? "bg-danger-subtle" : "")">@submittedGst.ToString("C")</td>
+                    <td>@gst.ToString("C")</td>
+                </tr>
+                <tr>
+                    <td>Stock Received</td>
+                    <td class="@(Math.Abs(stockReceived - submittedStockWeight) > 0.01 || Math.Abs(stockWeight - submittedStockWeight) > 0.01 ? "bg-danger-subtle" : "")">@submittedStockReceived (@submittedStockWeight.ToString("0.00")kg)</td>
+                    <td>@stockReceived (@stockWeight.ToString("0.00")kg)</td>
+                </tr>
+            }#1#
+            </tbody>
+        </table>
+    </div>
+
+    <h4>Details</h4>
+    <div class="m-0">
+        <button class="btn @(_grade == null ? "btn-success" : "btn-secondary")" onclick="@(() => FilterGrade(null))" role="button">
+            All
+        </button>
+        @{
+            var grades = GradeHelper.GetAll().Where(grade => _document.Animal.Any(animal => animal.GradeId == grade.Id)).ToArray();
+            foreach (var grade in grades)
+            {
+                <button class="btn @(_grade == grade.Id ? "btn-success" : "btn-secondary") ms-1" onclick="@(() => FilterGrade(grade.Id))" role="button">
+                    @(grades.Select(g => g.AnimalTypeId).Distinct().Count() > 1 ?
+                        $"{AnimalTypeHelper.GetInfo(grade.AnimalTypeId).Name} - {grade.Name}" :
+                        grade.Name
+                        )
+                </button>
+            }
+        }
+    </div>
+
+    <table class="table table-bordered text-center my-1">
+        <thead>
+        <tr>
+            @if (_document.Animal.Any(animal => !string.IsNullOrWhiteSpace(animal.NAITEID)))
+            {
+                <th class="text-white bg-dark-subtle col-2">NAIT ID</th>
+            }
+            <th class="text-white bg-dark-subtle col-1">Animal Type</th>
+            <th class="text-white bg-dark-subtle col-1">Grade</th>
+            <th class="text-white bg-dark-subtle col-1">Weight</th>
+            <th class="text-white bg-dark-subtle col-1">Deductions</th>
+            <th class="text-white bg-dark-subtle col-1">Total</th>
+            <th class="text-white bg-dark-subtle col-1">Validation</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var animal in _document.Animal.Where(animal => _grade is null || animal.GradeId == _grade))
+        {
+            var grade = @GradeHelper.GetInfo(animal.GradeId);
+            var animalType = @AnimalTypeHelper.GetInfo(grade.AnimalTypeId);
+
+            <tr>
+                @if (_document.Animal.Any(animal => !string.IsNullOrWhiteSpace(animal.NAITEID)))
+                {
+                    <td>@animal.NAITVisual (@animal.NAITEID.PadLeft(16, '0'))</td>
+                }
+                <td>@animalType.DisplayName</td>
+                <td>@grade.Name</td>
+                <td>@animal.Weight?.ToString("0.00")</td>
+                <td>TODO</td>
+                <td>@animal.PaymentAdvicePricePaid?.ToString("C")</td>
+                <td class="@(animal.ValidationId is not (ValidationId.Pending or ValidationId.Valid) ? "bg-danger-subtle" : "")">@ValidationHelper.GetInfo(animal.ValidationId).Name</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}*@
