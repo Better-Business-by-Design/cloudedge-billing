@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccountsReceivable.BAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231025094230_Fixes")]
-    partial class Fixes
+    [Migration("20231025211214_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -54,8 +54,8 @@ namespace AccountsReceivable.BAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                    b.Property<byte>("RoleId")
+                        .HasColumnType("tinyint");
 
                     b.HasKey("EmailAddress");
 
@@ -73,25 +73,32 @@ namespace AccountsReceivable.BAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<decimal>("CalcDeductionCost")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<decimal>("CalcGrossCost")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<decimal>("CalcGstCost")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<decimal>("CalcNetCost")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<decimal>("CalcPremiumCost")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<decimal>("CalcStockWeight")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<decimal>("CalcWeightCost")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<string>("CondemnedBy")
                         .HasColumnType("nvarchar(max)");
@@ -100,7 +107,8 @@ namespace AccountsReceivable.BAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DeductionCost")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<string>("Defects")
                         .HasColumnType("nvarchar(max)");
@@ -115,14 +123,16 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Property<string>("FinishingContract")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("GradeId")
-                        .HasColumnType("int");
+                    b.Property<byte>("GradeId")
+                        .HasColumnType("tinyint");
 
                     b.Property<decimal>("GrossCost")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<decimal>("GstCost")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<int>("InventoryCost")
                         .HasColumnType("int");
@@ -143,13 +153,16 @@ namespace AccountsReceivable.BAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NetCost")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<decimal>("Ph")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<decimal>("PremiumCost")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<string>("Presentation")
                         .IsRequired()
@@ -159,7 +172,8 @@ namespace AccountsReceivable.BAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<string>("ProcessDescription")
                         .IsRequired()
@@ -175,7 +189,8 @@ namespace AccountsReceivable.BAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("StockWeight")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<string>("TailLengthDescription")
                         .HasColumnType("nvarchar(max)");
@@ -185,7 +200,8 @@ namespace AccountsReceivable.BAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("WeightCost")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.HasKey("Id");
 
@@ -201,17 +217,19 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Property<string>("DocumentId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("AnimalTypeId")
-                        .HasColumnType("int");
+                    b.Property<byte>("AnimalTypeId")
+                        .HasColumnType("tinyint");
 
                     b.Property<decimal>("StockCost")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<int>("StockCount")
                         .HasColumnType("int");
 
                     b.Property<decimal>("StockWeightKg")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.HasKey("DocumentId", "AnimalTypeId");
 
@@ -233,10 +251,12 @@ namespace AccountsReceivable.BAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("PaymentSummaryAmount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<decimal>("Rate")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<string>("Uom")
                         .IsRequired()
@@ -256,28 +276,35 @@ namespace AccountsReceivable.BAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("CalcDeductionCostTotal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<decimal>("CalcGrossCostTotal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<decimal>("CalcGstCostTotal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<decimal>("CalcNetCostTotal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<decimal>("CalcPremiumCostTotal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<int>("CalcStockTotal")
                         .HasColumnType("int");
 
                     b.Property<decimal>("CalcStockWeightTotal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<decimal>("CalcWeightCostTotal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<string>("CarrierName")
                         .IsRequired()
@@ -293,7 +320,8 @@ namespace AccountsReceivable.BAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DeductionCostTotal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<string>("DocumentType")
                         .IsRequired()
@@ -310,10 +338,12 @@ namespace AccountsReceivable.BAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("GrossCostTotal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<decimal>("GstCostTotal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<string>("GstRegistrationNo")
                         .IsRequired()
@@ -326,7 +356,8 @@ namespace AccountsReceivable.BAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NetCostTotal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
@@ -336,7 +367,8 @@ namespace AccountsReceivable.BAL.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("PremiumCostTotal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<string>("PreviousDocumentId")
                         .HasColumnType("nvarchar(450)");
@@ -351,17 +383,18 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Property<int?>("ScheduleId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SpeciesTypeId")
-                        .HasColumnType("int");
+                    b.Property<byte?>("SpeciesTypeId")
+                        .HasColumnType("tinyint");
 
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
+                    b.Property<byte>("StatusId")
+                        .HasColumnType("tinyint");
 
                     b.Property<int>("StockTotal")
                         .HasColumnType("int");
 
                     b.Property<decimal>("StockWeightTotal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<string>("SupplierComments")
                         .HasColumnType("nvarchar(max)");
@@ -374,7 +407,8 @@ namespace AccountsReceivable.BAL.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("WeightCostTotal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.HasKey("Id");
 
@@ -459,10 +493,12 @@ namespace AccountsReceivable.BAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("PaymentSummaryAmount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<decimal>("Rate")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<string>("Uom")
                         .IsRequired()
@@ -482,19 +518,23 @@ namespace AccountsReceivable.BAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<decimal>("Cost")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
-                    b.Property<int>("GradeId")
-                        .HasColumnType("int");
+                    b.Property<byte>("GradeId")
+                        .HasColumnType("tinyint");
 
                     b.Property<decimal>("MaxWeight")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<decimal>("MinWeight")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<decimal>("Modifier")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<int>("ScheduleId")
                         .HasColumnType("int");
@@ -528,8 +568,8 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
+                    b.Property<byte>("StatusId")
+                        .HasColumnType("tinyint");
 
                     b.HasKey("Id");
 
@@ -571,15 +611,16 @@ namespace AccountsReceivable.BAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<int>("AnimalTypeId")
-                        .HasColumnType("int");
+                    b.Property<byte>("AnimalTypeId")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("Rate")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<int>("ScheduleId")
                         .HasColumnType("int");
@@ -597,8 +638,8 @@ namespace AccountsReceivable.BAL.Migrations
 
             modelBuilder.Entity("AccountsReceivable.BL.Models.Enum.AnimalType", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                    b.Property<byte>("Id")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
@@ -608,8 +649,8 @@ namespace AccountsReceivable.BAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SpeciesTypeId")
-                        .HasColumnType("int");
+                    b.Property<byte>("SpeciesTypeId")
+                        .HasColumnType("tinyint");
 
                     b.HasKey("Id");
 
@@ -620,90 +661,90 @@ namespace AccountsReceivable.BAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 0,
+                            Id = (byte)0,
                             DisplayName = "Bobby Calves",
                             Name = "BOBBY",
-                            SpeciesTypeId = 0
+                            SpeciesTypeId = (byte)0
                         },
                         new
                         {
-                            Id = 1,
+                            Id = (byte)1,
                             DisplayName = "Bull",
                             Name = "BULL",
-                            SpeciesTypeId = 1
+                            SpeciesTypeId = (byte)1
                         },
                         new
                         {
-                            Id = 2,
+                            Id = (byte)2,
                             DisplayName = "Cow",
                             Name = "COW",
-                            SpeciesTypeId = 1
+                            SpeciesTypeId = (byte)1
                         },
                         new
                         {
-                            Id = 3,
+                            Id = (byte)3,
                             DisplayName = "Manufacturing Cow",
                             Name = "MCOW",
-                            SpeciesTypeId = 1
+                            SpeciesTypeId = (byte)1
                         },
                         new
                         {
-                            Id = 4,
+                            Id = (byte)4,
                             DisplayName = "Heifer",
                             Name = "HEIFER",
-                            SpeciesTypeId = 1
+                            SpeciesTypeId = (byte)1
                         },
                         new
                         {
-                            Id = 5,
+                            Id = (byte)5,
                             DisplayName = "Steer",
                             Name = "STEER",
-                            SpeciesTypeId = 1
+                            SpeciesTypeId = (byte)1
                         },
                         new
                         {
-                            Id = 6,
+                            Id = (byte)6,
                             DisplayName = "Lamb",
                             Name = "LAMB",
-                            SpeciesTypeId = 2
+                            SpeciesTypeId = (byte)2
                         },
                         new
                         {
-                            Id = 7,
+                            Id = (byte)7,
                             DisplayName = "Mutton",
                             Name = "MUTTON",
-                            SpeciesTypeId = 2
+                            SpeciesTypeId = (byte)2
                         },
                         new
                         {
-                            Id = 8,
+                            Id = (byte)8,
                             DisplayName = "Ram",
                             Name = "RAM",
-                            SpeciesTypeId = 2
+                            SpeciesTypeId = (byte)2
                         },
                         new
                         {
-                            Id = 9,
+                            Id = (byte)9,
                             DisplayName = "Hind",
                             Name = "HIND",
-                            SpeciesTypeId = 3
+                            SpeciesTypeId = (byte)3
                         },
                         new
                         {
-                            Id = 10,
+                            Id = (byte)10,
                             DisplayName = "Stag",
                             Name = "STAG",
-                            SpeciesTypeId = 3
+                            SpeciesTypeId = (byte)3
                         });
                 });
 
             modelBuilder.Entity("AccountsReceivable.BL.Models.Enum.Grade", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                    b.Property<byte>("Id")
+                        .HasColumnType("tinyint");
 
-                    b.Property<int>("AnimalTypeId")
-                        .HasColumnType("int");
+                    b.Property<byte>("AnimalTypeId")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -718,658 +759,658 @@ namespace AccountsReceivable.BAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 0,
-                            AnimalTypeId = 0,
+                            Id = (byte)0,
+                            AnimalTypeId = (byte)0,
                             Name = "BV"
                         },
                         new
                         {
-                            Id = 1,
-                            AnimalTypeId = 0,
+                            Id = (byte)1,
+                            AnimalTypeId = (byte)0,
                             Name = "COND"
                         },
                         new
                         {
-                            Id = 2,
-                            AnimalTypeId = 0,
+                            Id = (byte)2,
+                            AnimalTypeId = (byte)0,
                             Name = "DEAD"
                         },
                         new
                         {
-                            Id = 3,
-                            AnimalTypeId = 1,
+                            Id = (byte)3,
+                            AnimalTypeId = (byte)1,
                             Name = "M1"
                         },
                         new
                         {
-                            Id = 4,
-                            AnimalTypeId = 1,
+                            Id = (byte)4,
+                            AnimalTypeId = (byte)1,
                             Name = "M2"
                         },
                         new
                         {
-                            Id = 5,
-                            AnimalTypeId = 1,
+                            Id = (byte)5,
+                            AnimalTypeId = (byte)1,
                             Name = "M3"
                         },
                         new
                         {
-                            Id = 6,
-                            AnimalTypeId = 1,
+                            Id = (byte)6,
+                            AnimalTypeId = (byte)1,
                             Name = "TM1"
                         },
                         new
                         {
-                            Id = 7,
-                            AnimalTypeId = 1,
+                            Id = (byte)7,
+                            AnimalTypeId = (byte)1,
                             Name = "TM2"
                         },
                         new
                         {
-                            Id = 8,
-                            AnimalTypeId = 1,
+                            Id = (byte)8,
+                            AnimalTypeId = (byte)1,
                             Name = "TM3"
                         },
                         new
                         {
-                            Id = 9,
-                            AnimalTypeId = 1,
+                            Id = (byte)9,
+                            AnimalTypeId = (byte)1,
                             Name = "COND"
                         },
                         new
                         {
-                            Id = 10,
-                            AnimalTypeId = 1,
+                            Id = (byte)10,
+                            AnimalTypeId = (byte)1,
                             Name = "DEAD"
                         },
                         new
                         {
-                            Id = 11,
-                            AnimalTypeId = 2,
+                            Id = (byte)11,
+                            AnimalTypeId = (byte)2,
                             Name = "F1"
                         },
                         new
                         {
-                            Id = 12,
-                            AnimalTypeId = 2,
+                            Id = (byte)12,
+                            AnimalTypeId = (byte)2,
                             Name = "F2"
                         },
                         new
                         {
-                            Id = 13,
-                            AnimalTypeId = 2,
+                            Id = (byte)13,
+                            AnimalTypeId = (byte)2,
                             Name = "F3"
                         },
                         new
                         {
-                            Id = 14,
-                            AnimalTypeId = 2,
+                            Id = (byte)14,
+                            AnimalTypeId = (byte)2,
                             Name = "P1"
                         },
                         new
                         {
-                            Id = 15,
-                            AnimalTypeId = 2,
+                            Id = (byte)15,
+                            AnimalTypeId = (byte)2,
                             Name = "P2"
                         },
                         new
                         {
-                            Id = 16,
-                            AnimalTypeId = 2,
+                            Id = (byte)16,
+                            AnimalTypeId = (byte)2,
                             Name = "P3"
                         },
                         new
                         {
-                            Id = 17,
-                            AnimalTypeId = 2,
+                            Id = (byte)17,
+                            AnimalTypeId = (byte)2,
                             Name = "T1"
                         },
                         new
                         {
-                            Id = 18,
-                            AnimalTypeId = 2,
+                            Id = (byte)18,
+                            AnimalTypeId = (byte)2,
                             Name = "T2"
                         },
                         new
                         {
-                            Id = 19,
-                            AnimalTypeId = 2,
+                            Id = (byte)19,
+                            AnimalTypeId = (byte)2,
                             Name = "T3"
                         },
                         new
                         {
-                            Id = 20,
-                            AnimalTypeId = 2,
+                            Id = (byte)20,
+                            AnimalTypeId = (byte)2,
                             Name = "COND"
                         },
                         new
                         {
-                            Id = 21,
-                            AnimalTypeId = 2,
+                            Id = (byte)21,
+                            AnimalTypeId = (byte)2,
                             Name = "DEAD"
                         },
                         new
                         {
-                            Id = 22,
-                            AnimalTypeId = 3,
+                            Id = (byte)22,
+                            AnimalTypeId = (byte)3,
                             Name = "M"
                         },
                         new
                         {
-                            Id = 23,
-                            AnimalTypeId = 3,
+                            Id = (byte)23,
+                            AnimalTypeId = (byte)3,
                             Name = "COND"
                         },
                         new
                         {
-                            Id = 24,
-                            AnimalTypeId = 3,
+                            Id = (byte)24,
+                            AnimalTypeId = (byte)3,
                             Name = "DEAD"
                         },
                         new
                         {
-                            Id = 25,
-                            AnimalTypeId = 4,
+                            Id = (byte)25,
+                            AnimalTypeId = (byte)4,
                             Name = "A1"
                         },
                         new
                         {
-                            Id = 26,
-                            AnimalTypeId = 4,
+                            Id = (byte)26,
+                            AnimalTypeId = (byte)4,
                             Name = "A2"
                         },
                         new
                         {
-                            Id = 27,
-                            AnimalTypeId = 4,
+                            Id = (byte)27,
+                            AnimalTypeId = (byte)4,
                             Name = "A3"
                         },
                         new
                         {
-                            Id = 28,
-                            AnimalTypeId = 4,
+                            Id = (byte)28,
+                            AnimalTypeId = (byte)4,
                             Name = "F1"
                         },
                         new
                         {
-                            Id = 29,
-                            AnimalTypeId = 4,
+                            Id = (byte)29,
+                            AnimalTypeId = (byte)4,
                             Name = "F2"
                         },
                         new
                         {
-                            Id = 30,
-                            AnimalTypeId = 4,
+                            Id = (byte)30,
+                            AnimalTypeId = (byte)4,
                             Name = "F3"
                         },
                         new
                         {
-                            Id = 31,
-                            AnimalTypeId = 4,
+                            Id = (byte)31,
+                            AnimalTypeId = (byte)4,
                             Name = "L1"
                         },
                         new
                         {
-                            Id = 32,
-                            AnimalTypeId = 4,
+                            Id = (byte)32,
+                            AnimalTypeId = (byte)4,
                             Name = "L2"
                         },
                         new
                         {
-                            Id = 33,
-                            AnimalTypeId = 4,
+                            Id = (byte)33,
+                            AnimalTypeId = (byte)4,
                             Name = "L3"
                         },
                         new
                         {
-                            Id = 34,
-                            AnimalTypeId = 4,
+                            Id = (byte)34,
+                            AnimalTypeId = (byte)4,
                             Name = "M"
                         },
                         new
                         {
-                            Id = 35,
-                            AnimalTypeId = 4,
+                            Id = (byte)35,
+                            AnimalTypeId = (byte)4,
                             Name = "P1"
                         },
                         new
                         {
-                            Id = 36,
-                            AnimalTypeId = 4,
+                            Id = (byte)36,
+                            AnimalTypeId = (byte)4,
                             Name = "P2"
                         },
                         new
                         {
-                            Id = 37,
-                            AnimalTypeId = 4,
+                            Id = (byte)37,
+                            AnimalTypeId = (byte)4,
                             Name = "P3"
                         },
                         new
                         {
-                            Id = 38,
-                            AnimalTypeId = 4,
+                            Id = (byte)38,
+                            AnimalTypeId = (byte)4,
                             Name = "T1"
                         },
                         new
                         {
-                            Id = 39,
-                            AnimalTypeId = 4,
+                            Id = (byte)39,
+                            AnimalTypeId = (byte)4,
                             Name = "T2"
                         },
                         new
                         {
-                            Id = 40,
-                            AnimalTypeId = 4,
+                            Id = (byte)40,
+                            AnimalTypeId = (byte)4,
                             Name = "T3"
                         },
                         new
                         {
-                            Id = 41,
-                            AnimalTypeId = 4,
+                            Id = (byte)41,
+                            AnimalTypeId = (byte)4,
                             Name = "COND"
                         },
                         new
                         {
-                            Id = 42,
-                            AnimalTypeId = 4,
+                            Id = (byte)42,
+                            AnimalTypeId = (byte)4,
                             Name = "DEAD"
                         },
                         new
                         {
-                            Id = 43,
-                            AnimalTypeId = 5,
+                            Id = (byte)43,
+                            AnimalTypeId = (byte)5,
                             Name = "A1"
                         },
                         new
                         {
-                            Id = 44,
-                            AnimalTypeId = 5,
+                            Id = (byte)44,
+                            AnimalTypeId = (byte)5,
                             Name = "A2"
                         },
                         new
                         {
-                            Id = 45,
-                            AnimalTypeId = 5,
+                            Id = (byte)45,
+                            AnimalTypeId = (byte)5,
                             Name = "A3"
                         },
                         new
                         {
-                            Id = 46,
-                            AnimalTypeId = 5,
+                            Id = (byte)46,
+                            AnimalTypeId = (byte)5,
                             Name = "F1"
                         },
                         new
                         {
-                            Id = 47,
-                            AnimalTypeId = 5,
+                            Id = (byte)47,
+                            AnimalTypeId = (byte)5,
                             Name = "F2"
                         },
                         new
                         {
-                            Id = 48,
-                            AnimalTypeId = 5,
+                            Id = (byte)48,
+                            AnimalTypeId = (byte)5,
                             Name = "F3"
                         },
                         new
                         {
-                            Id = 49,
-                            AnimalTypeId = 5,
+                            Id = (byte)49,
+                            AnimalTypeId = (byte)5,
                             Name = "L1"
                         },
                         new
                         {
-                            Id = 50,
-                            AnimalTypeId = 5,
+                            Id = (byte)50,
+                            AnimalTypeId = (byte)5,
                             Name = "L2"
                         },
                         new
                         {
-                            Id = 51,
-                            AnimalTypeId = 5,
+                            Id = (byte)51,
+                            AnimalTypeId = (byte)5,
                             Name = "L3"
                         },
                         new
                         {
-                            Id = 52,
-                            AnimalTypeId = 5,
+                            Id = (byte)52,
+                            AnimalTypeId = (byte)5,
                             Name = "M"
                         },
                         new
                         {
-                            Id = 53,
-                            AnimalTypeId = 5,
+                            Id = (byte)53,
+                            AnimalTypeId = (byte)5,
                             Name = "P1"
                         },
                         new
                         {
-                            Id = 54,
-                            AnimalTypeId = 5,
+                            Id = (byte)54,
+                            AnimalTypeId = (byte)5,
                             Name = "P2"
                         },
                         new
                         {
-                            Id = 55,
-                            AnimalTypeId = 5,
+                            Id = (byte)55,
+                            AnimalTypeId = (byte)5,
                             Name = "P3"
                         },
                         new
                         {
-                            Id = 56,
-                            AnimalTypeId = 5,
+                            Id = (byte)56,
+                            AnimalTypeId = (byte)5,
                             Name = "T1"
                         },
                         new
                         {
-                            Id = 57,
-                            AnimalTypeId = 5,
+                            Id = (byte)57,
+                            AnimalTypeId = (byte)5,
                             Name = "T2"
                         },
                         new
                         {
-                            Id = 58,
-                            AnimalTypeId = 5,
+                            Id = (byte)58,
+                            AnimalTypeId = (byte)5,
                             Name = "T3"
                         },
                         new
                         {
-                            Id = 59,
-                            AnimalTypeId = 5,
+                            Id = (byte)59,
+                            AnimalTypeId = (byte)5,
                             Name = "COND"
                         },
                         new
                         {
-                            Id = 60,
-                            AnimalTypeId = 5,
+                            Id = (byte)60,
+                            AnimalTypeId = (byte)5,
                             Name = "DEAD"
                         },
                         new
                         {
-                            Id = 61,
-                            AnimalTypeId = 6,
+                            Id = (byte)61,
+                            AnimalTypeId = (byte)6,
                             Name = "A"
                         },
                         new
                         {
-                            Id = 62,
-                            AnimalTypeId = 6,
+                            Id = (byte)62,
+                            AnimalTypeId = (byte)6,
                             Name = "B"
                         },
                         new
                         {
-                            Id = 63,
-                            AnimalTypeId = 6,
+                            Id = (byte)63,
+                            AnimalTypeId = (byte)6,
                             Name = "C"
                         },
                         new
                         {
-                            Id = 64,
-                            AnimalTypeId = 6,
+                            Id = (byte)64,
+                            AnimalTypeId = (byte)6,
                             Name = "F"
                         },
                         new
                         {
-                            Id = 65,
-                            AnimalTypeId = 6,
+                            Id = (byte)65,
+                            AnimalTypeId = (byte)6,
                             Name = "M"
                         },
                         new
                         {
-                            Id = 66,
-                            AnimalTypeId = 6,
+                            Id = (byte)66,
+                            AnimalTypeId = (byte)6,
                             Name = "P"
                         },
                         new
                         {
-                            Id = 67,
-                            AnimalTypeId = 6,
+                            Id = (byte)67,
+                            AnimalTypeId = (byte)6,
                             Name = "T"
                         },
                         new
                         {
-                            Id = 68,
-                            AnimalTypeId = 6,
+                            Id = (byte)68,
+                            AnimalTypeId = (byte)6,
                             Name = "Y"
                         },
                         new
                         {
-                            Id = 69,
-                            AnimalTypeId = 6,
+                            Id = (byte)69,
+                            AnimalTypeId = (byte)6,
                             Name = "COND"
                         },
                         new
                         {
-                            Id = 70,
-                            AnimalTypeId = 6,
+                            Id = (byte)70,
+                            AnimalTypeId = (byte)6,
                             Name = "DEAD"
                         },
                         new
                         {
-                            Id = 71,
-                            AnimalTypeId = 7,
+                            Id = (byte)71,
+                            AnimalTypeId = (byte)7,
                             Name = "MF"
                         },
                         new
                         {
-                            Id = 72,
-                            AnimalTypeId = 7,
+                            Id = (byte)72,
+                            AnimalTypeId = (byte)7,
                             Name = "MH"
                         },
                         new
                         {
-                            Id = 73,
-                            AnimalTypeId = 7,
+                            Id = (byte)73,
+                            AnimalTypeId = (byte)7,
                             Name = "MM"
                         },
                         new
                         {
-                            Id = 74,
-                            AnimalTypeId = 7,
+                            Id = (byte)74,
+                            AnimalTypeId = (byte)7,
                             Name = "MP"
                         },
                         new
                         {
-                            Id = 75,
-                            AnimalTypeId = 7,
+                            Id = (byte)75,
+                            AnimalTypeId = (byte)7,
                             Name = "ML"
                         },
                         new
                         {
-                            Id = 76,
-                            AnimalTypeId = 7,
+                            Id = (byte)76,
+                            AnimalTypeId = (byte)7,
                             Name = "MX"
                         },
                         new
                         {
-                            Id = 77,
-                            AnimalTypeId = 7,
+                            Id = (byte)77,
+                            AnimalTypeId = (byte)7,
                             Name = "COND"
                         },
                         new
                         {
-                            Id = 78,
-                            AnimalTypeId = 7,
+                            Id = (byte)78,
+                            AnimalTypeId = (byte)7,
                             Name = "DEAD"
                         },
                         new
                         {
-                            Id = 79,
-                            AnimalTypeId = 8,
+                            Id = (byte)79,
+                            AnimalTypeId = (byte)8,
                             Name = "R"
                         },
                         new
                         {
-                            Id = 80,
-                            AnimalTypeId = 8,
+                            Id = (byte)80,
+                            AnimalTypeId = (byte)8,
                             Name = "COND"
                         },
                         new
                         {
-                            Id = 81,
-                            AnimalTypeId = 8,
+                            Id = (byte)81,
+                            AnimalTypeId = (byte)8,
                             Name = "DEAD"
                         },
                         new
                         {
-                            Id = 82,
-                            AnimalTypeId = 9,
+                            Id = (byte)82,
+                            AnimalTypeId = (byte)9,
                             Name = "AF1"
                         },
                         new
                         {
-                            Id = 83,
-                            AnimalTypeId = 9,
+                            Id = (byte)83,
+                            AnimalTypeId = (byte)9,
                             Name = "AF2"
                         },
                         new
                         {
-                            Id = 84,
-                            AnimalTypeId = 9,
+                            Id = (byte)84,
+                            AnimalTypeId = (byte)9,
                             Name = "AFH"
                         },
                         new
                         {
-                            Id = 85,
-                            AnimalTypeId = 9,
+                            Id = (byte)85,
+                            AnimalTypeId = (byte)9,
                             Name = "AP"
                         },
                         new
                         {
-                            Id = 86,
-                            AnimalTypeId = 9,
+                            Id = (byte)86,
+                            AnimalTypeId = (byte)9,
                             Name = "M1"
                         },
                         new
                         {
-                            Id = 87,
-                            AnimalTypeId = 9,
+                            Id = (byte)87,
+                            AnimalTypeId = (byte)9,
                             Name = "M2"
                         },
                         new
                         {
-                            Id = 88,
-                            AnimalTypeId = 9,
+                            Id = (byte)88,
+                            AnimalTypeId = (byte)9,
                             Name = "PD1"
                         },
                         new
                         {
-                            Id = 89,
-                            AnimalTypeId = 9,
+                            Id = (byte)89,
+                            AnimalTypeId = (byte)9,
                             Name = "PD2"
                         },
                         new
                         {
-                            Id = 90,
-                            AnimalTypeId = 9,
+                            Id = (byte)90,
+                            AnimalTypeId = (byte)9,
                             Name = "PLG"
                         },
                         new
                         {
-                            Id = 91,
-                            AnimalTypeId = 9,
+                            Id = (byte)91,
+                            AnimalTypeId = (byte)9,
                             Name = "PLG1"
                         },
                         new
                         {
-                            Id = 92,
-                            AnimalTypeId = 9,
+                            Id = (byte)92,
+                            AnimalTypeId = (byte)9,
                             Name = "PLG2"
                         },
                         new
                         {
-                            Id = 93,
-                            AnimalTypeId = 9,
+                            Id = (byte)93,
+                            AnimalTypeId = (byte)9,
                             Name = "COND"
                         },
                         new
                         {
-                            Id = 94,
-                            AnimalTypeId = 9,
+                            Id = (byte)94,
+                            AnimalTypeId = (byte)9,
                             Name = "DEAD"
                         },
                         new
                         {
-                            Id = 95,
-                            AnimalTypeId = 10,
+                            Id = (byte)95,
+                            AnimalTypeId = (byte)10,
                             Name = "AF1"
                         },
                         new
                         {
-                            Id = 96,
-                            AnimalTypeId = 10,
+                            Id = (byte)96,
+                            AnimalTypeId = (byte)10,
                             Name = "AF2"
                         },
                         new
                         {
-                            Id = 97,
-                            AnimalTypeId = 10,
+                            Id = (byte)97,
+                            AnimalTypeId = (byte)10,
                             Name = "AFH"
                         },
                         new
                         {
-                            Id = 98,
-                            AnimalTypeId = 10,
+                            Id = (byte)98,
+                            AnimalTypeId = (byte)10,
                             Name = "AP"
                         },
                         new
                         {
-                            Id = 99,
-                            AnimalTypeId = 10,
+                            Id = (byte)99,
+                            AnimalTypeId = (byte)10,
                             Name = "M1"
                         },
                         new
                         {
-                            Id = 100,
-                            AnimalTypeId = 10,
+                            Id = (byte)100,
+                            AnimalTypeId = (byte)10,
                             Name = "M2"
                         },
                         new
                         {
-                            Id = 101,
-                            AnimalTypeId = 10,
+                            Id = (byte)101,
+                            AnimalTypeId = (byte)10,
                             Name = "PF1"
                         },
                         new
                         {
-                            Id = 102,
-                            AnimalTypeId = 10,
+                            Id = (byte)102,
+                            AnimalTypeId = (byte)10,
                             Name = "PF2"
                         },
                         new
                         {
-                            Id = 103,
-                            AnimalTypeId = 10,
+                            Id = (byte)103,
+                            AnimalTypeId = (byte)10,
                             Name = "PLG"
                         },
                         new
                         {
-                            Id = 104,
-                            AnimalTypeId = 10,
+                            Id = (byte)104,
+                            AnimalTypeId = (byte)10,
                             Name = "PLG1"
                         },
                         new
                         {
-                            Id = 105,
-                            AnimalTypeId = 10,
+                            Id = (byte)105,
+                            AnimalTypeId = (byte)10,
                             Name = "PLG2"
                         },
                         new
                         {
-                            Id = 106,
-                            AnimalTypeId = 10,
+                            Id = (byte)106,
+                            AnimalTypeId = (byte)10,
                             Name = "COND"
                         },
                         new
                         {
-                            Id = 107,
-                            AnimalTypeId = 10,
+                            Id = (byte)107,
+                            AnimalTypeId = (byte)10,
                             Name = "DEAD"
                         });
                 });
 
             modelBuilder.Entity("AccountsReceivable.BL.Models.Enum.Role", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                    b.Property<byte>("Id")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1382,25 +1423,25 @@ namespace AccountsReceivable.BAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 0,
+                            Id = (byte)0,
                             Name = "Read"
                         },
                         new
                         {
-                            Id = 1,
+                            Id = (byte)1,
                             Name = "Read/Write"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = (byte)2,
                             Name = "Administrator"
                         });
                 });
 
             modelBuilder.Entity("AccountsReceivable.BL.Models.Enum.SpeciesType", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                    b.Property<byte>("Id")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
@@ -1417,25 +1458,25 @@ namespace AccountsReceivable.BAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 0,
+                            Id = (byte)0,
                             DisplayName = "Bobby",
                             Name = "BOBBY"
                         },
                         new
                         {
-                            Id = 1,
+                            Id = (byte)1,
                             DisplayName = "Cattle",
                             Name = "BOVINE"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = (byte)2,
                             DisplayName = "Sheep",
                             Name = "OVINE"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = (byte)3,
                             DisplayName = "Deer",
                             Name = "DEER"
                         });
@@ -1443,8 +1484,8 @@ namespace AccountsReceivable.BAL.Migrations
 
             modelBuilder.Entity("AccountsReceivable.BL.Models.Enum.Status", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                    b.Property<byte>("Id")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1457,35 +1498,35 @@ namespace AccountsReceivable.BAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 0,
+                            Id = (byte)0,
                             Name = "Pending"
                         },
                         new
                         {
-                            Id = 1,
+                            Id = (byte)1,
                             Name = "Approved"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = (byte)2,
                             Name = "Declined"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = (byte)3,
                             Name = "Overridden"
                         },
                         new
                         {
-                            Id = 4,
+                            Id = (byte)4,
                             Name = "Superseded"
                         });
                 });
 
             modelBuilder.Entity("AccountsReceivable.BL.Models.Enum.Validation", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                    b.Property<byte>("Id")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1498,22 +1539,22 @@ namespace AccountsReceivable.BAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 0,
+                            Id = (byte)0,
                             Name = "Pending"
                         },
                         new
                         {
-                            Id = 1,
+                            Id = (byte)1,
                             Name = "Low"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = (byte)2,
                             Name = "Valid"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = (byte)3,
                             Name = "High"
                         });
                 });

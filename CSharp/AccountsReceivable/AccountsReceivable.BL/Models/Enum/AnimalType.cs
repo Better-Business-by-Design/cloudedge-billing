@@ -1,6 +1,6 @@
 ﻿namespace AccountsReceivable.BL.Models.Enum;
 
-public enum AnimalTypeId : ushort
+public enum AnimalTypeId : byte
 {
     Bobby = 0,
     Bull = 1,

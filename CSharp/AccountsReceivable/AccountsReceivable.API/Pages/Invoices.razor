@@ -1,12 +1,12 @@
 ﻿@page "/invoices"
 
+<Breadcrumb Items="_breadcrumb" />
 
 <MudTable Dense="true" Hover="true" Outlined="true"
           ServerData="@(new Func<TableState, Task<TableData<Document>>>(ServerReload))"
           OnRowClick="RowClickEvent" RowStyleFunc="RowStyleFunc" T="Document"
           @ref="_table">
     <ToolBarContent>
-        <MudText Typo="Typo.h5">Buyer Created Invoices</MudText>
         <MudSpacer/>
         <MudTextField T="string" ValueChanged="OnSearch" Placeholder="Search" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0">

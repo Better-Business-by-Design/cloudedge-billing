@@ -10,10 +10,15 @@ namespace AccountsReceivable.API.Pages;
 partial class Index
 {
     private MudTable<Document> _documentTable = null!;
-
-    private int _documentTotal;
     private MudTable<Schedule> _scheduleTable = null!;
+    private readonly List<BreadcrumbItem> _breadcrumb = new()
+    {
+        new BreadcrumbItem("Home", null, true)
+    };
+    
+    private int _documentTotal;
     private int _scheduleTotal;
+    
 
     private string _table = "documents";
 

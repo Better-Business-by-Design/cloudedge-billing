@@ -33,7 +33,7 @@ namespace AccountsReceivable.BAL.Migrations
                     Species = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Uom = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Rate = table.Column<double>(type: "float", nullable: false)
+                    Rate = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -73,7 +73,7 @@ namespace AccountsReceivable.BAL.Migrations
                 schema: "enum",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<byte>(type: "tinyint", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -86,7 +86,7 @@ namespace AccountsReceivable.BAL.Migrations
                 schema: "enum",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<byte>(type: "tinyint", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -100,7 +100,7 @@ namespace AccountsReceivable.BAL.Migrations
                 schema: "enum",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<byte>(type: "tinyint", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -131,7 +131,7 @@ namespace AccountsReceivable.BAL.Migrations
                 schema: "enum",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<byte>(type: "tinyint", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -194,7 +194,7 @@ namespace AccountsReceivable.BAL.Migrations
                 {
                     EmailAddress = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: false)
+                    RoleId = table.Column<byte>(type: "tinyint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -213,8 +213,8 @@ namespace AccountsReceivable.BAL.Migrations
                 schema: "enum",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    SpeciesTypeId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<byte>(type: "tinyint", nullable: false),
+                    SpeciesTypeId = table.Column<byte>(type: "tinyint", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -240,7 +240,7 @@ namespace AccountsReceivable.BAL.Migrations
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     MeatworkName = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    StatusId = table.Column<int>(type: "int", nullable: false)
+                    StatusId = table.Column<byte>(type: "tinyint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -288,8 +288,8 @@ namespace AccountsReceivable.BAL.Migrations
                 schema: "enum",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    AnimalTypeId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<byte>(type: "tinyint", nullable: false),
+                    AnimalTypeId = table.Column<byte>(type: "tinyint", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -322,33 +322,33 @@ namespace AccountsReceivable.BAL.Migrations
                     FarmCostCentre = table.Column<int>(type: "int", nullable: false),
                     PlantName = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     DairySupplierNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    KillSheet = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    KillSheet = table.Column<long>(type: "bigint", nullable: false),
                     BookingRef = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FieldRepName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CarrierName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NaitNo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ConsignedFrom = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SupplierComments = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SpeciesTypeId = table.Column<int>(type: "int", nullable: true),
+                    SupplierComments = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SpeciesTypeId = table.Column<byte>(type: "tinyint", nullable: true),
                     ScheduleId = table.Column<int>(type: "int", nullable: true),
                     TransitId = table.Column<int>(type: "int", nullable: true),
-                    StatusId = table.Column<int>(type: "int", nullable: false),
+                    StatusId = table.Column<byte>(type: "tinyint", nullable: false),
                     StockTotal = table.Column<int>(type: "int", nullable: false),
-                    StockWeightTotal = table.Column<double>(type: "float", nullable: false),
-                    WeightCostTotal = table.Column<double>(type: "float", nullable: false),
-                    DeductionCostTotal = table.Column<double>(type: "float", nullable: false),
-                    PremiumCostTotal = table.Column<double>(type: "float", nullable: false),
-                    NetCostTotal = table.Column<double>(type: "float", nullable: false),
-                    GstCostTotal = table.Column<double>(type: "float", nullable: false),
-                    GrossCostTotal = table.Column<double>(type: "float", nullable: false),
+                    StockWeightTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    WeightCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    DeductionCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    PremiumCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    NetCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    GstCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    GrossCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
                     CalcStockTotal = table.Column<int>(type: "int", nullable: false),
-                    CalcStockWeightTotal = table.Column<double>(type: "float", nullable: false),
-                    CalcWeightCostTotal = table.Column<double>(type: "float", nullable: false),
-                    CalcDeductionCostTotal = table.Column<double>(type: "float", nullable: false),
-                    CalcPremiumCostTotal = table.Column<double>(type: "float", nullable: false),
-                    CalcNetCostTotal = table.Column<double>(type: "float", nullable: false),
-                    CalcGstCostTotal = table.Column<double>(type: "float", nullable: false),
-                    CalcGrossCostTotal = table.Column<double>(type: "float", nullable: false)
+                    CalcStockWeightTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    CalcWeightCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    CalcDeductionCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    CalcPremiumCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    CalcNetCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    CalcGstCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    CalcGrossCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -409,11 +409,19 @@ namespace AccountsReceivable.BAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ScheduleId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Rate = table.Column<double>(type: "float", nullable: false)
+                    AnimalTypeId = table.Column<byte>(type: "tinyint", nullable: false),
+                    Rate = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Uplift", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Uplift_AnimalType_AnimalTypeId",
+                        column: x => x.AnimalTypeId,
+                        principalSchema: "enum",
+                        principalTable: "AnimalType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Uplift_Schedule_ScheduleId",
                         column: x => x.ScheduleId,
@@ -431,11 +439,11 @@ namespace AccountsReceivable.BAL.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ScheduleId = table.Column<int>(type: "int", nullable: false),
-                    GradeId = table.Column<int>(type: "int", nullable: false),
-                    MinWeight = table.Column<double>(type: "float", nullable: false),
-                    MaxWeight = table.Column<double>(type: "float", nullable: false),
-                    Modifier = table.Column<double>(type: "float", nullable: false),
-                    Cost = table.Column<double>(type: "float", nullable: false)
+                    GradeId = table.Column<byte>(type: "tinyint", nullable: false),
+                    MinWeight = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    MaxWeight = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    Modifier = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    Cost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -464,42 +472,42 @@ namespace AccountsReceivable.BAL.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DocumentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    KillAgenda = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    KillAgenda = table.Column<long>(type: "bigint", nullable: false),
                     DateKilled = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    GradeId = table.Column<int>(type: "int", nullable: false),
+                    GradeId = table.Column<byte>(type: "tinyint", nullable: false),
                     NaitEid = table.Column<decimal>(type: "decimal(20,0)", nullable: true),
                     NaitVisual = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SffEarTag = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProcessDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CondemnedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UnitOfPrice = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<double>(type: "float", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
                     SplitPaymentPercentage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Retained = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MeetsOptimumRange = table.Column<bool>(type: "bit", nullable: false),
-                    MeetsMasterGrade = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Ph = table.Column<double>(type: "float", nullable: false),
+                    MeetsMasterGrade = table.Column<bool>(type: "bit", nullable: false),
+                    Ph = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
                     Presentation = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PresentationReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TailLengthDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FinishingContract = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     InventoryCost = table.Column<int>(type: "int", nullable: false),
                     FinishingAmount = table.Column<int>(type: "int", nullable: false),
-                    Defects = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StockWeight = table.Column<double>(type: "float", nullable: false),
-                    WeightCost = table.Column<double>(type: "float", nullable: false),
-                    DeductionCost = table.Column<double>(type: "float", nullable: false),
-                    PremiumCost = table.Column<double>(type: "float", nullable: false),
-                    NetCost = table.Column<double>(type: "float", nullable: false),
-                    GstCost = table.Column<double>(type: "float", nullable: false),
-                    GrossCost = table.Column<double>(type: "float", nullable: false),
-                    CalcStockWeight = table.Column<double>(type: "float", nullable: false),
-                    CalcWeightCost = table.Column<double>(type: "float", nullable: false),
-                    CalcDeductionCost = table.Column<double>(type: "float", nullable: false),
-                    CalcPremiumCost = table.Column<double>(type: "float", nullable: false),
-                    CalcNetCost = table.Column<double>(type: "float", nullable: false),
-                    CalcGstCost = table.Column<double>(type: "float", nullable: false),
-                    CalcGrossCost = table.Column<double>(type: "float", nullable: false)
+                    Defects = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StockWeight = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    WeightCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    DeductionCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    PremiumCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    NetCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    GstCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    GrossCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    CalcStockWeight = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    CalcWeightCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    CalcDeductionCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    CalcPremiumCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    CalcNetCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    CalcGstCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    CalcGrossCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -526,10 +534,10 @@ namespace AccountsReceivable.BAL.Migrations
                 columns: table => new
                 {
                     DocumentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    AnimalTypeId = table.Column<int>(type: "int", nullable: false),
+                    AnimalTypeId = table.Column<byte>(type: "tinyint", nullable: false),
                     StockCount = table.Column<int>(type: "int", nullable: false),
-                    StockWeightKg = table.Column<double>(type: "float", nullable: false),
-                    StockCost = table.Column<double>(type: "float", nullable: false)
+                    StockWeightKg = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    StockCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -559,8 +567,8 @@ namespace AccountsReceivable.BAL.Migrations
                     Code = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Uom = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Rate = table.Column<double>(type: "float", nullable: false),
-                    PaymentSummaryAmount = table.Column<double>(type: "float", nullable: false)
+                    Rate = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    PaymentSummaryAmount = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -583,8 +591,8 @@ namespace AccountsReceivable.BAL.Migrations
                     Code = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Uom = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Rate = table.Column<double>(type: "float", nullable: false),
-                    PaymentSummaryAmount = table.Column<double>(type: "float", nullable: false)
+                    Rate = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    PaymentSummaryAmount = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -604,9 +612,9 @@ namespace AccountsReceivable.BAL.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { 0, "Read" },
-                    { 1, "Read/Write" },
-                    { 2, "Administrator" }
+                    { (byte)0, "Read" },
+                    { (byte)1, "Read/Write" },
+                    { (byte)2, "Administrator" }
                 });
 
             migrationBuilder.InsertData(
@@ -615,10 +623,10 @@ namespace AccountsReceivable.BAL.Migrations
                 columns: new[] { "Id", "DisplayName", "Name" },
                 values: new object[,]
                 {
-                    { 0, "Bobby", "BOBBY" },
-                    { 1, "Cattle", "BOVINE" },
-                    { 2, "Sheep", "OVINE" },
-                    { 3, "Deer", "DEER" }
+                    { (byte)0, "Bobby", "BOBBY" },
+                    { (byte)1, "Cattle", "BOVINE" },
+                    { (byte)2, "Sheep", "OVINE" },
+                    { (byte)3, "Deer", "DEER" }
                 });
 
             migrationBuilder.InsertData(
@@ -627,11 +635,11 @@ namespace AccountsReceivable.BAL.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { 0, "Pending" },
-                    { 1, "Approved" },
-                    { 2, "Declined" },
-                    { 3, "Overridden" },
-                    { 4, "Superseded" }
+                    { (byte)0, "Pending" },
+                    { (byte)1, "Approved" },
+                    { (byte)2, "Declined" },
+                    { (byte)3, "Overridden" },
+                    { (byte)4, "Superseded" }
                 });
 
             migrationBuilder.InsertData(
@@ -640,10 +648,10 @@ namespace AccountsReceivable.BAL.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { 0, "Pending" },
-                    { 1, "Low" },
-                    { 2, "Valid" },
-                    { 3, "High" }
+                    { (byte)0, "Pending" },
+                    { (byte)1, "Low" },
+                    { (byte)2, "Valid" },
+                    { (byte)3, "High" }
                 });
 
             migrationBuilder.InsertData(
@@ -652,17 +660,17 @@ namespace AccountsReceivable.BAL.Migrations
                 columns: new[] { "Id", "DisplayName", "Name", "SpeciesTypeId" },
                 values: new object[,]
                 {
-                    { 0, "Bobby", "BOBBY", 0 },
-                    { 1, "Bull", "BULL", 1 },
-                    { 2, "Cow", "COW", 1 },
-                    { 3, "Manufacturing Cow", "MCOW", 1 },
-                    { 4, "Heifer", "HEIFER", 1 },
-                    { 5, "Steer", "STEER", 1 },
-                    { 6, "Lamb", "LAMB", 2 },
-                    { 7, "Mutton", "MUTTON", 2 },
-                    { 8, "Ram", "RAM", 2 },
-                    { 9, "Hind", "HIND", 3 },
-                    { 10, "Stag", "STAG", 3 }
+                    { (byte)0, "Bobby Calves", "BOBBY", (byte)0 },
+                    { (byte)1, "Bull", "BULL", (byte)1 },
+                    { (byte)2, "Cow", "COW", (byte)1 },
+                    { (byte)3, "Manufacturing Cow", "MCOW", (byte)1 },
+                    { (byte)4, "Heifer", "HEIFER", (byte)1 },
+                    { (byte)5, "Steer", "STEER", (byte)1 },
+                    { (byte)6, "Lamb", "LAMB", (byte)2 },
+                    { (byte)7, "Mutton", "MUTTON", (byte)2 },
+                    { (byte)8, "Ram", "RAM", (byte)2 },
+                    { (byte)9, "Hind", "HIND", (byte)3 },
+                    { (byte)10, "Stag", "STAG", (byte)3 }
                 });
 
             migrationBuilder.InsertData(
@@ -671,48 +679,48 @@ namespace AccountsReceivable.BAL.Migrations
                 columns: new[] { "Id", "AnimalTypeId", "Name" },
                 values: new object[,]
                 {
-                    { 0, 0, "BV" },
-                    { 1, 0, "COND" },
-                    { 2, 0, "DEAD" },
-                    { 3, 1, "M1" },
-                    { 4, 1, "M2" },
-                    { 5, 1, "M3" },
-                    { 6, 1, "TM1" },
-                    { 7, 1, "TM2" },
-                    { 8, 1, "TM3" },
-                    { 9, 1, "COND" },
-                    { 10, 1, "DEAD" },
-                    { 11, 2, "F1" },
-                    { 12, 2, "F2" },
-                    { 13, 2, "F3" },
-                    { 14, 2, "P1" },
-                    { 15, 2, "P2" },
-                    { 16, 2, "P3" },
-                    { 17, 2, "T1" },
-                    { 18, 2, "T2" },
-                    { 19, 2, "T3" },
-                    { 20, 2, "COND" },
-                    { 21, 2, "DEAD" },
-                    { 22, 3, "M" },
-                    { 23, 3, "COND" },
-                    { 24, 3, "DEAD" },
-                    { 25, 4, "A1" },
-                    { 26, 4, "A2" },
-                    { 27, 4, "A3" },
-                    { 28, 4, "F1" },
-                    { 29, 4, "F2" },
-                    { 30, 4, "F3" },
-                    { 31, 4, "L1" },
-                    { 32, 4, "L2" },
-                    { 33, 4, "L3" },
-                    { 34, 4, "M" },
-                    { 35, 4, "P1" },
-                    { 36, 4, "P2" },
-                    { 37, 4, "P3" },
-                    { 38, 4, "T1" },
-                    { 39, 4, "T2" },
-                    { 40, 4, "T3" },
-                    { 41, 4, "COND" }
+                    { (byte)0, (byte)0, "BV" },
+                    { (byte)1, (byte)0, "COND" },
+                    { (byte)2, (byte)0, "DEAD" },
+                    { (byte)3, (byte)1, "M1" },
+                    { (byte)4, (byte)1, "M2" },
+                    { (byte)5, (byte)1, "M3" },
+                    { (byte)6, (byte)1, "TM1" },
+                    { (byte)7, (byte)1, "TM2" },
+                    { (byte)8, (byte)1, "TM3" },
+                    { (byte)9, (byte)1, "COND" },
+                    { (byte)10, (byte)1, "DEAD" },
+                    { (byte)11, (byte)2, "F1" },
+                    { (byte)12, (byte)2, "F2" },
+                    { (byte)13, (byte)2, "F3" },
+                    { (byte)14, (byte)2, "P1" },
+                    { (byte)15, (byte)2, "P2" },
+                    { (byte)16, (byte)2, "P3" },
+                    { (byte)17, (byte)2, "T1" },
+                    { (byte)18, (byte)2, "T2" },
+                    { (byte)19, (byte)2, "T3" },
+                    { (byte)20, (byte)2, "COND" },
+                    { (byte)21, (byte)2, "DEAD" },
+                    { (byte)22, (byte)3, "M" },
+                    { (byte)23, (byte)3, "COND" },
+                    { (byte)24, (byte)3, "DEAD" },
+                    { (byte)25, (byte)4, "A1" },
+                    { (byte)26, (byte)4, "A2" },
+                    { (byte)27, (byte)4, "A3" },
+                    { (byte)28, (byte)4, "F1" },
+                    { (byte)29, (byte)4, "F2" },
+                    { (byte)30, (byte)4, "F3" },
+                    { (byte)31, (byte)4, "L1" },
+                    { (byte)32, (byte)4, "L2" },
+                    { (byte)33, (byte)4, "L3" },
+                    { (byte)34, (byte)4, "M" },
+                    { (byte)35, (byte)4, "P1" },
+                    { (byte)36, (byte)4, "P2" },
+                    { (byte)37, (byte)4, "P3" },
+                    { (byte)38, (byte)4, "T1" },
+                    { (byte)39, (byte)4, "T2" },
+                    { (byte)40, (byte)4, "T3" },
+                    { (byte)41, (byte)4, "COND" }
                 });
 
             migrationBuilder.InsertData(
@@ -721,48 +729,48 @@ namespace AccountsReceivable.BAL.Migrations
                 columns: new[] { "Id", "AnimalTypeId", "Name" },
                 values: new object[,]
                 {
-                    { 42, 4, "DEAD" },
-                    { 43, 5, "A1" },
-                    { 44, 5, "A2" },
-                    { 45, 5, "A3" },
-                    { 46, 5, "F1" },
-                    { 47, 5, "F2" },
-                    { 48, 5, "F3" },
-                    { 49, 5, "L1" },
-                    { 50, 5, "L2" },
-                    { 51, 5, "L3" },
-                    { 52, 5, "M" },
-                    { 53, 5, "P1" },
-                    { 54, 5, "P2" },
-                    { 55, 5, "P3" },
-                    { 56, 5, "T1" },
-                    { 57, 5, "T2" },
-                    { 58, 5, "T3" },
-                    { 59, 5, "COND" },
-                    { 60, 5, "DEAD" },
-                    { 61, 6, "A" },
-                    { 62, 6, "B" },
-                    { 63, 6, "C" },
-                    { 64, 6, "F" },
-                    { 65, 6, "M" },
-                    { 66, 6, "P" },
-                    { 67, 6, "T" },
-                    { 68, 6, "Y" },
-                    { 69, 6, "COND" },
-                    { 70, 6, "DEAD" },
-                    { 71, 7, "MF" },
-                    { 72, 7, "MH" },
-                    { 73, 7, "MM" },
-                    { 74, 7, "MP" },
-                    { 75, 7, "ML" },
-                    { 76, 7, "MX" },
-                    { 77, 7, "COND" },
-                    { 78, 7, "DEAD" },
-                    { 79, 8, "R" },
-                    { 80, 8, "COND" },
-                    { 81, 8, "DEAD" },
-                    { 82, 9, "AF1" },
-                    { 83, 9, "AF2" }
+                    { (byte)42, (byte)4, "DEAD" },
+                    { (byte)43, (byte)5, "A1" },
+                    { (byte)44, (byte)5, "A2" },
+                    { (byte)45, (byte)5, "A3" },
+                    { (byte)46, (byte)5, "F1" },
+                    { (byte)47, (byte)5, "F2" },
+                    { (byte)48, (byte)5, "F3" },
+                    { (byte)49, (byte)5, "L1" },
+                    { (byte)50, (byte)5, "L2" },
+                    { (byte)51, (byte)5, "L3" },
+                    { (byte)52, (byte)5, "M" },
+                    { (byte)53, (byte)5, "P1" },
+                    { (byte)54, (byte)5, "P2" },
+                    { (byte)55, (byte)5, "P3" },
+                    { (byte)56, (byte)5, "T1" },
+                    { (byte)57, (byte)5, "T2" },
+                    { (byte)58, (byte)5, "T3" },
+                    { (byte)59, (byte)5, "COND" },
+                    { (byte)60, (byte)5, "DEAD" },
+                    { (byte)61, (byte)6, "A" },
+                    { (byte)62, (byte)6, "B" },
+                    { (byte)63, (byte)6, "C" },
+                    { (byte)64, (byte)6, "F" },
+                    { (byte)65, (byte)6, "M" },
+                    { (byte)66, (byte)6, "P" },
+                    { (byte)67, (byte)6, "T" },
+                    { (byte)68, (byte)6, "Y" },
+                    { (byte)69, (byte)6, "COND" },
+                    { (byte)70, (byte)6, "DEAD" },
+                    { (byte)71, (byte)7, "MF" },
+                    { (byte)72, (byte)7, "MH" },
+                    { (byte)73, (byte)7, "MM" },
+                    { (byte)74, (byte)7, "MP" },
+                    { (byte)75, (byte)7, "ML" },
+                    { (byte)76, (byte)7, "MX" },
+                    { (byte)77, (byte)7, "COND" },
+                    { (byte)78, (byte)7, "DEAD" },
+                    { (byte)79, (byte)8, "R" },
+                    { (byte)80, (byte)8, "COND" },
+                    { (byte)81, (byte)8, "DEAD" },
+                    { (byte)82, (byte)9, "AF1" },
+                    { (byte)83, (byte)9, "AF2" }
                 });
 
             migrationBuilder.InsertData(
@@ -771,30 +779,30 @@ namespace AccountsReceivable.BAL.Migrations
                 columns: new[] { "Id", "AnimalTypeId", "Name" },
                 values: new object[,]
                 {
-                    { 84, 9, "AFH" },
-                    { 85, 9, "AP" },
-                    { 86, 9, "M1" },
-                    { 87, 9, "M2" },
-                    { 88, 9, "PD1" },
-                    { 89, 9, "PD2" },
-                    { 90, 9, "PLG" },
-                    { 91, 9, "PLG1" },
-                    { 92, 9, "PLG2" },
-                    { 93, 9, "COND" },
-                    { 94, 9, "DEAD" },
-                    { 95, 10, "AF1" },
-                    { 96, 10, "AF2" },
-                    { 97, 10, "AFH" },
-                    { 98, 10, "AP" },
-                    { 99, 10, "M1" },
-                    { 100, 10, "M2" },
-                    { 101, 10, "PF1" },
-                    { 102, 10, "PF2" },
-                    { 103, 10, "PLG" },
-                    { 104, 10, "PLG1" },
-                    { 105, 10, "PLG2" },
-                    { 106, 10, "COND" },
-                    { 107, 10, "DEAD" }
+                    { (byte)84, (byte)9, "AFH" },
+                    { (byte)85, (byte)9, "AP" },
+                    { (byte)86, (byte)9, "M1" },
+                    { (byte)87, (byte)9, "M2" },
+                    { (byte)88, (byte)9, "PD1" },
+                    { (byte)89, (byte)9, "PD2" },
+                    { (byte)90, (byte)9, "PLG" },
+                    { (byte)91, (byte)9, "PLG1" },
+                    { (byte)92, (byte)9, "PLG2" },
+                    { (byte)93, (byte)9, "COND" },
+                    { (byte)94, (byte)9, "DEAD" },
+                    { (byte)95, (byte)10, "AF1" },
+                    { (byte)96, (byte)10, "AF2" },
+                    { (byte)97, (byte)10, "AFH" },
+                    { (byte)98, (byte)10, "AP" },
+                    { (byte)99, (byte)10, "M1" },
+                    { (byte)100, (byte)10, "M2" },
+                    { (byte)101, (byte)10, "PF1" },
+                    { (byte)102, (byte)10, "PF2" },
+                    { (byte)103, (byte)10, "PLG" },
+                    { (byte)104, (byte)10, "PLG1" },
+                    { (byte)105, (byte)10, "PLG2" },
+                    { (byte)106, (byte)10, "COND" },
+                    { (byte)107, (byte)10, "DEAD" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -912,6 +920,12 @@ namespace AccountsReceivable.BAL.Migrations
                 schema: "application",
                 table: "Supplier",
                 column: "MeatworkName");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Uplift_AnimalTypeId",
+                schema: "application",
+                table: "Uplift",
+                column: "AnimalTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "Uplift_Unique",

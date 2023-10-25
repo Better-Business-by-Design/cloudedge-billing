@@ -1,6 +1,7 @@
 ﻿@page "/pricing/{Id}"
 
-<MudBreadcrumbs Items="@(new List<BreadcrumbItem> { new("Home", ""), new("Pricing Schedule", "pricing"), new("Details", "", true)})"></MudBreadcrumbs>
+<Breadcrumb Items="_breadcrumb" />
+
 <MudTable Dense="true" Hover="true" Outlined="true" ServerData="@(new Func<TableState, Task<TableData<Price>>>(ServerReload))" @ref="_table" T="Price">
     <ToolBarContent>
         @if (_schedule is not null)

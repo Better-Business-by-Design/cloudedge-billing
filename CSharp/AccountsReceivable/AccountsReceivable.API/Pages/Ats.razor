@@ -1,8 +1,11 @@
 ﻿@page "/ats"
 
+<Breadcrumb Items="_breadcrumb" />
+
 <MudTable Dense="true" Hover="true" Outlined="true"
           ServerData="@(new Func<TableState, Task<TableData<Document>>>(ServerReload))"
-          @ref="_table">
+          @ref="_table"
+          T="Document">
     <ToolBarContent>
         <MudText Typo="Typo.h5">Animals in Transit</MudText>
         <MudSpacer/>

@@ -10,6 +10,11 @@ partial class Invoices
 {
     private string _searchString = string.Empty;
     private MudTable<Document> _table = null!;
+    private readonly List<BreadcrumbItem> _breadcrumb = new()
+    {
+        new BreadcrumbItem("Home", ""),
+        new BreadcrumbItem("Buyer Created Invoices", null, true)
+    };
 
     private int _totalItems;
 

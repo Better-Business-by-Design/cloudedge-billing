@@ -1,0 +1,13 @@
+﻿<MudBreadcrumbs Items="Items" >
+    <ItemTemplate Context="item">
+        @if (item.Href is not null)
+        {
+            <MudLink Color="Color.Inherit" Href="@item.Href">@item.Text</MudLink>
+        }
+        else
+        {
+            <MudText Style="font-weight: bold">@item.Text</MudText>
+        }
+        
+    </ItemTemplate>
+</MudBreadcrumbs>
