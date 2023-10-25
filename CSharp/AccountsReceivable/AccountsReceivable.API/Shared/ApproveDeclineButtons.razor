@@ -1,6 +1,8 @@
 @using Microsoft.Extensions.Logging
 @using AccountsReceivable.BL.Models.Enum
+@using System.Security.Authentication
 @inject ILogger<ApproveDeclineButtons> Logger
+@inject IDialogService DialogService
 
 @if ((Role ?? RoleId.Missing) is RoleId.ReadWrite or RoleId.Administrator)
     {
@@ -14,7 +16,7 @@
         <MudButton 
             Color="Color.Primary"
             Variant="Variant.Filled"
-            OnClick="@InvokeOpenApproveDialog"
+            OnClick="@OpenApproveDialog"
             Disabled="@IsStatusNotPendingOrDeclined()">
             Approve
         </MudButton>
@@ -23,7 +25,7 @@
             Color="Color.Error"
             Variant="Variant.Filled"
             Class="ml-2"
-            OnClick="@InvokeOpenDeclineDialog"
+            OnClick="@OpenDeclineDialog"
             Disabled="@IsStatusNotPending()">
             Decline
         </MudButton>
@@ -40,24 +42,44 @@
     public Task? EmailButtonTask { get; set; }
     
     [Parameter]
-    public Task? OpenApproveDialog { get; set; }
+    public Task? SetApprovedTask { get; set; }
     
     [Parameter]
-    public Task? OpenDeclineDialog { get; set; }
+    public Task? SetDeclinedTask { get; set; }
+    
+    [Parameter]
+    public string? DetailObjectType { get; set; }
 
     private void InvokeEmailButtonTask()
     {
         EmailButtonTask?.Start();
     }
     
-    private void InvokeOpenApproveDialog()
+    private async void OpenApproveDialog()
     {
-        OpenApproveDialog?.Start();
+        var result = await OpenAuthRequiredDialog("approve");
+        if (result) SetApprovedTask?.Start();
     }
 
-    private void InvokeOpenDeclineDialog()
+    private async void OpenDeclineDialog()
     {
-        OpenDeclineDialog?.Start();
+        var result = await OpenAuthRequiredDialog("decline");
+        if (result) SetDeclinedTask?.Start();
+    }
+
+    private async Task<bool> OpenAuthRequiredDialog(string changeString)
+    {
+        if ((Role ?? RoleId.Missing) is not (RoleId.ReadWrite or RoleId.Administrator))
+        {
+            throw new AuthenticationException($"User with role {(Role ?? RoleId.Missing).ToString()} doesn't have permission to change Status values, needs either {RoleId.ReadWrite.ToString()} or {RoleId.Administrator.ToString()}");
+        } 
+        
+        var result = await DialogService.ShowMessageBox(
+            "Approval Confirmation",
+            "Are you sure you want to "+ changeString + " this " + (DetailObjectType ?? "Object") + "?",
+            "Approve", cancelText: "Cancel");
+
+        return result ?? false;
     }
 
     private bool IsStatusNotPendingOrDeclined()

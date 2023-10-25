@@ -16,8 +16,9 @@
             <ApproveDeclineButtons 
                 Role="@User?.RoleId"
                 Status="@_schedule?.StatusId"
-                OpenApproveDialog="new Task(OpenApproveDialog)"
-                OpenDeclineDialog="new Task(OpenDeclineDialog)"
+                SetApprovedTask="new Task(SetDocumentStatusApproved)" 
+                SetDeclinedTask="new Task(SetDocumentStatusDeclined)"
+                DetailObjectType="Pricing Schedule"
                 />
         }
     </ToolBarContent>

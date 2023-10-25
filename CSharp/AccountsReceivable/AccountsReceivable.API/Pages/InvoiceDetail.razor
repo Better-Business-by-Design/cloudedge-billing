@@ -15,8 +15,9 @@
         <ApproveDeclineButtons 
             Role="@User?.RoleId" 
             Status="@_document?.StatusId" 
-            OpenApproveDialog="new Task(OpenApproveDialog)" 
-            OpenDeclineDialog="new Task(OpenDeclineDialog)"
+            SetApprovedTask="new Task(SetDocumentStatusApproved)" 
+            SetDeclinedTask="new Task(SetDocumentStatusDeclined)"
+            DetailObjectType="Buyer Created Invoice"
             />
 
     </MudToolBar>

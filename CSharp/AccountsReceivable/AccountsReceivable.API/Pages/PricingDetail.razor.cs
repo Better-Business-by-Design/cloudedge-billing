@@ -94,57 +94,32 @@ partial class PricingDetail
         _table.ReloadServerData();
     }*/
 
-    private async void OpenApproveDialog()
+    private async void SetDocumentStatusApproved()
     {
-        if (_schedule is null) throw new InvalidOperationException();
-        if (User?.RoleId is not (RoleId.ReadWrite or RoleId.Administrator)) throw new AuthenticationException();
+        SetDocumentStatus(StatusId.Approved);
+    }
+    private async void SetDocumentStatusDeclined()
+    {
+        SetDocumentStatus(StatusId.Declined);
+        Navigation.NavigateTo("pricing");
+    }
 
-        var result = await DialogService.ShowMessageBox(
-            "Approval Confirmation",
-            "Are you sure you want to approve this Pricing Schedule?",
-            "Approve", cancelText: "Cancel");
-
-        if (result == null) return;
-
-        _schedule.StatusId = StatusId.Approved;
+    private async void SetDocumentStatus(StatusId statusId)
+    {
+        _schedule.StatusId = statusId;
 
         var audit = new Audit
         {
             UserId = User.EmailAddress,
-            Action = $"Approved Schedule [{_schedule.Id}]",
+            Action = $"{StatusHelper.GetInfo(statusId).Name} Schedule [{_schedule.Id}]",
             //Comment = !string.IsNullOrWhiteSpace(comment) ? comment : null, // TODO
             Timestamp = DateTime.Now
         };
         await DbContext.AddAsync(audit);
 
         await DbContext.SaveChangesAsync();
-        Navigation.NavigateTo("pricing");
     }
+    
 
-    private async void OpenDeclineDialog()
-    {
-        if (_schedule is null) throw new InvalidOperationException();
-        if (User?.RoleId is not (RoleId.ReadWrite or RoleId.Administrator)) throw new AuthenticationException();
-
-        var result = await DialogService.ShowMessageBox(
-            "Decline Confirmation",
-            "Are you sure you want to decline this Pricing Schedule?",
-            "Decline", cancelText: "Cancel");
-
-        if (result == null) return;
-
-        _schedule.StatusId = StatusId.Declined;
-
-        var audit = new Audit
-        {
-            UserId = User.EmailAddress,
-            Action = $"Declined Schedule [{_schedule.Id}]",
-            //Comment = comment, // TODO
-            Timestamp = DateTime.Now
-        };
-        await DbContext.AddAsync(audit);
-
-        await DbContext.SaveChangesAsync();
-        Navigation.NavigateTo("pricing");
-    }
+    
 }

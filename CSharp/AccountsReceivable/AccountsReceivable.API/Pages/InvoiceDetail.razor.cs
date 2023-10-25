@@ -111,57 +111,29 @@ partial class InvoiceDetail
             :*/ string.Empty;
     }
 
-    private async void OpenApproveDialog()
+    private async void SetDocumentStatusApproved()
     {
-        if (_document is null) throw new InvalidOperationException();
-        if (User?.RoleId is not (RoleId.ReadWrite or RoleId.Administrator)) throw new AuthenticationException();
-
-        var result = await DialogService.ShowMessageBox(
-            "Approval Confirmation",
-            "Are you sure you want to approve this Buyer Created Invoice?",
-            "Approve", cancelText: "Cancel");
-
-        if (result == null) return;
-
-        _document.StatusId = StatusId.Approved;
-
-        var audit = new Audit
-        {
-            UserId = User.EmailAddress,
-            Action = $"Approved BCI [{_document.Id}]",
-            // Comment = !string.IsNullOrWhiteSpace(comment) ? comment : null, // Todo
-            Timestamp = DateTime.Now
-        };
-        await DbContext.AddAsync(audit);
-
-        await DbContext.SaveChangesAsync();
+        SetDocumentStatus(StatusId.Approved);
+    }
+    private async void SetDocumentStatusDeclined()
+    {
+        SetDocumentStatus(StatusId.Declined);
         Navigation.NavigateTo("invoices");
     }
 
-    private async void OpenDeclineDialog()
+    private async void SetDocumentStatus(StatusId statusId)
     {
-        if (_document is null) throw new InvalidOperationException();
-        if (User?.RoleId is not (RoleId.ReadWrite or RoleId.Administrator)) throw new AuthenticationException();
-
-        var result = await DialogService.ShowMessageBox(
-            "Decline Confirmation",
-            "Are you sure you want to decline this Buyer Created Invoice?",
-            "Decline", cancelText: "Cancel");
-
-        if (result == null) return;
-
-        _document.StatusId = StatusId.Declined;
+        _document.StatusId = statusId;
 
         var audit = new Audit
         {
             UserId = User.EmailAddress,
-            Action = $"Declined BCI [{_document.Id}]",
+            Action = $"{StatusHelper.GetInfo(statusId).Name} BCI [{_document.Id}]",
             // Comment = comment, // todo
             Timestamp = DateTime.Now
         };
+        
         await DbContext.AddAsync(audit);
-
         await DbContext.SaveChangesAsync();
-        Navigation.NavigateTo("invoices");
     }
 }
