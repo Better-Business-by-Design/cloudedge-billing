@@ -52,7 +52,7 @@ partial class InvoiceDetail
 
     private async Task<TableData<Animal>> ServerReload(TableState state)
     {
-        await DocumentMap.CalculateDocuments(DbContext, null);
+        // await DocumentMap.CalculateDocuments(DbContext, null);
         
         if (_document is null)
         {
@@ -81,7 +81,6 @@ partial class InvoiceDetail
             .AsNoTracking()
             .Include(animal => animal.Grade)
             .Include(animal => animal.Grade!.AnimalType)
-            /*.Include(animal => animal.Validation)*/
             .Include(animal => animal.DeductionDetails)
             .Include(animal => animal.PremiumDetails)
             .Where(animal => animal.DocumentId == _document!.Id);

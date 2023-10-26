@@ -65,6 +65,8 @@ partial class Index
                     document => document.WeightTotal),
                 "plant_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
                     document => document.Plant.Name),
+                "validation_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
+                    document => document.NetCostTotal == document.CalcNetCostTotal),
                 "status_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
                     document => document.StatusId),
                 "ats_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,

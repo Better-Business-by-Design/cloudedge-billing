@@ -68,7 +68,7 @@ public class Document
 
     /* SFF Pricing */
 
-    public int AnimalTotal;
+    public ushort AnimalTotal;
     
     public decimal WeightTotal { get; set; }
     
