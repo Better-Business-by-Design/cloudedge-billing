@@ -7,6 +7,7 @@
     <MudTable Dense="true" Hover="true"
               ServerData="@(new Func<TableState, Task<TableData<Document>>>(DocumentServerReload))"
               OnRowClick="DocumentRowClickEvent" T="Document"
+              RowStyleFunc="RowStyleFunc"
               @ref="_documentTable">
         <ToolBarContent>
             <MudText Typo="Typo.h5">Buyer Created Invoices</MudText>

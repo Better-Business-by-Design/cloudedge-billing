@@ -17,8 +17,9 @@
         <ApproveDeclineButtons
             Role="@User?.RoleId"
             Status="@_document?.StatusId"
-            SetApprovedTask="new Task(SetDocumentStatusApproved)"
-            SetDeclinedTask="new Task(SetDocumentStatusDeclined)"
+            RecalculateTask="@(() => RecalculatePricing())"
+            SetApprovedTask="@(() => SetStatusApproved())"
+            SetDeclinedTask="@(() => SetStatusDeclined())"
             DetailObjectType="Buyer Created Invoice"/>
 
     </MudToolBar>

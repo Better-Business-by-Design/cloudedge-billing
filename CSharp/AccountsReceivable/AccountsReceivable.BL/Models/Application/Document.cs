@@ -51,8 +51,8 @@ public class Document
     public virtual ICollection<string>? SupplierComments { get; set; }
     public virtual ICollection<AnimalTypeSummary> AnimalTypeSummaries { get; set; } = null!;
 
-    public SpeciesTypeId? SpeciesTypeId { get; set; }
-    public virtual SpeciesType? SpeciesType { get; set; }
+    public SpeciesTypeId SpeciesTypeId { get; set; }
+    public virtual SpeciesType SpeciesType { get; set; } = null!;
 
     public ushort? ScheduleId { get; set; }
     public virtual Schedule? Schedule { get; set; }

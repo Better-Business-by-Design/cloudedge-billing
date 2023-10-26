@@ -66,7 +66,7 @@ partial class Index
                 "plant_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
                     document => document.Plant.Name),
                 "validation_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
-                    document => document.NetCostTotal == document.CalcNetCostTotal),
+                    document => document.CalcTimestamp == null ? 1 : document.NetCostTotal == document.CalcNetCostTotal ? 2 : 3),
                 "status_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
                     document => document.StatusId),
                 "ats_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
@@ -124,6 +124,11 @@ partial class Index
         Navigation.NavigateTo($"invoices/{clickEvent.Item.Id}");
     }
 
+    private string RowStyleFunc(Document document, int index)
+    {
+        return $"background-color: {(document.CalcTimestamp == null ? "" : document.NetCostTotal == document.CalcNetCostTotal ? Colors.LightGreen.Lighten4 : Colors.DeepOrange.Lighten4)}";
+    }
+    
     private async Task<TableData<Schedule>> ScheduleServerReload(TableState state)
     {
         var reloadTuple = await ServerReload(state);

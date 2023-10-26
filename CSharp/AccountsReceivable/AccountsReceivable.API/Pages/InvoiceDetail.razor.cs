@@ -1,6 +1,6 @@
 ﻿using System.Security.Authentication;
 using AccountsReceivable.BAL.Data;
-using AccountsReceivable.BAL.Mappings;
+using AccountsReceivable.BAL.Extensions;
 using AccountsReceivable.BL.Models.Account;
 using AccountsReceivable.BL.Models.Application;
 using AccountsReceivable.BL.Models.Enum;
@@ -52,8 +52,6 @@ partial class InvoiceDetail
 
     private async Task<TableData<Animal>> ServerReload(TableState state)
     {
-        // await DocumentMap.CalculateDocuments(DbContext, null);
-        
         if (_document is null)
         {
             _document = await DbContext.Documents
@@ -120,23 +118,35 @@ partial class InvoiceDetail
             :*/ string.Empty;
     }
 
-    private async void SetDocumentStatusApproved()
+    private async Task RecalculatePricing()
     {
-        SetDocumentStatus(StatusId.Approved);
+        await _document!.CalculatePrices(DbContext);
+        await DbContext.SaveChangesAsync();
+        
+        Navigation.NavigateTo($"invoices/{_document!.Id}");
     }
-    private async void SetDocumentStatusDeclined()
+    
+    private async Task SetStatusApproved()
     {
-        SetDocumentStatus(StatusId.Declined);
+        await SetDocumentStatus(StatusId.Approved);
+        
+        Navigation.NavigateTo("invoices");
+    }
+    
+    private async Task SetStatusDeclined()
+    {
+        await SetDocumentStatus(StatusId.Declined);
+        
         Navigation.NavigateTo("invoices");
     }
 
-    private async void SetDocumentStatus(StatusId statusId)
+    private async Task SetDocumentStatus(StatusId statusId)
     {
-        _document.StatusId = statusId;
+        _document!.StatusId = statusId;
 
         var audit = new Audit
         {
-            UserId = User.EmailAddress,
+            UserId = User!.EmailAddress,
             Action = $"{StatusHelper.GetInfo(statusId).Name} BCI [{_document.Id}]",
             // Comment = comment, // todo
             Timestamp = DateTime.Now

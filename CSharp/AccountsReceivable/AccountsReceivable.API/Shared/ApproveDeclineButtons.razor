@@ -5,23 +5,42 @@
 @inject IDialogService DialogService
 
 @if ((Role ?? RoleId.Missing) is RoleId.ReadWrite or RoleId.Administrator)
+{
+    @if (EmailTask is not null)
     {
-        <MudButton
+        <MudIconButton
             Color="Color.Primary"
             Variant="Variant.Filled"
-            StartIcon="@Icons.Material.Filled.Email"
+            Icon="@Icons.Material.Filled.Email"
             OnClick="@InvokeEmailButtonTask">
-        </MudButton>
-            
-        <MudButton 
+        </MudIconButton>
+    }
+
+    @if (RecalculateTask is not null)
+    {
+        <MudIconButton
+            Color="Color.Inherit"
+            Variant="Variant.Filled"
+            Icon="@Icons.Material.Filled.Email"
+            OnClick="@RecalculateTask"
+            Disabled="@IsStatusNotApproved()">
+        </MudIconButton>
+    }
+
+    @if (SetApprovedTask is not null)
+    {
+        <MudButton
             Color="Color.Primary"
             Variant="Variant.Filled"
             OnClick="@OpenApproveDialog"
             Disabled="@IsStatusNotPendingOrDeclined()">
             Approve
         </MudButton>
+    }
 
-        <MudButton 
+    @if (SetApprovedTask is not null)
+    {
+        <MudButton
             Color="Color.Error"
             Variant="Variant.Filled"
             Class="ml-2"
@@ -30,41 +49,51 @@
             Decline
         </MudButton>
     }
+}
 
 @code {
+
     [Parameter]
     public RoleId? Role { get; set; }
-    
+
     [Parameter]
     public StatusId? Status { get; set; }
-    
+
     [Parameter]
-    public Task? EmailButtonTask { get; set; }
-    
+    public Func<Task>? EmailTask { get; set; }
+
     [Parameter]
-    public Task? SetApprovedTask { get; set; }
-    
+    public Func<Task>? RecalculateTask { get; set; }
+
     [Parameter]
-    public Task? SetDeclinedTask { get; set; }
-    
+    public Func<Task>? SetApprovedTask { get; set; }
+
+    [Parameter]
+    public Func<Task>? SetDeclinedTask { get; set; }
+
     [Parameter]
     public string? DetailObjectType { get; set; }
 
-    private void InvokeEmailButtonTask()
+    private async void InvokeEmailButtonTask()
     {
-        EmailButtonTask?.Start();
+        await EmailTask?.Invoke()!;
     }
-    
+
+    private async void RecalculateButton()
+    {
+        await RecalculateTask?.Invoke()!;
+    }
+
     private async void OpenApproveDialog()
     {
         var result = await OpenAuthRequiredDialog("approve");
-        if (result) SetApprovedTask?.Start();
+        if (result) await SetApprovedTask?.Invoke()!;
     }
 
     private async void OpenDeclineDialog()
     {
         var result = await OpenAuthRequiredDialog("decline");
-        if (result) SetDeclinedTask?.Start();
+        if (result) await SetDeclinedTask?.Invoke()!;
     }
 
     private async Task<bool> OpenAuthRequiredDialog(string changeString)
@@ -72,11 +101,11 @@
         if ((Role ?? RoleId.Missing) is not (RoleId.ReadWrite or RoleId.Administrator))
         {
             throw new AuthenticationException($"User with role {(Role ?? RoleId.Missing).ToString()} doesn't have permission to change Status values, needs either {RoleId.ReadWrite.ToString()} or {RoleId.Administrator.ToString()}");
-        } 
-        
+        }
+
         var result = await DialogService.ShowMessageBox(
             "Approval Confirmation",
-            "Are you sure you want to "+ changeString + " this " + (DetailObjectType ?? "Object") + "?",
+            "Are you sure you want to " + changeString + " this " + (DetailObjectType ?? "Object") + "?",
             "Approve", cancelText: "Cancel");
 
         return result ?? false;
@@ -91,4 +120,10 @@
     {
         return (Status ?? StatusId.Missing) is not StatusId.Pending;
     }
+    
+    private bool IsStatusNotApproved()
+    {
+        return (Status ?? StatusId.Missing) is not StatusId.Approved;
+    }
+
 }

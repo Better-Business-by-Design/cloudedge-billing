@@ -1,5 +1,6 @@
 ﻿using System.Security.Authentication;
 using AccountsReceivable.BAL.Data;
+using AccountsReceivable.BAL.Extensions;
 using AccountsReceivable.BL.Models.Account;
 using AccountsReceivable.BL.Models.Application;
 using AccountsReceivable.BL.Models.Enum;
@@ -46,7 +47,8 @@ partial class PricingDetail
             ushort id;
             if (ushort.TryParse(Id, out id))
                 _schedule = DbContext.Schedules
-                    .Include(pricing => pricing.Status)
+                    .Include(schedule => schedule.Status)
+                    .Include(schedule => schedule.Uplifts)
                     .Include(schedule => schedule.Meatwork)
                     .FirstOrDefault(schedule => schedule.Id == id);
 
@@ -103,23 +105,27 @@ partial class PricingDetail
         _table.ReloadServerData();
     }*/
 
-    private async void SetDocumentStatusApproved()
+    private async Task SetStatusApproved()
     {
-        SetDocumentStatus(StatusId.Approved);
+        await _schedule!.ProcessDocuments(DbContext);
+        await SetDocumentStatus(StatusId.Approved);
+        
+        Navigation.NavigateTo("pricing");
     }
-    private async void SetDocumentStatusDeclined()
+    private async Task SetStatusDeclined()
     {
-        SetDocumentStatus(StatusId.Declined);
+        await SetDocumentStatus(StatusId.Declined);
+        
         Navigation.NavigateTo("pricing");
     }
 
-    private async void SetDocumentStatus(StatusId statusId)
+    private async Task SetDocumentStatus(StatusId statusId)
     {
-        _schedule.StatusId = statusId;
+        _schedule!.StatusId = statusId;
 
         var audit = new Audit
         {
-            UserId = User.EmailAddress,
+            UserId = User!.EmailAddress,
             Action = $"{StatusHelper.GetInfo(statusId).Name} Schedule [{_schedule.Id}]",
             //Comment = !string.IsNullOrWhiteSpace(comment) ? comment : null, // TODO
             Timestamp = DateTime.Now

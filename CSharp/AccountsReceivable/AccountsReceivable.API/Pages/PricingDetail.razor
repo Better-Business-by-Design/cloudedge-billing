@@ -16,8 +16,8 @@
         <ApproveDeclineButtons 
             Role="@User?.RoleId"
             Status="@_schedule?.StatusId"
-            SetApprovedTask="new Task(SetDocumentStatusApproved)" 
-            SetDeclinedTask="new Task(SetDocumentStatusDeclined)"
+            SetApprovedTask="@(() => SetStatusApproved())" 
+            SetDeclinedTask="@(() => SetStatusDeclined())"
             DetailObjectType="Pricing Schedule"
             />
     </MudToolBar>
