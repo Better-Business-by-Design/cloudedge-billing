@@ -3,7 +3,7 @@
 <Breadcrumb Items="_breadcrumb" />
 
 <MudDataGrid 
-    @ref="DataGrid"
+    @ref="_dataGrid"
     T="Document"
     ServerData="@(new Func<GridState<Document>, Task<GridData<Document>>>(GridServerReload))"
     SortMode="SortMode.Multiple"

@@ -10,7 +10,7 @@ namespace AccountsReceivable.API.Pages;
 
 partial class Invoices
 {
-    private MudDataGrid<Document> DataGrid;
+    private MudDataGrid<Document> _dataGrid = null!;
     private readonly List<BreadcrumbItem> _breadcrumb = new()
     {
         new BreadcrumbItem("Home", ""),
@@ -25,19 +25,7 @@ partial class Invoices
 
     [Inject]
     protected virtual NavigationManager Navigation { get; set; } = default!;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        await base.OnAfterRenderAsync(firstRender);
-
-        if (firstRender)
-        {
-            await DataGrid.SetSortAsync(nameof(Document.Status), SortDirection.Ascending, document => document.Status.Name,
-                new NaturalComparer());
-        }
-    }
     
-
     private async Task<GridData<Document>> GridServerReload(GridState<Document> state)
     {
         var fullQuery = DbContext.Documents
@@ -88,7 +76,7 @@ partial class Invoices
     private void OnSearch(string searchString)
     {
         _searchString = searchString;
-        DataGrid.ReloadServerData();
+        _dataGrid.ReloadServerData();
     }
 
     private void RowClicked(DataGridRowClickEventArgs<Document> args)
