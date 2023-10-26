@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 using MudBlazor.Utilities;
 
+
 namespace AccountsReceivable.API.Pages;
 
 partial class Invoices
@@ -25,6 +26,7 @@ partial class Invoices
 
     [Inject]
     protected virtual NavigationManager Navigation { get; set; } = default!;
+    
     
     private async Task<GridData<Document>> GridServerReload(GridState<Document> state)
     {
@@ -50,16 +52,18 @@ partial class Invoices
 
         var orderedQuery = filteredQuery.OrderBy(document => 0);
         
+        // ReSharper disable once LoopCanBeConvertedToQuery
         foreach (var sortDefinition in state.SortDefinitions)
         {
             orderedQuery = sortDefinition.SortBy switch
             {
-                "Date" => orderedQuery.ThenBy(document => document.DateProcessed),
+                "DateProcessed" => orderedQuery.ThenBy(document => document.DateProcessed),
                 "KillSheet" => orderedQuery.ThenBy(document => document.KillSheet),
-                "Plant (Works)" => orderedQuery.ThenBy(document => document.Plant.Name),
-                "Farm" => orderedQuery.ThenBy(document => document.Farm.Name),
-                "Species" => orderedQuery.ThenBy(document => document.SpeciesType == null ? string.Empty : document.SpeciesType.DisplayName),
-                "Status" => orderedQuery.ThenBy(document => document.StatusId),
+                "Plant.Name" => orderedQuery.ThenBy(document => document.Plant.Name),
+                "Farm.Name" => orderedQuery.ThenBy(document => document.Farm.Name),
+                "SpeciesType" => orderedQuery.ThenBy(document => 
+                    document.SpeciesType == null ? string.Empty : document.SpeciesType.DisplayName),
+                "StatusId" => orderedQuery.ThenBy(document => document.StatusId),
                 _ => throw new NotImplementedException()
             };
         }
