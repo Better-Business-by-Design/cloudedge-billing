@@ -1,4 +1,5 @@
-﻿using AccountsReceivable.BL.Models.Enum;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using AccountsReceivable.BL.Models.Enum;
 
 namespace AccountsReceivable.BL.Models.Application;
 
@@ -27,8 +28,6 @@ public class Animal
     public string? CondemnedBy { get; set; }
 
     public string UnitOfPrice { get; set; } = null!;
-
-    public decimal Price { get; set; }
 
     public string? SplitPaymentPercentage { get; set; }
 
@@ -63,8 +62,10 @@ public class Animal
 
     /* SFF Pricing */
 
-    public decimal StockWeight { get; set; }
-
+    public decimal Weight { get; set; }
+    
+    public decimal Price { get; set; }
+    
     public decimal WeightCost { get; set; }
 
     public decimal DeductionCost { get; set; }
@@ -72,14 +73,12 @@ public class Animal
     public decimal PremiumCost { get; set; }
 
     public decimal NetCost { get; set; }
+    
 
-    public decimal GstCost { get; set; }
+    /* Calculated Pricing - All Pamu prices used calculated values */
 
-    public decimal GrossCost { get; set; }
 
-    /* Calculated Pricing */
-
-    public decimal CalcStockWeight { get; set; }
+    public decimal CalcPrice { get; set; }
 
     public decimal CalcWeightCost { get; set; }
 
@@ -88,10 +87,9 @@ public class Animal
     public decimal CalcPremiumCost { get; set; }
 
     public decimal CalcNetCost { get; set; }
-
-    public decimal CalcGstCost { get; set; }
-
-    public decimal CalcGrossCost { get; set; }
+    
+    [NotMapped]
+    public bool Validation => NetCost == CalcNetCost;
 }
 
 /* Nested Classes */
