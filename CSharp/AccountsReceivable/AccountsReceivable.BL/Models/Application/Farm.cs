@@ -2,7 +2,7 @@
 
 public class Farm
 {
-    public int CostCentre { get; set; }
+    public ushort CostCentre { get; set; }
 
     public string Name { get; set; } = null!;
 

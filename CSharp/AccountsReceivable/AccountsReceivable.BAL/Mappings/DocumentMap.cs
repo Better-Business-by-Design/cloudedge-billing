@@ -25,7 +25,7 @@ public static class DocumentMap
             documentMap.ForMember(document => document.PreviousDocumentId, opt => opt.MapFrom(src => src.PreviousDocument));
             documentMap.ForMember(document => document.AnimalTypeSummaries, opt => opt.MapFrom(src => src.PaymentAdviceAnimalType));
 
-            documentMap.ForMember(document => document.AnimalTotal, opt => opt.MapFrom(src => src.PaymentAdviceTotalStockReceived));
+            documentMap.ForMember(document => document.StockCount, opt => opt.MapFrom(src => src.PaymentAdviceTotalStockReceived));
             documentMap.ForMember(document => document.WeightTotal, opt => opt.MapFrom(src => src.PaymentAdviceTotalMeatKg));
             documentMap.ForMember(document => document.WeightCostTotal, opt => opt.MapFrom(src => src.PaymentAdviceTotalPricePaid));
             documentMap.ForMember(document => document.PremiumCostTotal, opt => opt.MapFrom(src => src.AdditionalPremiumsDeductions));
@@ -88,11 +88,10 @@ public static class DocumentMap
 
         foreach (var animal in document.Animals!)
         {
-            var schedulePrice = schedule.Prices.SingleOrDefault(price =>
+            var schedulePrice = schedule.Prices.Where(price =>
                 price.GradeId == animal.GradeId &&
-                price.MinWeight <= animal.Weight &&
                 price.MaxWeight >= animal.Weight
-            );
+            ).MinBy(price => price.MaxWeight);
 
             if (schedulePrice is null)
             {
@@ -105,7 +104,8 @@ public static class DocumentMap
                 uplift.MaxWeight >= animal.Weight
             ).ToArray();
 
-            animal.CalcWeightCost = animal.Weight * (schedulePrice.Cost + upliftArray.Sum(uplift => uplift.Rate));
+            animal.CalcPrice = schedulePrice.Cost + upliftArray.Sum(uplift => uplift.Rate);
+            animal.CalcWeightCost = animal.Weight * animal.CalcPrice;
             animal.CalcDeductionCost = animal.DeductionCost; // TODO
             animal.CalcPremiumCost = animal.PremiumCost; // TODO
             animal.CalcNetCost = animal.CalcWeightCost + animal.CalcDeductionCost + animal.CalcPremiumCost;

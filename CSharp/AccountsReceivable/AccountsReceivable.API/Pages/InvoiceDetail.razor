@@ -26,8 +26,8 @@
     var rows = new List<Tuple<string, string, string>>
     {
         new("Net Total", _document.NetCostTotal.ToString("C"), _document.CalcNetCostTotal.ToString("C")),
-        new("Stock Received", _document.AnimalTotal.ToString(), string.Empty),
-        new("Stock Weight (KG)", _document.AnimalTotal.ToString("N2"), string.Empty)
+        new("Stock Received", _document.StockCount.ToString(), string.Empty),
+        new("Stock Weight (KG)", _document.WeightTotal.ToString("N2"), string.Empty)
     };
 
     <MudTable Items="rows" Dense="true">

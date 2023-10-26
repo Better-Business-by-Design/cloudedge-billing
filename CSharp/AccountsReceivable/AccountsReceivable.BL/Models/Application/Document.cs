@@ -27,7 +27,7 @@ public class Document
 
     public string GstRegistrationNo { get; set; } = null!;
 
-    public int FarmCostCentre { get; set; }
+    public ushort FarmCostCentre { get; set; }
     public virtual Farm Farm { get; set; } = null!;
 
     public string PlantName { get; set; } = null!;
@@ -68,7 +68,7 @@ public class Document
 
     /* SFF Pricing */
 
-    public int AnimalTotal;
+    public ushort StockCount { get; set; }
     
     public decimal WeightTotal { get; set; }
     
