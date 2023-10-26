@@ -1,6 +1,6 @@
 ﻿@page "/"
 
-<Breadcrumb Items="_breadcrumb" />
+<Breadcrumb Items="_breadcrumb"/>
 
 @if (_table.Equals("documents"))
 {
@@ -20,7 +20,7 @@
         </ToolBarContent>
         <HeaderContent>
             <MudTh>
-                <MudTableSortLabel SortLabel="date_field" T="Document">
+                <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortLabel="date_field" T="Document">
                     Date
                 </MudTableSortLabel>
             </MudTh>
@@ -41,7 +41,12 @@
             </MudTh>
             <MudTh>
                 <MudTableSortLabel SortLabel="stock_field" T="Document">
-                    Stock
+                    Stock Count
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="weight_field" T="Document">
+                    Stock Weight
                 </MudTableSortLabel>
             </MudTh>
             <MudTh>
@@ -50,12 +55,17 @@
                 </MudTableSortLabel>
             </MudTh>
             <MudTh>
-                <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortLabel="status_field" T="Document">
-                    Status
+                <MudTableSortLabel SortLabel="validation_field" T="Document">
+                    Validation
                 </MudTableSortLabel>
             </MudTh>
             <MudTh>
-                <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortLabel="ats_field" T="Document">
+                <MudTableSortLabel SortLabel="status_field" T="Document">
+                    Approval Status
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="ats_field" T="Document">
                     ATS Status
                 </MudTableSortLabel>
             </MudTh>
@@ -73,13 +83,19 @@
             <MudTd DataLabel="Species">
                 @(context.SpeciesType?.DisplayName ?? "Unknown")
             </MudTd>
-            <MudTd DataLabel="Stock">
-                @context.StockTotal.ToString() (@context.StockWeightTotal.ToString("0.00")kg)
+            <MudTd DataLabel="Stock Count">
+                @context.AnimalTotal.ToString()
+            </MudTd>
+            <MudTd DataLabel="Stock Weight">
+                @context.WeightTotal.ToString("0.00")kg
             </MudTd>
             <MudTd DataLabel="Plant (Works)">
                 @($"{context.Plant.Name} ({context.Plant.Meatwork.Name})")
             </MudTd>
-            <MudTd DataLabel="Status">
+            <MudTd DataLabel="Validation">
+                @(!context.Validation.HasValue ? "Pending" : (context.Validation.Value ? "Valid" : "Invalid"))
+            </MudTd>
+            <MudTd DataLabel="Approval Status">
                 @context.Status.Name
             </MudTd>
             <MudTd DataLabel="ATS Status">

@@ -1,8 +1,10 @@
 ﻿using System.Security.Authentication;
 using AccountsReceivable.BAL.Data;
+using AccountsReceivable.BAL.Mappings;
 using AccountsReceivable.BL.Models.Account;
 using AccountsReceivable.BL.Models.Application;
 using AccountsReceivable.BL.Models.Enum;
+using AutoMapper;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
@@ -50,6 +52,8 @@ partial class InvoiceDetail
 
     private async Task<TableData<Animal>> ServerReload(TableState state)
     {
+        await DocumentMap.CalculateDocuments(DbContext, null);
+        
         if (_document is null)
         {
             _document = await DbContext.Documents

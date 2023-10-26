@@ -207,7 +207,8 @@ public class ApplicationDbContext : DbContext
             entity.HasIndex(uplift => new
                 {
                     uplift.ScheduleId,
-                    uplift.Name
+                    uplift.Name,
+                    uplift.AnimalTypeId
                 })
                 .HasDatabaseName("Uplift_Unique")
                 .IsUnique();

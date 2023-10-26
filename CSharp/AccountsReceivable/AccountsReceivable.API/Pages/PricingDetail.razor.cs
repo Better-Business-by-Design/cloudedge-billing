@@ -59,7 +59,9 @@ partial class PricingDetail
                     TotalItems = _totalItems,
                     Items = Array.Empty<Price>()
                 };
-            }
+            }         
+            
+            StateHasChanged();
         }
 
         var fullQuery = DbContext.Set<Price>()

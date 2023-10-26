@@ -1,4 +1,5 @@
-﻿using AccountsReceivable.BL.Models.Enum;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using AccountsReceivable.BL.Models.Enum;
 using AccountsReceivable.BL.Models.Source;
 
 namespace AccountsReceivable.BL.Models.Application;
@@ -67,10 +68,10 @@ public class Document
 
     /* SFF Pricing */
 
-    public int StockTotal { get; set; }
-
-    public decimal StockWeightTotal { get; set; }
-
+    public int AnimalTotal;
+    
+    public decimal WeightTotal { get; set; }
+    
     public decimal WeightCostTotal { get; set; }
 
     public decimal DeductionCostTotal { get; set; }
@@ -78,17 +79,10 @@ public class Document
     public decimal PremiumCostTotal { get; set; }
 
     public decimal NetCostTotal { get; set; }
+    
 
-    public decimal GstCostTotal { get; set; }
-
-    public decimal GrossCostTotal { get; set; }
-
-    /* Calculated Pricing */
-
-    public int CalcStockTotal { get; set; }
-
-    public decimal CalcStockWeightTotal { get; set; }
-
+    /* Calculated Pricing - All Pamu prices used calculated values */
+    
     public decimal CalcWeightCostTotal { get; set; }
 
     public decimal CalcDeductionCostTotal { get; set; }
@@ -96,12 +90,11 @@ public class Document
     public decimal CalcPremiumCostTotal { get; set; }
 
     public decimal CalcNetCostTotal { get; set; }
-
-    public decimal CalcGstCostTotal { get; set; }
-
-    public decimal CalcGrossCostTotal { get; set; }
-
     
+    public DateTime? CalcTimestamp { get; set; }
+
+    [NotMapped]
+    public bool? Validation => CalcTimestamp.HasValue ? NetCostTotal == CalcNetCostTotal : null;
 }
 
 /* Nested Classes */

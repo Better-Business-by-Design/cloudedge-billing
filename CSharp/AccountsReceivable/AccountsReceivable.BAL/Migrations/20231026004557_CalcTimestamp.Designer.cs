@@ -4,6 +4,7 @@ using AccountsReceivable.BAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccountsReceivable.BAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231026004557_CalcTimestamp")]
+    partial class CalcTimestamp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,6 +76,14 @@ namespace AccountsReceivable.BAL.Migrations
                         .HasPrecision(9, 2)
                         .HasColumnType("decimal(9,2)");
 
+                    b.Property<decimal>("CalcGrossCost")
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
+
+                    b.Property<decimal>("CalcGstCost")
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
+
                     b.Property<decimal>("CalcNetCost")
                         .HasPrecision(9, 2)
                         .HasColumnType("decimal(9,2)");
@@ -82,7 +92,7 @@ namespace AccountsReceivable.BAL.Migrations
                         .HasPrecision(9, 2)
                         .HasColumnType("decimal(9,2)");
 
-                    b.Property<decimal>("CalcPrice")
+                    b.Property<decimal>("CalcStockWeight")
                         .HasPrecision(9, 2)
                         .HasColumnType("decimal(9,2)");
 
@@ -115,6 +125,14 @@ namespace AccountsReceivable.BAL.Migrations
 
                     b.Property<byte>("GradeId")
                         .HasColumnType("tinyint");
+
+                    b.Property<decimal>("GrossCost")
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
+
+                    b.Property<decimal>("GstCost")
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<int>("InventoryCost")
                         .HasColumnType("int");
@@ -170,16 +188,16 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Property<string>("SplitPaymentPercentage")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("StockWeight")
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
+
                     b.Property<string>("TailLengthDescription")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UnitOfPrice")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Weight")
-                        .HasPrecision(9, 2)
-                        .HasColumnType("decimal(9,2)");
 
                     b.Property<decimal>("WeightCost")
                         .HasPrecision(9, 2)
@@ -261,11 +279,26 @@ namespace AccountsReceivable.BAL.Migrations
                         .HasPrecision(9, 2)
                         .HasColumnType("decimal(9,2)");
 
+                    b.Property<decimal>("CalcGrossCostTotal")
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
+
+                    b.Property<decimal>("CalcGstCostTotal")
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
+
                     b.Property<decimal>("CalcNetCostTotal")
                         .HasPrecision(9, 2)
                         .HasColumnType("decimal(9,2)");
 
                     b.Property<decimal>("CalcPremiumCostTotal")
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
+
+                    b.Property<int>("CalcStockTotal")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("CalcStockWeightTotal")
                         .HasPrecision(9, 2)
                         .HasColumnType("decimal(9,2)");
 
@@ -306,6 +339,14 @@ namespace AccountsReceivable.BAL.Migrations
 
                     b.Property<DateTime?>("FromDateProcessed")
                         .HasColumnType("datetime2");
+
+                    b.Property<decimal>("GrossCostTotal")
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
+
+                    b.Property<decimal>("GstCostTotal")
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
 
                     b.Property<string>("GstRegistrationNo")
                         .IsRequired()
@@ -351,6 +392,13 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Property<byte>("StatusId")
                         .HasColumnType("tinyint");
 
+                    b.Property<int>("StockTotal")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("StockWeightTotal")
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
+
                     b.Property<string>("SupplierComments")
                         .HasColumnType("nvarchar(max)");
 
@@ -362,10 +410,6 @@ namespace AccountsReceivable.BAL.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("WeightCostTotal")
-                        .HasPrecision(9, 2)
-                        .HasColumnType("decimal(9,2)");
-
-                    b.Property<decimal>("WeightTotal")
                         .HasPrecision(9, 2)
                         .HasColumnType("decimal(9,2)");
 

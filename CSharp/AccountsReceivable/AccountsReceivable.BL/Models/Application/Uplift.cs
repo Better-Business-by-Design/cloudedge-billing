@@ -14,5 +14,8 @@ public class Uplift
     public AnimalTypeId AnimalTypeId { get; set; }
     public virtual AnimalType AnimalType { get; set; } = null!;
     
+    public decimal MinWeight { get; set; }
+    public decimal MaxWeight { get; set; }
+    
     public decimal Rate { get; set; }
 }
