@@ -60,7 +60,7 @@ partial class Index
                 "species_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
                     document => document.SpeciesTypeId),
                 "stock_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
-                    document => document.AnimalTotal),
+                    document => document.StockCount),
                 "weight_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
                     document => document.WeightTotal),
                 "plant_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,

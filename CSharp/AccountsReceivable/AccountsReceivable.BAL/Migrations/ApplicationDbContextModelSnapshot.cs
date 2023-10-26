@@ -351,6 +351,9 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Property<byte>("StatusId")
                         .HasColumnType("tinyint");
 
+                    b.Property<int>("StockCount")
+                        .HasColumnType("int");
+
                     b.Property<string>("SupplierComments")
                         .HasColumnType("nvarchar(max)");
 

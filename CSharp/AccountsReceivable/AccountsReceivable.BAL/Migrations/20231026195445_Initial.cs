@@ -333,22 +333,17 @@ namespace AccountsReceivable.BAL.Migrations
                     ScheduleId = table.Column<int>(type: "int", nullable: true),
                     TransitId = table.Column<int>(type: "int", nullable: true),
                     StatusId = table.Column<byte>(type: "tinyint", nullable: false),
-                    StockTotal = table.Column<int>(type: "int", nullable: false),
-                    StockWeightTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    StockCount = table.Column<int>(type: "int", nullable: false),
+                    WeightTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
                     WeightCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
                     DeductionCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
                     PremiumCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
                     NetCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
-                    GstCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
-                    GrossCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
-                    CalcStockTotal = table.Column<int>(type: "int", nullable: false),
-                    CalcStockWeightTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
                     CalcWeightCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
                     CalcDeductionCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
                     CalcPremiumCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
                     CalcNetCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
-                    CalcGstCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
-                    CalcGrossCostTotal = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false)
+                    CalcTimestamp = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -410,6 +405,8 @@ namespace AccountsReceivable.BAL.Migrations
                     ScheduleId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AnimalTypeId = table.Column<byte>(type: "tinyint", nullable: false),
+                    MinWeight = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    MaxWeight = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
                     Rate = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false)
                 },
                 constraints: table =>
@@ -481,7 +478,6 @@ namespace AccountsReceivable.BAL.Migrations
                     ProcessDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CondemnedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UnitOfPrice = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
                     SplitPaymentPercentage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Retained = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MeetsOptimumRange = table.Column<bool>(type: "bit", nullable: false),
@@ -494,20 +490,17 @@ namespace AccountsReceivable.BAL.Migrations
                     InventoryCost = table.Column<int>(type: "int", nullable: false),
                     FinishingAmount = table.Column<int>(type: "int", nullable: false),
                     Defects = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StockWeight = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    Weight = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
                     WeightCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
                     DeductionCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
                     PremiumCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
                     NetCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
-                    GstCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
-                    GrossCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
-                    CalcStockWeight = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
+                    CalcPrice = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
                     CalcWeightCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
                     CalcDeductionCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
                     CalcPremiumCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
-                    CalcNetCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
-                    CalcGstCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false),
-                    CalcGrossCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false)
+                    CalcNetCost = table.Column<decimal>(type: "decimal(9,2)", precision: 9, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -614,7 +607,8 @@ namespace AccountsReceivable.BAL.Migrations
                 {
                     { (byte)0, "Read" },
                     { (byte)1, "Read/Write" },
-                    { (byte)2, "Administrator" }
+                    { (byte)2, "Administrator" },
+                    { (byte)3, "Missing" }
                 });
 
             migrationBuilder.InsertData(
@@ -639,7 +633,8 @@ namespace AccountsReceivable.BAL.Migrations
                     { (byte)1, "Approved" },
                     { (byte)2, "Declined" },
                     { (byte)3, "Overridden" },
-                    { (byte)4, "Superseded" }
+                    { (byte)4, "Superseded" },
+                    { (byte)5, "Missing" }
                 });
 
             migrationBuilder.InsertData(
@@ -931,7 +926,7 @@ namespace AccountsReceivable.BAL.Migrations
                 name: "Uplift_Unique",
                 schema: "application",
                 table: "Uplift",
-                columns: new[] { "ScheduleId", "Name" },
+                columns: new[] { "ScheduleId", "Name", "AnimalTypeId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(

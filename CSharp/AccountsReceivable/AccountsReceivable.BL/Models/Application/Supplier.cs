@@ -2,7 +2,7 @@
 
 public class Supplier
 {
-    public int FarmCostCentre { get; set; }
+    public ushort FarmCostCentre { get; set; }
     public virtual Farm Farm { get; set; } = null!;
 
     public string MeatworkName { get; set; } = null!;
