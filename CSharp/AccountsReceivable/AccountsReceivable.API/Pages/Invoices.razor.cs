@@ -53,6 +53,11 @@ partial class Invoices
 
         foreach (var filterDefinition in state.FilterDefinitions)
         {
+            if (filterDefinition.Value is null && filterDefinition.Operator is not ("is empty" or "is not empty")) 
+            {
+                continue;
+            }
+            
             Expression<Func<Document, bool>> fullPredicate;
             
             if (filterDefinition.FieldType.IsString)
@@ -74,8 +79,8 @@ partial class Invoices
                     "not equals" => property => !property.Equals(value),
                     "starts with" => property => property.StartsWith(value),
                     "ends with" => property => property.EndsWith(value),
-                    "is_empty" => property => property.IsNullOrEmpty(),
-                    "is_not_empty" => property => !property.IsNullOrEmpty(),
+                    "is empty" => property => property.Equals(string.Empty),
+                    "is not empty" => property => !property.Equals(string.Empty),
                     _ => throw new NotImplementedException()
                 };
 
@@ -87,6 +92,7 @@ partial class Invoices
             } 
             else if (filterDefinition.FieldType.IsEnum)
             {
+                var value = filterDefinition.Value;
                 Expression<Func<Document, Enum>> selectPredicate = filterDefinition.Title switch
                 {
                     "Species" => document => document.SpeciesTypeId,
@@ -98,6 +104,8 @@ partial class Invoices
 
                 Expression<Func<Enum, bool>> logicPredicate = filterDefinition.Operator switch
                 {
+                    "is" => property => property.Equals(value),
+                    "is not" => property => !property.Equals(value),
                     _ => throw new NotImplementedException()
                 };
 
