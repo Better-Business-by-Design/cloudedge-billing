@@ -183,7 +183,7 @@ partial class Invoices
                 "DateProcessed" => document => document.DateProcessed,
                 "KillSheet" => document => document.KillSheet,
                 "Farm.Name" => document => document.Farm.Name,
-                "SpeciesType" => document => document.SpeciesType == null ? string.Empty : document.SpeciesType.DisplayName,
+                "SpeciesType" => document => document.SpeciesType.DisplayName,
                 "StockCount" => document => document.StockCount,
                 "WeightTotal" => document => document.WeightTotal,
                 "Plant.Name" => document => document.Plant.Name,
@@ -219,11 +219,17 @@ partial class Invoices
 
     private Func<Document, int, string> _rowStyleFunc => (document, i) =>
     {
-        if (document.SpeciesType is null)
+        var color = document.StatusId switch
         {
-            return $"background-color: {Colors.DeepOrange.Lighten4}";
-        }
-
-        return string.Empty;
+            StatusId.Pending => Colors.LightBlue.Lighten4,
+            StatusId.Approved => Colors.LightGreen.Lighten4,
+            StatusId.Overridden => Colors.Red.Lighten4,
+            StatusId.Declined => Colors.Red.Lighten2,
+            StatusId.Superseded => Colors.Grey.Lighten4,
+            StatusId.Missing => Colors.Red.Lighten1,
+            _ => Colors.Shades.White
+        }; 
+        return $"background-color: {color}";
+        
     };
 }
