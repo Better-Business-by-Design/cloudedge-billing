@@ -13,11 +13,6 @@
     Hover="true"
     Striped="true"
     RowStyleFunc="@_rowStyleFunc">
-    <ToolBarContent>
-        <MudSpacer />
-        <MudTextField T="string" ValueChanged="@OnSearch" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
-            AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-    </ToolBarContent>
     <Columns>
         <PropertyColumn Property="x => x.DateProcessed" Format="dd/MM/yyyy" Title="Date"/>
         <PropertyColumn Property="x => x.KillSheet"/>

@@ -74,41 +74,42 @@ public static class DocumentExtensions
                 entity.EndDate >= document.DateProcessed
             );
 
-        if (schedule is null) throw new NotImplementedException();
-
         var stockWeightCost = 0M;
         var deduction = 0M;
         var premium = 0M;
         var net = 0M;
 
-        foreach (var animal in document.Animals!)
+        if (schedule is not null)
         {
-            var schedulePrice = schedule.Prices.Where(price =>
-                price.GradeId == animal.GradeId &&
-                price.MaxWeight >= animal.Weight
-            ).MinBy(price => price.MaxWeight);
-
-            if (schedulePrice is null)
+            foreach (var animal in document.Animals!)
             {
-                continue;
+                var schedulePrice = schedule.Prices.Where(price =>
+                    price.GradeId == animal.GradeId &&
+                    price.MaxWeight >= animal.Weight
+                ).MinBy(price => price.MaxWeight);
+
+                if (schedulePrice is null)
+                {
+                    continue;
+                }
+
+                var upliftArray = schedule.Uplifts.Where(uplift =>
+                    uplift.AnimalTypeId == animal.Grade.AnimalTypeId &&
+                    uplift.MinWeight <= animal.Weight &&
+                    uplift.MaxWeight >= animal.Weight
+                ).ToArray();
+
+                animal.CalcPrice = schedulePrice.Cost + (schedulePrice.Cost != 0 ? upliftArray.Sum(uplift => uplift.Rate) : 0);
+                animal.CalcWeightCost = animal.Weight * animal.CalcPrice;
+                animal.CalcDeductionCost = animal.DeductionCost; // TODO
+                animal.CalcPremiumCost = animal.PremiumCost; // TODO
+                animal.CalcNetCost = animal.CalcWeightCost + animal.CalcDeductionCost + animal.CalcPremiumCost;
+
+                stockWeightCost += animal.CalcWeightCost;
+                deduction += animal.CalcDeductionCost;
+                premium += animal.CalcPremiumCost;
+                net += animal.CalcNetCost;
             }
-
-            var upliftArray = schedule.Uplifts.Where(uplift =>
-                uplift.AnimalTypeId == animal.Grade.AnimalTypeId &&
-                uplift.MinWeight <= animal.Weight &&
-                uplift.MaxWeight >= animal.Weight
-            ).ToArray();
-
-            animal.CalcPrice = schedulePrice.Cost + upliftArray.Sum(uplift => uplift.Rate);
-            animal.CalcWeightCost = animal.Weight * animal.CalcPrice;
-            animal.CalcDeductionCost = animal.DeductionCost; // TODO
-            animal.CalcPremiumCost = animal.PremiumCost; // TODO
-            animal.CalcNetCost = animal.CalcWeightCost + animal.CalcDeductionCost + animal.CalcPremiumCost;
-
-            stockWeightCost += animal.CalcWeightCost;
-            deduction += animal.CalcDeductionCost;
-            premium += animal.CalcPremiumCost;
-            net += animal.CalcNetCost;
         }
 
         document.CalcWeightCostTotal = stockWeightCost;

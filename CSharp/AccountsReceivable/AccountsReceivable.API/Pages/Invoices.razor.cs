@@ -39,16 +39,7 @@ partial class Invoices
             .Include(document => document.Status)
             .Include(document => document.SpeciesType);
 
-        var filteredQuery = fullQuery.Where(document =>
-            string.IsNullOrWhiteSpace(_searchString) ||
-            EF.Functions.Like(document.KillSheet.ToString(), $"%{_searchString}%") ||
-            EF.Functions.Like(document.Farm.Name, $"%{_searchString}%") ||
-            EF.Functions.Like(document.Plant.Name, $"%{_searchString}%") ||
-            EF.Functions.Like(document.Status.Name, $"%{_searchString}%") ||
-            EF.Functions.Like(
-                document.SpeciesType != null ? document.SpeciesType.DisplayName : "Unknown",
-                $"%{_searchString}%")
-        );
+        var filteredQuery = fullQuery.Where(document => true);
 
 
         foreach (var filterDefinition in state.FilterDefinitions)
@@ -204,12 +195,6 @@ partial class Invoices
             TotalItems = _totalItems,
             Items = await orderedQuery.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArrayAsync()
         };
-    }
-    
-    private void OnSearch(string searchString)
-    {
-        _searchString = searchString;
-        _dataGrid.ReloadServerData();
     }
 
     private void RowClicked(DataGridRowClickEventArgs<Document> args)
