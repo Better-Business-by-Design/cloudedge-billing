@@ -10,22 +10,7 @@ using MudBlazor;
 using MudBlazor.Utilities;
 
 namespace AccountsReceivable.API.Pages;
-public class ParameterReplaceVisitor : ExpressionVisitor
-{
-    private ParameterExpression from;
-    private Expression to;
-    public ParameterReplaceVisitor(ParameterExpression from, Expression to)
-    {
-        this.from = from;
-        this.to = to;
-    }
-    protected override Expression VisitParameter(ParameterExpression node)
-    {
-        return node == from ? to : node;
-    }
-    
 
-}
 partial class Invoices
 {
     private MudDataGrid<Document> _dataGrid = null!;
@@ -128,7 +113,7 @@ partial class Invoices
                 Expression<Func<Document, decimal>> selectPredicate = filterDefinition.Title switch
                 {
                     "KillSheet" => document => document.KillSheet,
-                    "Stock Count" => document => document.AnimalTotal,
+                    "Stock Count" => document => document.StockCount,
                     "Stock Weight" => document => document.WeightTotal,
                     _ => throw new NotImplementedException()
                 };
@@ -191,7 +176,7 @@ partial class Invoices
                 "KillSheet" => document => document.KillSheet,
                 "Farm.Name" => document => document.Farm.Name,
                 "SpeciesType" => document => document.SpeciesType == null ? string.Empty : document.SpeciesType.DisplayName,
-                "AnimalTotal" => document => document.AnimalTotal,
+                "StockCount" => document => document.StockCount,
                 "WeightTotal" => document => document.WeightTotal,
                 "Plant.Name" => document => document.Plant.Name,
                 "StatusId" => document => document.StatusId,
