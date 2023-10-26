@@ -1,4 +1,5 @@
 ﻿using System.Security.Authentication;
+using AccountsReceivable.API.ViewModels;
 using AccountsReceivable.BAL.Data;
 using AccountsReceivable.BAL.Extensions;
 using AccountsReceivable.BL.Models.Account;
@@ -16,6 +17,7 @@ partial class InvoiceDetail
     private Document? _document;
     private string _searchString = string.Empty;
     private bool _showAnimalId;
+
     private readonly List<BreadcrumbItem> _breadcrumb = new()
     {
         new BreadcrumbItem("Home", ""),
@@ -24,14 +26,7 @@ partial class InvoiceDetail
     };
 
     private MudTable<Animal> _table = null!;
-    /*private TableGroupDefinition<Animal> _group = new()
-    {
-        GroupName = "Animal",
-        Indentation = false,
-        Expandable = true,
-        IsInitiallyExpanded = false,
-        Selector = animal => $"{animal.GradeId} {animal.Weight}"
-    };*/
+    private MudDataGrid<PriceAnimals> _dataGrid = null!;
 
     private int _totalItems;
 
@@ -50,10 +45,14 @@ partial class InvoiceDetail
     [Inject]
     private IDialogService DialogService { get; set; } = default!;
 
-    private async Task<TableData<Animal>> ServerReload(TableState state)
+    private async Task<GridData<PriceAnimals>> GridServerReload(GridState<PriceAnimals> state)
     {
         if (_document is null)
         {
+            /*var ds = await DbContext.Documents.Include(s => s.Schedule).ToListAsync();
+            foreach (var d in ds) await d.CalculatePrices(DbContext);
+            await DbContext.SaveChangesAsync();*/
+            
             _document = await DbContext.Documents
                 .Include(document => document.Farm)
                 .Include(document => document.Status)
@@ -65,78 +64,68 @@ partial class InvoiceDetail
             {
                 Navigation.NavigateTo("invoices");
 
-                return new TableData<Animal>
+                return new GridData<PriceAnimals>
                 {
                     TotalItems = _totalItems,
-                    Items = Array.Empty<Animal>()
+                    Items = Array.Empty<PriceAnimals>()
                 };
             }
 
             StateHasChanged();
         }
 
-        var fullQuery = DbContext.Set<Animal>()
+        var fullQuery = DbContext.Documents
             .AsNoTracking()
-            .Include(animal => animal.Grade)
-            .Include(animal => animal.Grade!.AnimalType)
-            .Include(animal => animal.DeductionDetails)
-            .Include(animal => animal.PremiumDetails)
-            .Where(animal => animal.DocumentId == _document!.Id);
-
-        /*var filteredQuery = fullQuery.Where(schedule =>
-            string.IsNullOrWhiteSpace(_searchString) ||
-            EF.Functions.Like(schedule.Status.Name, $"%{_searchString}%") ||
-            EF.Functions.Like(schedule.Meatwork.Name, $"%{_searchString}%")
-        );*/
-
-        /*var orderedQuery = state.SortLabel switch
-        {
-            "start_field" => fullQuery.OrderByDirection(state.SortDirection, schedule => schedule.StartDate),
-            "end_field" => fullQuery.OrderByDirection(state.SortDirection, schedule => schedule.EndDate),
-            "works_field" => fullQuery.OrderByDirection(state.SortDirection,
-                schedule => schedule.Meatwork.Name),
-            "status_field" => fullQuery.OrderByDirection(state.SortDirection,
-                schedule => schedule.StatusId),
-            _ => fullQuery
-        };*/
+            .Include(document => document.Schedule!.Prices)
+            .ThenInclude(prices => prices.Grade)
+            .Include(document => document.Animals!)
+            .ThenInclude(animal => animal.Grade)
+            .Where(document => document.Id.Equals(Id))
+            .SelectMany(document => document.Schedule!.Prices.Select(price => new PriceAnimals
+                {
+                    Price = price,
+                    Grade = price.Grade,
+                    StockCount = (ushort) (document.Animals != null ? document.Animals.Count(animal => animal.GradeId == price.GradeId && animal.Weight <= price.MaxWeight && animal.Weight >= price.MinWeight) : 0),
+                    StockWeight = document.Animals != null ? document.Animals.Where(animal => animal.GradeId == price.GradeId && animal.Weight <= price.MaxWeight && animal.Weight >= price.MinWeight).Sum(animal => animal.Weight) : 0,
+                    Cost = document.Animals != null ? document.Animals.First(animal => animal.GradeId == price.GradeId && animal.Weight <= price.MaxWeight && animal.Weight >= price.MinWeight).Price : 0,
+                    CalcCost = document.Animals != null ? document.Animals.First(animal => animal.GradeId == price.GradeId && animal.Weight <= price.MaxWeight && animal.Weight >= price.MinWeight).CalcPrice : 0
+                }
+            ).Where(animalPrice => animalPrice.StockCount != 0));
 
         _totalItems = fullQuery.Count();
-        _showAnimalId = fullQuery.Any(animal => animal.NaitEid != null);
 
-        return new TableData<Animal>
+        return new GridData<PriceAnimals>
         {
             TotalItems = _totalItems,
-            Items = await fullQuery.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArrayAsync()
+            Items = await fullQuery.ToArrayAsync()
         };
     }
 
-    private string RowStyleFunc(Animal animal, int index)
+    private string RowStyleFunc(PriceAnimals priceAnimals, int index)
     {
-        // TODO - Validation
-        return /*animal.ValidationId is ValidationId.Low or ValidationId.High
-            ? $"background-color: {Colors.DeepOrange.Lighten4};"
-            :*/ string.Empty;
+        return $"background-color: {(priceAnimals.Cost == priceAnimals.CalcCost ? Colors.LightGreen.Lighten4 : Colors.DeepOrange.Lighten4)}";
+
     }
 
     private async Task RecalculatePricing()
     {
         await _document!.CalculatePrices(DbContext);
         await DbContext.SaveChangesAsync();
-        
-        Navigation.NavigateTo($"invoices/{_document!.Id}");
+
+        Navigation.NavigateTo($"invoices/{_document!.Id}", true);
     }
-    
+
     private async Task SetStatusApproved()
     {
         await SetDocumentStatus(StatusId.Approved);
-        
+
         Navigation.NavigateTo("invoices");
     }
-    
+
     private async Task SetStatusDeclined()
     {
         await SetDocumentStatus(StatusId.Declined);
-        
+
         Navigation.NavigateTo("invoices");
     }
 
@@ -151,7 +140,7 @@ partial class InvoiceDetail
             // Comment = comment, // todo
             Timestamp = DateTime.Now
         };
-        
+
         await DbContext.AddAsync(audit);
         await DbContext.SaveChangesAsync();
     }
