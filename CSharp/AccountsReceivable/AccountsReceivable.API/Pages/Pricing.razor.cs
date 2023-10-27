@@ -1,68 +1,133 @@
-﻿using AccountsReceivable.BAL.Data;
+﻿using System.Linq.Expressions;
+using AccountsReceivable.API.Shared;
 using AccountsReceivable.BL.Models.Application;
-using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 
 namespace AccountsReceivable.API.Pages;
 
-partial class Pricing
+partial class Pricing : DataGridPage<Schedule>
 {
-    private string _searchString = string.Empty;
-    private MudTable<Schedule> _table = null!;
+    
     private readonly List<BreadcrumbItem> _breadcrumb = new()
     {
         new BreadcrumbItem("Home", ""),
         new BreadcrumbItem("Pricing Schedules", null, true)
     };
 
-    private int _totalItems;
-
-    [Inject]
-    protected virtual ApplicationDbContext DbContext { get; set; } = default!;
-
-    [Inject]
-    protected virtual NavigationManager Navigation { get; set; } = default!;
-
-    private async Task<TableData<Schedule>> ServerReload(TableState state)
+    protected override IQueryable<Schedule> BuildFullQuery()
     {
-        var fullQuery = DbContext.Schedules
+        return DbContext.Schedules
             .AsNoTracking()
             .Include(schedule => schedule.Status)
             .Include(schedule => schedule.Meatwork);
-
-        var filteredQuery = fullQuery.Where(schedule =>
-            string.IsNullOrWhiteSpace(_searchString) ||
-            EF.Functions.Like(schedule.Status.Name, $"%{_searchString}%") ||
-            EF.Functions.Like(schedule.Meatwork.Name, $"%{_searchString}%")
-        );
-
-        var orderedQuery = state.SortLabel switch
-        {
-            "start_field" => filteredQuery.OrderByDirection(state.SortDirection, schedule => schedule.StartDate),
-            "end_field" => filteredQuery.OrderByDirection(state.SortDirection, schedule => schedule.EndDate),
-            "works_field" => filteredQuery.OrderByDirection(state.SortDirection, schedule => schedule.Meatwork.Name),
-            "status_field" => filteredQuery.OrderByDirection(state.SortDirection, schedule => schedule.StatusId),
-            _ => filteredQuery
-        };
-
-        _totalItems = orderedQuery.Count();
-
-        return new TableData<Schedule>
-        {
-            TotalItems = _totalItems,
-            Items = await orderedQuery.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArrayAsync()
-        };
     }
 
-    private void OnSearch(string searchString)
+    protected override IQueryable<Schedule> FilterFullQuery(
+        IQueryable<Schedule> fullQuery, 
+        IEnumerable<IFilterDefinition<Schedule>> filterDefinitions)
     {
-        _searchString = searchString;
-        _table.ReloadServerData();
+        var filteredQuery = fullQuery;
+        foreach (var filterDefinition in filterDefinitions)
+        {
+            if (filterDefinition.Operator is null) { continue; }
+            var logicOperator = filterDefinition.Operator!;
+            
+            if (filterDefinition.Value is null && filterDefinition.Operator is not ("is empty" or "is not empty")) 
+            {
+                continue;
+            }
+            
+            Expression<Func<Schedule, bool>> fullPredicate;
+            
+            if (filterDefinition.FieldType.IsString)
+            {
+                var value = filterDefinition.Value?.ToString() ?? string.Empty;
+                
+                Expression<Func<Schedule, string>> selectPredicate = filterDefinition.Title switch
+                {
+                    "Works" => schedule => schedule.Meatwork.Name,
+                    _ => throw new NotImplementedException()
+                };
+                
+                fullPredicate = selectPredicate.Compose(GenerateStringLogicPredicate(logicOperator, value));
+            } 
+            else if (filterDefinition.FieldType.IsBoolean)
+            {
+                throw new NotImplementedException();
+            } 
+            else if (filterDefinition.FieldType.IsEnum)
+            {
+                var value = filterDefinition.Value!;
+                Expression<Func<Schedule, Enum>> selectPredicate = filterDefinition.Title switch
+                {
+                    "Status" => schedule => schedule.Status.Id,
+                    _ => throw new NotImplementedException()
+                };
+                
+                fullPredicate = selectPredicate.Compose(GenerateEnumLogicPredicate(logicOperator, value));
+            } 
+            else if (filterDefinition.FieldType.IsGuid)
+            {
+                throw new NotImplementedException();
+            } 
+            else if (filterDefinition.FieldType.IsNumber)
+            {
+                throw new NotImplementedException();
+            } 
+            else if (filterDefinition.FieldType.IsDateTime)
+            {
+                var value = Convert.ToDateTime(filterDefinition.Value ?? new DateTime());
+                Expression<Func<Schedule, DateTime>> selectPredicate = filterDefinition.Title switch
+                {
+                    "Start Date" => schedule => schedule.StartDate,
+                    "End Date" => schedule => schedule.EndDate,
+                    _ => throw new NotImplementedException()
+                };
+                fullPredicate = selectPredicate.Compose(GenerateDateTimeLogicPredicate(logicOperator, value));
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+            
+            filteredQuery = filteredQuery.Where(fullPredicate);
+        }
+        return filteredQuery;
     }
 
-    private void RowClickEvent(TableRowClickEventArgs<Schedule> clickEvent)
+    protected override IOrderedQueryable<Schedule> OrderFilteredQuery(
+        IQueryable<Schedule> filteredQuery, 
+        IEnumerable<SortDefinition<Schedule>> sortDefinitions)
     {
-        Navigation.NavigateTo($"pricing/{clickEvent.Item.Id}");
+        var orderedQuery = filteredQuery.OrderBy(schedule => true);
+        // ReSharper disable once LoopCanBeConvertedToQuery
+        foreach (var sortDefinition in sortDefinitions)
+        {
+            Expression<Func<Schedule, object>> keySelector = sortDefinition.SortBy switch
+            {
+                "StartDate" => schedule => schedule.StartDate,
+                "EndDate" => schedule => schedule.EndDate,
+                "Meatwork.Name" => schedule => schedule.Meatwork.Name,
+                "Status.Id" => schedule => schedule.Status.Id,
+                _ => throw new NotImplementedException()
+            };
+
+            orderedQuery = sortDefinition.Descending
+                ? orderedQuery.ThenByDescending(keySelector)
+                : orderedQuery.ThenBy(keySelector);
+        }
+
+        return orderedQuery;
+    }
+
+    protected override void RowClicked(DataGridRowClickEventArgs<Schedule> args)
+    {
+        Navigation.NavigateTo($"pricing/{args.Item.Id}");
+    }
+
+    protected override string RowStyleFunc(Schedule row, int i)
+    {
+        return base.RowStyleFunc(row, i);
     }
 }

@@ -8,7 +8,7 @@ namespace AccountsReceivable.API.Pages;
 
 public abstract class DataGridPage<T> : ComponentBase
 {
-    protected MudDataGrid<T> DataGrid;
+    protected MudDataGrid<T> DataGrid = null!;
     protected int TotalItems;
     
     [Inject]
