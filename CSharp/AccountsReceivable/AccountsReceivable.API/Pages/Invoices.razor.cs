@@ -8,42 +8,38 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MudBlazor;
 using MudBlazor.Utilities;
+using Expression = Castle.DynamicProxy.Generators.Emitters.SimpleAST.Expression;
 
 namespace AccountsReceivable.API.Pages;
 
-partial class Invoices
+partial class Invoices : DataGridPage<Document>
 {
-    private MudDataGrid<Document> _dataGrid = null!;
     private readonly List<BreadcrumbItem> _breadcrumb = new()
     {
         new BreadcrumbItem("Home", ""),
         new BreadcrumbItem("Buyer Created Invoices", null, true)
     };
-    
-    private string _searchString = string.Empty;
-    private int _totalItems;
 
-    [Inject]
-    protected virtual ApplicationDbContext DbContext { get; set; } = default!;
-
-    [Inject]
-    protected virtual NavigationManager Navigation { get; set; } = default!;
-    
-    
-    private async Task<GridData<Document>> GridServerReload(GridState<Document> state)
+    protected override IQueryable<Document> BuildFullQuery()
     {
-        var fullQuery = DbContext.Documents
+        return DbContext.Documents
             .AsNoTracking()
             .Include(document => document.Farm)
             .Include(document => document.Plant)
             .Include(document => document.Status)
             .Include(document => document.SpeciesType);
-
-        var filteredQuery = fullQuery.Where(document => true);
-
-
-        foreach (var filterDefinition in state.FilterDefinitions)
+    }
+    
+    protected override IQueryable<Document> FilterFullQuery(
+        IQueryable<Document> fullQuery, 
+        IEnumerable<IFilterDefinition<Document>> filterDefinitions)
+    {
+        var filteredQuery = fullQuery;
+        foreach (var filterDefinition in filterDefinitions)
         {
+            if (filterDefinition.Operator is null) { continue; }
+            var logicOperator = filterDefinition.Operator!;
+            
             if (filterDefinition.Value is null && filterDefinition.Operator is not ("is empty" or "is not empty")) 
             {
                 continue;
@@ -62,18 +58,7 @@ partial class Invoices
                     _ => throw new NotImplementedException()
                 };
 
-                Expression<Func<string, bool>> logicPredicate = filterDefinition.Operator switch
-                {
-                    "contains" => property => property.Contains(value),
-                    "not contains" => property => !property.Contains(value),
-                    "equals" => property => property.Equals(value),
-                    "not equals" => property => !property.Equals(value),
-                    "starts with" => property => property.StartsWith(value),
-                    "ends with" => property => property.EndsWith(value),
-                    "is empty" => property => property.Equals(string.Empty),
-                    "is not empty" => property => !property.Equals(string.Empty),
-                    _ => throw new NotImplementedException()
-                };
+                var logicPredicate = GenerateStringLogicPredicate(logicOperator, value);
 
                 fullPredicate = selectPredicate.Compose(logicPredicate);
             } 
@@ -83,7 +68,7 @@ partial class Invoices
             } 
             else if (filterDefinition.FieldType.IsEnum)
             {
-                var value = filterDefinition.Value;
+                var value = filterDefinition.Value!;
                 Expression<Func<Document, Enum>> selectPredicate = filterDefinition.Title switch
                 {
                     "Species" => document => document.SpeciesTypeId,
@@ -93,12 +78,8 @@ partial class Invoices
                     _ => throw new NotImplementedException()
                 };
 
-                Expression<Func<Enum, bool>> logicPredicate = filterDefinition.Operator switch
-                {
-                    "is" => property => property.Equals(value),
-                    "is not" => property => !property.Equals(value),
-                    _ => throw new NotImplementedException()
-                };
+                var logicPredicate =
+                    GenerateEnumLogicPredicate(logicOperator, value);
 
                 fullPredicate = selectPredicate.Compose(logicPredicate);
             } 
@@ -117,18 +98,7 @@ partial class Invoices
                     _ => throw new NotImplementedException()
                 };
 
-                Expression<Func<decimal, bool>> logicPredicate = filterDefinition.Operator switch
-                {
-                    "=" => property => property == value,
-                    "!=" => property => property != value,
-                    ">" => property => property > value,
-                    ">=" => property => property >= value,
-                    "<" => property => property < value,
-                    "<=" => property => property <= value,
-                    "is empty" => property => false, // TODO... find better way to implement
-                    "is not empty" => property => true, // TODO... find better way to implement
-                    _ => throw new NotImplementedException()
-                };
+                var logicPredicate = GenerateDecimalLogicPredicate(logicOperator, value);
 
                 fullPredicate = selectPredicate.Compose(logicPredicate);
             } 
@@ -141,18 +111,7 @@ partial class Invoices
                     _ => throw new NotImplementedException()
                 };
 
-                Expression<Func<DateTime, bool>> logicPredicate = filterDefinition.Operator switch
-                {
-                    "is" => property => property.Equals(value),
-                    "is not" => property => !property.Equals(value),
-                    "is after" => property => property.CompareTo(value) > 0,
-                    "is on or after" => property => property.CompareTo(value) >= 0,
-                    "is before" => property => property.CompareTo(value) < 0,
-                    "is on or before" => property => property.CompareTo(value) <= 0,
-                    "is empty" => property => property.CompareTo(new DateTime()) == 0,
-                    "is not empty" => property => property.CompareTo(new DateTime()) != 0,
-                    _ => throw new NotImplementedException()
-                };
+                var logicPredicate = GenerateDateTimeLogicPredicate(logicOperator, value);
                 fullPredicate = selectPredicate.Compose(logicPredicate);
             }
             else
@@ -161,15 +120,19 @@ partial class Invoices
             }
             filteredQuery = filteredQuery.Where(fullPredicate);
         }
-        
-        Expression<Func<Document, object>> keySelector = document => 0;
-        var orderedQuery = filteredQuery.OrderBy(keySelector);
-        
+
+        return filteredQuery;
+    }
+
+    protected override IOrderedQueryable<Document> OrderFilteredQuery(
+        IQueryable<Document> filteredQuery, 
+        IEnumerable<SortDefinition<Document>> sortDefinitions)
+    {
+        var orderedQuery = filteredQuery.OrderBy(document => true);
         // ReSharper disable once LoopCanBeConvertedToQuery
-        foreach (var sortDefinition in state.SortDefinitions)
+        foreach (var sortDefinition in sortDefinitions)
         {
-            
-            keySelector = sortDefinition.SortBy switch
+            Expression<Func<Document, object>> keySelector = sortDefinition.SortBy switch
             {
                 "DateProcessed" => document => document.DateProcessed,
                 "KillSheet" => document => document.KillSheet,
@@ -187,34 +150,27 @@ partial class Invoices
                 ? orderedQuery.ThenByDescending(keySelector)
                 : orderedQuery.ThenBy(keySelector);
         }
-        
-        _totalItems = orderedQuery.Count();
 
-        return new GridData<Document>
-        {
-            TotalItems = _totalItems,
-            Items = await orderedQuery.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArrayAsync()
-        };
+        return orderedQuery;
     }
-
-    private void RowClicked(DataGridRowClickEventArgs<Document> args)
+    
+    protected override void RowClicked(DataGridRowClickEventArgs<Document> args)
     {
         Navigation.NavigateTo($"invoices/{args.Item.Id}");
     }
 
-    private Func<Document, int, string> _rowStyleFunc => (document, i) =>
+    protected override string RowStyleFunc(Document row, int i)
     {
-        var color = document.StatusId switch
-        {
-            StatusId.Pending => Colors.LightBlue.Lighten4,
-            StatusId.Approved => Colors.LightGreen.Lighten4,
-            StatusId.Overridden => Colors.Red.Lighten4,
-            StatusId.Declined => Colors.Red.Lighten2,
-            StatusId.Superseded => Colors.Grey.Lighten4,
-            StatusId.Missing => Colors.Red.Lighten1,
-            _ => Colors.Shades.White
-        }; 
+        var color = row.StatusId switch
+            {
+                StatusId.Pending => Colors.LightBlue.Lighten4,
+                StatusId.Approved => Colors.LightGreen.Lighten4,
+                StatusId.Overridden => Colors.Red.Lighten4,
+                StatusId.Declined => Colors.Red.Lighten2,
+                StatusId.Superseded => Colors.Grey.Lighten4,
+                StatusId.Missing => Colors.Red.Lighten1,
+                _ => Colors.Shades.White
+            };
         return $"background-color: {color}";
-        
-    };
+    }
 }

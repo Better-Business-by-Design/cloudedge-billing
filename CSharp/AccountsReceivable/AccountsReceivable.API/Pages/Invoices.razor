@@ -1,9 +1,10 @@
 ﻿@page "/invoices"
+@inherits DataGridPage<Document>
 
 <Breadcrumb Items="_breadcrumb" />
 
 <MudDataGrid 
-    @ref="_dataGrid"
+    @ref="DataGrid"
     T="Document"
     ServerData="@(new Func<GridState<Document>, Task<GridData<Document>>>(GridServerReload))"
     SortMode="SortMode.Multiple"
@@ -12,7 +13,7 @@
     Dense="true"
     Hover="true"
     Striped="true"
-    RowStyleFunc="@_rowStyleFunc">
+    RowStyleFunc="@RowStyleFunc">
     <Columns>
         <PropertyColumn Property="x => x.DateProcessed" Format="dd/MM/yyyy" Title="Date"/>
         <PropertyColumn Property="x => x.KillSheet"/>
