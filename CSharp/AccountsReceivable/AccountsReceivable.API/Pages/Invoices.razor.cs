@@ -22,7 +22,9 @@ partial class Invoices : DataGridPage<Document>
             .Include(document => document.Farm)
             .Include(document => document.Plant)
             .Include(document => document.Status)
-            .Include(document => document.SpeciesType);
+            .Include(document => document.SpeciesType)
+            .Include(document => document.CalcValidation)
+            .Include(document => document.TransitValidation);
     }
     
     protected override IQueryable<Document> FilterFullQuery(
@@ -132,12 +134,13 @@ partial class Invoices : DataGridPage<Document>
                 "DateProcessed" => document => document.DateProcessed,
                 "KillSheet" => document => document.KillSheet,
                 "Farm.Name" => document => document.Farm.Name,
-                "SpeciesType" => document => document.SpeciesType.DisplayName,
+                "SpeciesType.DisplayName" => document => document.SpeciesType.DisplayName,
                 "StockCount" => document => document.StockCount,
                 "WeightTotal" => document => document.WeightTotal,
                 "Plant.Name" => document => document.Plant.Name,
+                "CalcValidationId" => document => document.CalcValidationId,
+                "TransitValidationId" => document => document.TransitValidationId,
                 "StatusId" => document => document.StatusId,
-                "TransitId" => document => document.TransitId == null ? string.Empty : document.TransitId,
                 _ => throw new NotImplementedException()
             };
 

@@ -1,4 +1,4 @@
-<Activity mc:Ignorable="sap sap2010" x:Class="Load_Documents" sap2010:ExpressionActivityEditor.ExpressionActivityEditor="C#" sap:VirtualizedContainerService.HintSize="833.6,3493.6" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:a="clr-namespace:AutoMapper;assembly=AutoMapper" xmlns:abd="clr-namespace:AccountsReceivable.BAL.Data;assembly=AccountsReceivable.BAL" xmlns:abma="clr-namespace:AccountsReceivable.BL.Models.Application;assembly=AccountsReceivable.BL" xmlns:abme="clr-namespace:AccountsReceivable.BL.Models.Enum;assembly=AccountsReceivable.BL" xmlns:abmj="clr-namespace:AccountsReceivable.BL.Models.Json;assembly=AccountsReceivable.BL" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:sc="clr-namespace:System.Collections;assembly=System.Private.CoreLib" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:si="clr-namespace:System.IO;assembly=System.Private.CoreLib" xmlns:udcdw="clr-namespace:UiPath.Data.ConnectionUI.Dialog.Workaround;assembly=UiPath.Database" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity mc:Ignorable="sap sap2010" x:Class="Load_Documents" sap2010:ExpressionActivityEditor.ExpressionActivityEditor="C#" sap:VirtualizedContainerService.HintSize="1121.6,3674.4" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:a="clr-namespace:AutoMapper;assembly=AutoMapper" xmlns:abd="clr-namespace:AccountsReceivable.BAL.Data;assembly=AccountsReceivable.BAL" xmlns:abe="clr-namespace:AccountsReceivable.BAL.Extensions;assembly=AccountsReceivable.BAL" xmlns:abma="clr-namespace:AccountsReceivable.BL.Models.Application;assembly=AccountsReceivable.BL" xmlns:abme="clr-namespace:AccountsReceivable.BL.Models.Enum;assembly=AccountsReceivable.BL" xmlns:abmj="clr-namespace:AccountsReceivable.BL.Models.Json;assembly=AccountsReceivable.BL" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:sc="clr-namespace:System.ComponentModel;assembly=System.ComponentModel.TypeConverter" xmlns:sc1="clr-namespace:System.Collections;assembly=System.Private.CoreLib" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:si="clr-namespace:System.IO;assembly=System.Private.CoreLib" xmlns:stt="clr-namespace:System.Threading.Tasks;assembly=System.Private.CoreLib" xmlns:udcdw="clr-namespace:UiPath.Data.ConnectionUI.Dialog.Workaround;assembly=UiPath.Database" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
       <x:String>AccountsReceivable.BAL.Data</x:String>
@@ -42,7 +42,8 @@
       <x:String>UiPath.Activities.System.Collections</x:String>
       <x:String>AutoMapper</x:String>
       <x:String>AutoMapper.Internal</x:String>
-      <x:String>AccountsReceivable.BAL.Mappings</x:String>
+      <x:String>AccountsReceivable.BAL.Extensions</x:String>
+      <x:String>System.Threading.Tasks</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -118,9 +119,13 @@
       <AssemblyReference>UiPath.Excel.Activities.Design</AssemblyReference>
       <AssemblyReference>AutoMapper</AssemblyReference>
       <AssemblyReference>netstandard</AssemblyReference>
+      <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>UiPath.OCR.Core</AssemblyReference>
+      <AssemblyReference>UiPath.Vision.Core</AssemblyReference>
+      <AssemblyReference>System.Threading.Tasks.Parallel</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Load Documents" sap:VirtualizedContainerService.HintSize="796.8,3428.8" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="Load Documents" sap:VirtualizedContainerService.HintSize="764,3609.6" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="abd:ApplicationDbContext" Name="DbContext" />
       <Variable x:TypeArguments="scg:List(abma:Supplier)" Name="Suppliers" />
@@ -131,10 +136,10 @@
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <InvokeMethod DisplayName="Invoke - SNI Workaround" sap:VirtualizedContainerService.HintSize="734.4,134.4" sap2010:WorkflowViewState.IdRef="InvokeMethod_1" MethodName="SNILoadWorkaround" TargetType="udcdw:DbWorkarounds">
+    <InvokeMethod DisplayName="Invoke - SNI Workaround" sap:VirtualizedContainerService.HintSize="701.6,134.4" sap2010:WorkflowViewState.IdRef="InvokeMethod_1" MethodName="SNILoadWorkaround" TargetType="udcdw:DbWorkarounds">
       <InArgument x:TypeArguments="x:Boolean">True</InArgument>
     </InvokeMethod>
-    <ui:MultipleAssign DisplayName="Assign - DbContext" sap:VirtualizedContainerService.HintSize="734.4,180" sap2010:WorkflowViewState.IdRef="MultipleAssign_1">
+    <ui:MultipleAssign DisplayName="Assign - DbContext" sap:VirtualizedContainerService.HintSize="701.6,180" sap2010:WorkflowViewState.IdRef="MultipleAssign_1">
       <ui:MultipleAssign.AssignOperations>
         <scg:List x:TypeArguments="ui:AssignOperation" Capacity="4">
           <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_1">
@@ -176,7 +181,7 @@
         </scg:List>
       </ui:MultipleAssign.AssignOperations>
     </ui:MultipleAssign>
-    <ui:ForEachFileX DisplayName="For Each - Document in Folder" Filter="*.json" Folder="Data\\Input" sap:VirtualizedContainerService.HintSize="734.4,2748" sap2010:WorkflowViewState.IdRef="ForEachFileX_1" IncludeSubDirectories="False" OrderBy="NameAscFirst" SkipFolderWithoutPermission="False">
+    <ui:ForEachFileX DisplayName="For Each - Document in Folder" Filter="*.json" Folder="Data\\Input" sap:VirtualizedContainerService.HintSize="701.6,2928.8" sap2010:WorkflowViewState.IdRef="ForEachFileX_1" IncludeSubDirectories="False" OrderBy="NameAscFirst" SkipFolderWithoutPermission="False">
       <ui:ForEachFileX.Body>
         <ActivityAction x:TypeArguments="si:FileInfo, x:Int32">
           <ActivityAction.Argument1>
@@ -185,32 +190,33 @@
           <ActivityAction.Argument2>
             <DelegateInArgument x:TypeArguments="x:Int32" Name="CurrentIndex" />
           </ActivityAction.Argument2>
-          <Sequence DisplayName="Process Json Documents" sap:VirtualizedContainerService.HintSize="700.8,2484.8" sap2010:WorkflowViewState.IdRef="Sequence_11">
+          <Sequence DisplayName="Process Json Documents" sap:VirtualizedContainerService.HintSize="668,2665.6" sap2010:WorkflowViewState.IdRef="Sequence_11">
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>
-            <ui:ForEach x:TypeArguments="abmj:DocumentDto" DisplayName="For Each - DocumentDto in RootDto" sap:VirtualizedContainerService.HintSize="638.4,2199.2" sap2010:WorkflowViewState.IdRef="ForEach`1_2">
+            <ui:ForEach x:TypeArguments="abmj:DocumentDto" DisplayName="For Each - DocumentDto in RootDto" sap:VirtualizedContainerService.HintSize="605.6,2553.6" sap2010:WorkflowViewState.IdRef="ForEach`1_2">
               <ui:ForEach.Body>
                 <ActivityAction x:TypeArguments="abmj:DocumentDto">
                   <ActivityAction.Argument>
                     <DelegateInArgument x:TypeArguments="abmj:DocumentDto" Name="DocumentDto" />
                   </ActivityAction.Argument>
-                  <Sequence DisplayName="Handle Documents" sap:VirtualizedContainerService.HintSize="604.8,2011.2" sap2010:WorkflowViewState.IdRef="Sequence_4">
+                  <Sequence DisplayName="Handle Documents" sap:VirtualizedContainerService.HintSize="572,2365.6" sap2010:WorkflowViewState.IdRef="Sequence_4">
                     <Sequence.Variables>
                       <Variable x:TypeArguments="x:Int32" Name="AnimalIndex" />
                       <Variable x:TypeArguments="abma:Document" Name="Document" />
                       <Variable x:TypeArguments="a:MapperConfiguration" Name="DocumentConfig" />
                       <Variable x:TypeArguments="x:Int32" Name="PaymentAdviceAnimalTypeIndex" />
                       <Variable x:TypeArguments="x:Int32" Name="SummaryIndex" />
+                      <Variable x:TypeArguments="stt:Task" Name="PricingTask" />
                     </Sequence.Variables>
                     <sap:WorkflowViewStateService.ViewState>
                       <scg:Dictionary x:TypeArguments="x:String, x:Object">
                         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                       </scg:Dictionary>
                     </sap:WorkflowViewStateService.ViewState>
-                    <ui:LogMessage DisplayName="Log - Started Document" sap:VirtualizedContainerService.HintSize="561.6,142.4" sap2010:WorkflowViewState.IdRef="LogMessage_1">
+                    <ui:LogMessage DisplayName="Log - Started Document" sap:VirtualizedContainerService.HintSize="528.8,142.4" sap2010:WorkflowViewState.IdRef="LogMessage_1">
                       <ui:LogMessage.Level>
                         <InArgument x:TypeArguments="ui:LogLevel">
                           <CSharpValue x:TypeArguments="ui:LogLevel" sap2010:WorkflowViewState.IdRef="CSharpValue`1_51">UiPath.Core.Activities.LogLevel.Info</CSharpValue>
@@ -222,7 +228,7 @@
                         </InArgument>
                       </ui:LogMessage.Message>
                     </ui:LogMessage>
-                    <ui:MultipleAssign DisplayName="Assign - Document" sap:VirtualizedContainerService.HintSize="561.6,210.4" sap2010:WorkflowViewState.IdRef="MultipleAssign_3">
+                    <ui:MultipleAssign DisplayName="Assign - Document" sap:VirtualizedContainerService.HintSize="528.8,210.4" sap2010:WorkflowViewState.IdRef="MultipleAssign_3">
                       <ui:MultipleAssign.AssignOperations>
                         <scg:List x:TypeArguments="ui:AssignOperation" Capacity="8">
                           <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_14">
@@ -233,7 +239,7 @@
                             </ui:AssignOperation.To>
                             <ui:AssignOperation.Value>
                               <InArgument x:TypeArguments="abma:Document">
-                                <CSharpValue x:TypeArguments="abma:Document" sap2010:WorkflowViewState.IdRef="CSharpValue`1_72">DocumentMap.Configuration.CreateMapper().Map&lt;Document&gt;(DocumentDto)</CSharpValue>
+                                <CSharpValue x:TypeArguments="abma:Document" sap2010:WorkflowViewState.IdRef="CSharpValue`1_99">DocumentExtensions.Configuration.CreateMapper().Map&lt;Document&gt;(DocumentDto)</CSharpValue>
                               </InArgument>
                             </ui:AssignOperation.Value>
                           </ui:AssignOperation>
@@ -267,13 +273,13 @@
                           </ui:AssignOperation>
                           <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_10">
                             <ui:AssignOperation.To>
-                              <OutArgument x:TypeArguments="s:Nullable(abme:SpeciesTypeId)">
-                                <CSharpReference x:TypeArguments="s:Nullable(abme:SpeciesTypeId)" sap2010:WorkflowViewState.IdRef="CSharpReference`1_25">Document.SpeciesTypeId</CSharpReference>
+                              <OutArgument x:TypeArguments="abme:SpeciesTypeId">
+                                <CSharpReference x:TypeArguments="abme:SpeciesTypeId" sap2010:WorkflowViewState.IdRef="CSharpReference`1_44">Document.SpeciesTypeId</CSharpReference>
                               </OutArgument>
                             </ui:AssignOperation.To>
                             <ui:AssignOperation.Value>
-                              <InArgument x:TypeArguments="s:Nullable(abme:SpeciesTypeId)">
-                                <CSharpValue x:TypeArguments="s:Nullable(abme:SpeciesTypeId)" sap2010:WorkflowViewState.IdRef="CSharpValue`1_74" xml:space="preserve">DocumentDto.PaymentAdviceAnimalType.Any() ? 
+                              <InArgument x:TypeArguments="abme:SpeciesTypeId">
+                                <CSharpValue x:TypeArguments="abme:SpeciesTypeId" sap2010:WorkflowViewState.IdRef="CSharpValue`1_105" xml:space="preserve">DocumentDto.PaymentAdviceAnimalType.Any() ? 
 	DocumentDto.PaymentAdviceAnimalType.Select(paymentAdvice =&gt; 
 		AnimalTypeHelper.GetAll().Single(animalType =&gt; animalType.DisplayName.Equals(paymentAdvice.AnimalType, StringComparison.OrdinalIgnoreCase)).SpeciesTypeId
 	).Distinct().Single() : 
@@ -284,30 +290,63 @@
                         </scg:List>
                       </ui:MultipleAssign.AssignOperations>
                     </ui:MultipleAssign>
-                    <ui:ForEach x:TypeArguments="x:Object" DisplayName="For Each - AnimalTypeSummary in Document" sap:VirtualizedContainerService.HintSize="561.6,541.6" sap2010:WorkflowViewState.IdRef="ForEach`1_5">
+                    <ui:IfElseIf DisplayName="If - Previous Document Exists" sap:VirtualizedContainerService.HintSize="528.8,344" sap2010:WorkflowViewState.IdRef="IfElseIf_1">
+                      <ui:IfElseIf.ConditionBlocks>
+                        <sc:BindingList x:TypeArguments="ui:IfElseIfBlock" AllowEdit="True" AllowNew="True" AllowRemove="True" RaiseListChangedEvents="True">
+                          <ui:IfElseIfBlock BlockType="If">
+                            <ui:IfElseIfBlock.Condition>
+                              <InArgument x:TypeArguments="x:Boolean">
+                                <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue`1_94">!string.IsNullOrWhiteSpace(Document.PreviousDocumentId)</CSharpValue>
+                              </InArgument>
+                            </ui:IfElseIfBlock.Condition>
+                            <ui:IfElseIfBlock.Then>
+                              <ui:MultipleAssign DisplayName="Assign - Previous Document" sap:VirtualizedContainerService.HintSize="478.4,148" sap2010:WorkflowViewState.IdRef="MultipleAssign_4">
+                                <ui:MultipleAssign.AssignOperations>
+                                  <scg:List x:TypeArguments="ui:AssignOperation" Capacity="4">
+                                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_15">
+                                      <ui:AssignOperation.To>
+                                        <OutArgument x:TypeArguments="abma:Document">
+                                          <CSharpReference x:TypeArguments="abma:Document" sap2010:WorkflowViewState.IdRef="CSharpReference`1_41">Document.PreviousDocument</CSharpReference>
+                                        </OutArgument>
+                                      </ui:AssignOperation.To>
+                                      <ui:AssignOperation.Value>
+                                        <InArgument x:TypeArguments="abma:Document">
+                                          <CSharpValue x:TypeArguments="abma:Document" sap2010:WorkflowViewState.IdRef="CSharpValue`1_125">DbContext.Documents.Single(document =&gt; document.Id.Equals(Document.PreviousDocumentId))</CSharpValue>
+                                        </InArgument>
+                                      </ui:AssignOperation.Value>
+                                    </ui:AssignOperation>
+                                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_16">
+                                      <ui:AssignOperation.To>
+                                        <OutArgument x:TypeArguments="abme:StatusId">
+                                          <CSharpReference x:TypeArguments="abme:StatusId" sap2010:WorkflowViewState.IdRef="CSharpReference`1_42">Document.PreviousDocument.StatusId</CSharpReference>
+                                        </OutArgument>
+                                      </ui:AssignOperation.To>
+                                      <ui:AssignOperation.Value>
+                                        <InArgument x:TypeArguments="abme:StatusId">
+                                          <CSharpValue x:TypeArguments="abme:StatusId" sap2010:WorkflowViewState.IdRef="CSharpValue`1_96">StatusId.Superseded</CSharpValue>
+                                        </InArgument>
+                                      </ui:AssignOperation.Value>
+                                    </ui:AssignOperation>
+                                  </scg:List>
+                                </ui:MultipleAssign.AssignOperations>
+                              </ui:MultipleAssign>
+                            </ui:IfElseIfBlock.Then>
+                          </ui:IfElseIfBlock>
+                        </sc:BindingList>
+                      </ui:IfElseIf.ConditionBlocks>
+                    </ui:IfElseIf>
+                    <ui:ForEach x:TypeArguments="x:Object" DisplayName="For Each - AnimalTypeSummary in Document" sap:VirtualizedContainerService.HintSize="528.8,359.2" sap2010:WorkflowViewState.IdRef="ForEach`1_5">
                       <ui:ForEach.Body>
                         <ActivityAction x:TypeArguments="x:Object">
                           <ActivityAction.Argument>
                             <DelegateInArgument x:TypeArguments="x:Object" Name="currentItem" />
                           </ActivityAction.Argument>
-                          <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="476.8,353.6" sap2010:WorkflowViewState.IdRef="Sequence_8">
+                          <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="476.8,171.2" sap2010:WorkflowViewState.IdRef="Sequence_8">
                             <sap:WorkflowViewStateService.ViewState>
                               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                               </scg:Dictionary>
                             </sap:WorkflowViewStateService.ViewState>
-                            <ui:LogMessage DisplayName="Log - Animal Type Summary" sap:VirtualizedContainerService.HintSize="433.6,142.4" sap2010:WorkflowViewState.IdRef="LogMessage_3">
-                              <ui:LogMessage.Level>
-                                <InArgument x:TypeArguments="ui:LogLevel">
-                                  <CSharpValue x:TypeArguments="ui:LogLevel" sap2010:WorkflowViewState.IdRef="CSharpValue`1_76">UiPath.Core.Activities.LogLevel.Trace</CSharpValue>
-                                </InArgument>
-                              </ui:LogMessage.Level>
-                              <ui:LogMessage.Message>
-                                <InArgument x:TypeArguments="x:Object">
-                                  <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue`1_91">"Started: Animal Type Summary [" + (SummaryIndex + 1) + "]"</CSharpValue>
-                                </InArgument>
-                              </ui:LogMessage.Message>
-                            </ui:LogMessage>
                             <Assign DisplayName="Assign - AnimalType" sap:VirtualizedContainerService.HintSize="433.6,81.6" sap2010:WorkflowViewState.IdRef="Assign_1">
                               <Assign.To>
                                 <OutArgument x:TypeArguments="abme:AnimalTypeId">
@@ -332,47 +371,24 @@
                         <InArgument x:TypeArguments="x:Int32" />
                       </ui:ForEach.MaxIterations>
                       <ui:ForEach.Values>
-                        <InArgument x:TypeArguments="sc:IEnumerable">
-                          <CSharpValue x:TypeArguments="sc:IEnumerable" sap2010:WorkflowViewState.IdRef="CSharpValue`1_85">Document.AnimalTypeSummaries</CSharpValue>
+                        <InArgument x:TypeArguments="sc1:IEnumerable">
+                          <CSharpValue x:TypeArguments="sc1:IEnumerable" sap2010:WorkflowViewState.IdRef="CSharpValue`1_85">Document.AnimalTypeSummaries</CSharpValue>
                         </InArgument>
                       </ui:ForEach.Values>
                     </ui:ForEach>
-                    <ui:ForEach x:TypeArguments="x:Object" DisplayName="For Each - Animal in Document" sap:VirtualizedContainerService.HintSize="561.6,732" sap2010:WorkflowViewState.IdRef="ForEach`1_6">
+                    <ui:ForEach x:TypeArguments="x:Object" DisplayName="For Each - Animal in Document" sap:VirtualizedContainerService.HintSize="528.8,359.2" sap2010:WorkflowViewState.IdRef="ForEach`1_6">
                       <ui:ForEach.Body>
                         <ActivityAction x:TypeArguments="x:Object">
                           <ActivityAction.Argument>
                             <DelegateInArgument x:TypeArguments="x:Object" Name="currentItem" />
                           </ActivityAction.Argument>
-                          <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="528,544" sap2010:WorkflowViewState.IdRef="Sequence_9">
+                          <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="476.8,171.2" sap2010:WorkflowViewState.IdRef="Sequence_9">
                             <sap:WorkflowViewStateService.ViewState>
                               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                               </scg:Dictionary>
                             </sap:WorkflowViewStateService.ViewState>
-                            <ui:CommentOut DisplayName="Comment Out" sap:VirtualizedContainerService.HintSize="484.8,332.8" sap2010:WorkflowViewState.IdRef="CommentOut_1">
-                              <ui:CommentOut.Body>
-                                <Sequence DisplayName="Ignored Activities" sap:VirtualizedContainerService.HintSize="449.6,254.4" sap2010:WorkflowViewState.IdRef="Sequence_10">
-                                  <sap:WorkflowViewStateService.ViewState>
-                                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                                    </scg:Dictionary>
-                                  </sap:WorkflowViewStateService.ViewState>
-                                  <ui:LogMessage DisplayName="Log - Animal" sap:VirtualizedContainerService.HintSize="387.2,142.4" sap2010:WorkflowViewState.IdRef="LogMessage_4">
-                                    <ui:LogMessage.Level>
-                                      <InArgument x:TypeArguments="ui:LogLevel">
-                                        <CSharpValue x:TypeArguments="ui:LogLevel" sap2010:WorkflowViewState.IdRef="CSharpValue`1_89">UiPath.Core.Activities.LogLevel.Trace</CSharpValue>
-                                      </InArgument>
-                                    </ui:LogMessage.Level>
-                                    <ui:LogMessage.Message>
-                                      <InArgument x:TypeArguments="x:Object">
-                                        <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue`1_92">"Started: Animal [" + (AnimalIndex + 1) + "]"</CSharpValue>
-                                      </InArgument>
-                                    </ui:LogMessage.Message>
-                                  </ui:LogMessage>
-                                </Sequence>
-                              </ui:CommentOut.Body>
-                            </ui:CommentOut>
-                            <Assign DisplayName="Assign - GradeId" sap:VirtualizedContainerService.HintSize="484.8,81.6" sap2010:WorkflowViewState.IdRef="Assign_2">
+                            <Assign DisplayName="Assign - GradeId" sap:VirtualizedContainerService.HintSize="433.6,81.6" sap2010:WorkflowViewState.IdRef="Assign_2">
                               <Assign.To>
                                 <OutArgument x:TypeArguments="abme:GradeId">
                                   <CSharpReference x:TypeArguments="abme:GradeId" sap2010:WorkflowViewState.IdRef="CSharpReference`1_39">((Animal) currentItem).GradeId</CSharpReference>
@@ -396,12 +412,12 @@
                         <InArgument x:TypeArguments="x:Int32" />
                       </ui:ForEach.MaxIterations>
                       <ui:ForEach.Values>
-                        <InArgument x:TypeArguments="sc:IEnumerable">
-                          <CSharpValue x:TypeArguments="sc:IEnumerable" sap2010:WorkflowViewState.IdRef="CSharpValue`1_87">Document.Animals</CSharpValue>
+                        <InArgument x:TypeArguments="sc1:IEnumerable">
+                          <CSharpValue x:TypeArguments="sc1:IEnumerable" sap2010:WorkflowViewState.IdRef="CSharpValue`1_87">Document.Animals</CSharpValue>
                         </InArgument>
                       </ui:ForEach.Values>
                     </ui:ForEach>
-                    <InvokeMethod DisplayName="Invoke - Add Document" sap:VirtualizedContainerService.HintSize="561.6,135.2" sap2010:WorkflowViewState.IdRef="InvokeMethod_6" MethodName="Add">
+                    <InvokeMethod DisplayName="Invoke - Add Document" sap:VirtualizedContainerService.HintSize="528.8,135.2" sap2010:WorkflowViewState.IdRef="InvokeMethod_25" MethodName="Add">
                       <InvokeMethod.TargetObject>
                         <InArgument x:TypeArguments="abd:ApplicationDbContext">
                           <CSharpValue x:TypeArguments="abd:ApplicationDbContext" sap2010:WorkflowViewState.IdRef="CSharpValue`1_39">DbContext</CSharpValue>
@@ -410,6 +426,28 @@
                       <InArgument x:TypeArguments="abma:Document">
                         <CSharpValue x:TypeArguments="abma:Document" sap2010:WorkflowViewState.IdRef="CSharpValue`1_66">Document</CSharpValue>
                       </InArgument>
+                    </InvokeMethod>
+                    <InvokeMethod DisplayName="Invoke - Save Changes" sap:VirtualizedContainerService.HintSize="528.8,135.2" sap2010:WorkflowViewState.IdRef="InvokeMethod_26" MethodName="SaveChanges">
+                      <InvokeMethod.TargetObject>
+                        <InArgument x:TypeArguments="abd:ApplicationDbContext">
+                          <CSharpValue x:TypeArguments="abd:ApplicationDbContext" sap2010:WorkflowViewState.IdRef="CSharpValue`1_117">DbContext</CSharpValue>
+                        </InArgument>
+                      </InvokeMethod.TargetObject>
+                    </InvokeMethod>
+                    <InvokeMethod DisplayName="Invoke - Calculate Prices" sap:VirtualizedContainerService.HintSize="528.8,135.2" sap2010:WorkflowViewState.IdRef="InvokeMethod_20" MethodName="CalculatePrices" TargetType="abe:DocumentExtensions">
+                      <InArgument x:TypeArguments="abma:Document">
+                        <CSharpValue x:TypeArguments="abma:Document" sap2010:WorkflowViewState.IdRef="CSharpValue`1_132">Document</CSharpValue>
+                      </InArgument>
+                      <InArgument x:TypeArguments="abd:ApplicationDbContext">
+                        <CSharpValue x:TypeArguments="abd:ApplicationDbContext" sap2010:WorkflowViewState.IdRef="CSharpValue`1_120">DbContext</CSharpValue>
+                      </InArgument>
+                    </InvokeMethod>
+                    <InvokeMethod DisplayName="Invoke - Save Changes" sap:VirtualizedContainerService.HintSize="528.8,135.2" sap2010:WorkflowViewState.IdRef="InvokeMethod_23" MethodName="SaveChanges">
+                      <InvokeMethod.TargetObject>
+                        <InArgument x:TypeArguments="abd:ApplicationDbContext">
+                          <CSharpValue x:TypeArguments="abd:ApplicationDbContext" sap2010:WorkflowViewState.IdRef="CSharpValue`1_128">DbContext</CSharpValue>
+                        </InArgument>
+                      </InvokeMethod.TargetObject>
                     </InvokeMethod>
                   </Sequence>
                 </ActivityAction>
@@ -421,23 +459,16 @@
                 <InArgument x:TypeArguments="x:Int32" />
               </ui:ForEach.MaxIterations>
               <ui:ForEach.Values>
-                <InArgument x:TypeArguments="sc:IEnumerable">
-                  <CSharpValue x:TypeArguments="sc:IEnumerable" sap2010:WorkflowViewState.IdRef="CSharpValue`1_42">JsonConvert.DeserializeObject&lt;RootDto[]&gt;(File.ReadAllText(CurrentFile.FullName)).SelectMany(r =&gt; r.Documents)</CSharpValue>
+                <InArgument x:TypeArguments="sc1:IEnumerable">
+                  <CSharpValue x:TypeArguments="sc1:IEnumerable" sap2010:WorkflowViewState.IdRef="CSharpValue`1_42">JsonConvert.DeserializeObject&lt;RootDto[]&gt;(File.ReadAllText(CurrentFile.FullName)).SelectMany(r =&gt; r.Documents)</CSharpValue>
                 </InArgument>
               </ui:ForEach.Values>
             </ui:ForEach>
-            <InvokeMethod DisplayName="Invoke - Save Changes" sap:VirtualizedContainerService.HintSize="638.4,133.6" sap2010:WorkflowViewState.IdRef="InvokeMethod_10" MethodName="SaveChanges">
-              <InvokeMethod.TargetObject>
-                <InArgument x:TypeArguments="abd:ApplicationDbContext">
-                  <CSharpValue x:TypeArguments="abd:ApplicationDbContext" sap2010:WorkflowViewState.IdRef="CSharpValue`1_41">DbContext</CSharpValue>
-                </InArgument>
-              </InvokeMethod.TargetObject>
-            </InvokeMethod>
           </Sequence>
         </ActivityAction>
       </ui:ForEachFileX.Body>
     </ui:ForEachFileX>
-    <InvokeMethod DisplayName="Invoke - Dispose" sap:VirtualizedContainerService.HintSize="734.4,134.4" sap2010:WorkflowViewState.IdRef="InvokeMethod_2" MethodName="Dispose">
+    <InvokeMethod DisplayName="Invoke - Dispose" sap:VirtualizedContainerService.HintSize="701.6,134.4" sap2010:WorkflowViewState.IdRef="InvokeMethod_2" MethodName="Dispose">
       <InvokeMethod.TargetObject>
         <InArgument x:TypeArguments="abd:ApplicationDbContext">
           <CSharpValue x:TypeArguments="abd:ApplicationDbContext" sap2010:WorkflowViewState.IdRef="CSharpValue`1_5">DbContext</CSharpValue>

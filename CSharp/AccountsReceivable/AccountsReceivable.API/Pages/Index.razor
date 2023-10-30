@@ -4,7 +4,7 @@
 
 @if (_table.Equals("documents"))
 {
-    <MudTable Dense="true" Hover="true"
+    <MudTable Dense="true" Hover="true" Bordered="true" 
               ServerData="@(new Func<TableState, Task<TableData<Document>>>(DocumentServerReload))"
               OnRowClick="DocumentRowClickEvent" T="Document"
               RowStyleFunc="RowStyleFunc"
@@ -56,8 +56,14 @@
                 </MudTableSortLabel>
             </MudTh>
             <MudTh>
-                <MudTableSortLabel InitialDirection="SortDirection.Ascending"  SortLabel="validation_field" T="Document">
+                <MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="validation_field" T="Document">
                     Validation
+                </MudTableSortLabel>
+            </MudTh>
+
+            <MudTh>
+                <MudTableSortLabel SortLabel="ats_field" T="Document">
+                    ATS Status
                 </MudTableSortLabel>
             </MudTh>
             <MudTh>
@@ -65,42 +71,37 @@
                     Approval Status
                 </MudTableSortLabel>
             </MudTh>
-            <MudTh>
-                <MudTableSortLabel SortLabel="ats_field" T="Document">
-                    ATS Status
-                </MudTableSortLabel>
-            </MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Date">
+            <MudTd>
                 @context.DateProcessed.ToString("dd/MM/yyyy")
             </MudTd>
-            <MudTd DataLabel="KillSheet">
+            <MudTd>
                 @context.KillSheet
             </MudTd>
-            <MudTd DataLabel="Farm">
+            <MudTd>
                 @context.Farm.Name
             </MudTd>
-            <MudTd DataLabel="Species">
+            <MudTd>
                 @(context.SpeciesType?.DisplayName ?? "Unknown")
             </MudTd>
-            <MudTd DataLabel="Stock Count">
+            <MudTd>
                 @context.StockCount.ToString()
             </MudTd>
-            <MudTd DataLabel="Stock Weight">
+            <MudTd>
                 @context.WeightTotal.ToString("0.00")kg
             </MudTd>
             <MudTd DataLabel="Plant (Works)">
                 @($"{context.Plant.Name} ({context.Plant.Meatwork.Name})")
             </MudTd>
-            <MudTd DataLabel="Validation">
-                @(!context.Validation.HasValue ? "Pending" : (context.Validation.Value ? "Valid" : "Invalid"))
+            <MudTd>
+                @context.CalcValidation.Name
             </MudTd>
-            <MudTd DataLabel="Approval Status">
+            <MudTd>
+                @context.TransitValidation.Name
+            </MudTd>
+            <MudTd>
                 @context.Status.Name
-            </MudTd>
-            <MudTd DataLabel="ATS Status">
-                @(context.TransitId == null ? "Pending" : "Valid") @* Todo *@
             </MudTd>
         </RowTemplate>
         <NoRecordsContent>
@@ -153,16 +154,16 @@ else if (_table.Equals("schedules"))
             </MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="StartDate">
+            <MudTd>
                 @context.StartDate.ToString("dd/MM/yyyy")
             </MudTd>
-            <MudTd DataLabel="EndDate">
+            <MudTd>
                 @context.EndDate.ToString("dd/MM/yyyy")
             </MudTd>
-            <MudTd DataLabel="Works">
+            <MudTd>
                 @context.Meatwork.Name
             </MudTd>
-            <MudTd DataLabel="Status">
+            <MudTd>
                 @context.Status.Name
             </MudTd>
         </RowTemplate>

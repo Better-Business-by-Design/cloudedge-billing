@@ -53,18 +53,16 @@ public class Document
 
     public SpeciesTypeId SpeciesTypeId { get; set; }
     public virtual SpeciesType SpeciesType { get; set; } = null!;
-
-    public ushort? ScheduleId { get; set; }
-    public virtual Schedule? Schedule { get; set; }
-
-    public ushort? TransitId { get; set; }
-    public virtual TransitDto? Transit { get; set; }
-
+    
     public StatusId StatusId { get; set; } = StatusId.Pending;
     public virtual Status Status { get; set; } = null!;
-
-    /*public ValidationId ValidationId { get; set; } = ValidationId.Pending;
-    public virtual Validation Validation { get; set; } = null!;*/
+    
+    /* Transit */
+    
+    // Todo
+    
+    public ValidationId TransitValidationId { get; set; } = ValidationId.Pending;
+    public virtual Validation TransitValidation { get; set; } = null!;
 
     /* SFF Pricing */
 
@@ -83,6 +81,9 @@ public class Document
 
     /* Calculated Pricing - All Pamu prices used calculated values */
     
+    public ushort? ScheduleId { get; set; }
+    public virtual Schedule? Schedule { get; set; }
+    
     public decimal CalcWeightCostTotal { get; set; }
 
     public decimal CalcDeductionCostTotal { get; set; }
@@ -93,8 +94,10 @@ public class Document
     
     public DateTime? CalcTimestamp { get; set; }
 
-    [NotMapped]
-    public bool? Validation => CalcTimestamp.HasValue ? NetCostTotal == CalcNetCostTotal : null;
+    public ValidationId CalcValidationId { get; set; } = ValidationId.Pending;
+    public virtual Validation CalcValidation { get; set; } = null!;
+    
+    
 }
 
 /* Nested Classes */

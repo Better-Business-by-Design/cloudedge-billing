@@ -4,6 +4,7 @@ using AccountsReceivable.BAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccountsReceivable.BAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231030003012_Enum Cascade")]
+    partial class EnumCascade
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -642,86 +644,79 @@ namespace AccountsReceivable.BAL.Migrations
                         new
                         {
                             Id = (byte)0,
-                            DisplayName = "Missing",
-                            Name = "MISSING",
+                            DisplayName = "Bobby Calves",
+                            Name = "BOBBY",
                             SpeciesTypeId = (byte)0
                         },
                         new
                         {
                             Id = (byte)1,
-                            DisplayName = "Bobby Calves",
-                            Name = "BOBBY",
+                            DisplayName = "Bull",
+                            Name = "BULL",
                             SpeciesTypeId = (byte)1
                         },
                         new
                         {
                             Id = (byte)2,
-                            DisplayName = "Bull",
-                            Name = "BULL",
-                            SpeciesTypeId = (byte)2
+                            DisplayName = "Cow",
+                            Name = "COW",
+                            SpeciesTypeId = (byte)1
                         },
                         new
                         {
                             Id = (byte)3,
-                            DisplayName = "Cow",
-                            Name = "COW",
-                            SpeciesTypeId = (byte)2
+                            DisplayName = "Manufacturing Cow",
+                            Name = "MCOW",
+                            SpeciesTypeId = (byte)1
                         },
                         new
                         {
                             Id = (byte)4,
-                            DisplayName = "Manufacturing Cow",
-                            Name = "MCOW",
-                            SpeciesTypeId = (byte)2
+                            DisplayName = "Heifer",
+                            Name = "HEIFER",
+                            SpeciesTypeId = (byte)1
                         },
                         new
                         {
                             Id = (byte)5,
-                            DisplayName = "Heifer",
-                            Name = "HEIFER",
-                            SpeciesTypeId = (byte)2
+                            DisplayName = "Steer",
+                            Name = "STEER",
+                            SpeciesTypeId = (byte)1
                         },
                         new
                         {
                             Id = (byte)6,
-                            DisplayName = "Steer",
-                            Name = "STEER",
+                            DisplayName = "Lamb",
+                            Name = "LAMB",
                             SpeciesTypeId = (byte)2
                         },
                         new
                         {
                             Id = (byte)7,
-                            DisplayName = "Lamb",
-                            Name = "LAMB",
-                            SpeciesTypeId = (byte)3
+                            DisplayName = "Mutton",
+                            Name = "MUTTON",
+                            SpeciesTypeId = (byte)2
                         },
                         new
                         {
                             Id = (byte)8,
-                            DisplayName = "Mutton",
-                            Name = "MUTTON",
-                            SpeciesTypeId = (byte)3
+                            DisplayName = "Ram",
+                            Name = "RAM",
+                            SpeciesTypeId = (byte)2
                         },
                         new
                         {
                             Id = (byte)9,
-                            DisplayName = "Ram",
-                            Name = "RAM",
+                            DisplayName = "Hind",
+                            Name = "HIND",
                             SpeciesTypeId = (byte)3
                         },
                         new
                         {
                             Id = (byte)10,
-                            DisplayName = "Hind",
-                            Name = "HIND",
-                            SpeciesTypeId = (byte)4
-                        },
-                        new
-                        {
-                            Id = (byte)11,
                             DisplayName = "Stag",
                             Name = "STAG",
-                            SpeciesTypeId = (byte)4
+                            SpeciesTypeId = (byte)3
                         });
                 });
 
@@ -748,654 +743,648 @@ namespace AccountsReceivable.BAL.Migrations
                         {
                             Id = (byte)0,
                             AnimalTypeId = (byte)0,
-                            Name = "Missing"
-                        },
-                        new
-                        {
-                            Id = (byte)1,
-                            AnimalTypeId = (byte)1,
                             Name = "BV"
                         },
                         new
                         {
-                            Id = (byte)2,
-                            AnimalTypeId = (byte)1,
+                            Id = (byte)1,
+                            AnimalTypeId = (byte)0,
                             Name = "COND"
+                        },
+                        new
+                        {
+                            Id = (byte)2,
+                            AnimalTypeId = (byte)0,
+                            Name = "DEAD"
                         },
                         new
                         {
                             Id = (byte)3,
                             AnimalTypeId = (byte)1,
-                            Name = "DEAD"
-                        },
-                        new
-                        {
-                            Id = (byte)4,
-                            AnimalTypeId = (byte)2,
                             Name = "M1"
                         },
                         new
                         {
-                            Id = (byte)5,
-                            AnimalTypeId = (byte)2,
+                            Id = (byte)4,
+                            AnimalTypeId = (byte)1,
                             Name = "M2"
                         },
                         new
                         {
-                            Id = (byte)6,
-                            AnimalTypeId = (byte)2,
+                            Id = (byte)5,
+                            AnimalTypeId = (byte)1,
                             Name = "M3"
                         },
                         new
                         {
-                            Id = (byte)7,
-                            AnimalTypeId = (byte)2,
+                            Id = (byte)6,
+                            AnimalTypeId = (byte)1,
                             Name = "TM1"
                         },
                         new
                         {
-                            Id = (byte)8,
-                            AnimalTypeId = (byte)2,
+                            Id = (byte)7,
+                            AnimalTypeId = (byte)1,
                             Name = "TM2"
                         },
                         new
                         {
-                            Id = (byte)9,
-                            AnimalTypeId = (byte)2,
+                            Id = (byte)8,
+                            AnimalTypeId = (byte)1,
                             Name = "TM3"
                         },
                         new
                         {
-                            Id = (byte)10,
-                            AnimalTypeId = (byte)2,
+                            Id = (byte)9,
+                            AnimalTypeId = (byte)1,
                             Name = "COND"
+                        },
+                        new
+                        {
+                            Id = (byte)10,
+                            AnimalTypeId = (byte)1,
+                            Name = "DEAD"
                         },
                         new
                         {
                             Id = (byte)11,
                             AnimalTypeId = (byte)2,
-                            Name = "DEAD"
-                        },
-                        new
-                        {
-                            Id = (byte)12,
-                            AnimalTypeId = (byte)3,
                             Name = "F1"
                         },
                         new
                         {
-                            Id = (byte)13,
-                            AnimalTypeId = (byte)3,
+                            Id = (byte)12,
+                            AnimalTypeId = (byte)2,
                             Name = "F2"
                         },
                         new
                         {
-                            Id = (byte)14,
-                            AnimalTypeId = (byte)3,
+                            Id = (byte)13,
+                            AnimalTypeId = (byte)2,
                             Name = "F3"
                         },
                         new
                         {
-                            Id = (byte)15,
-                            AnimalTypeId = (byte)3,
+                            Id = (byte)14,
+                            AnimalTypeId = (byte)2,
                             Name = "P1"
                         },
                         new
                         {
-                            Id = (byte)16,
-                            AnimalTypeId = (byte)3,
+                            Id = (byte)15,
+                            AnimalTypeId = (byte)2,
                             Name = "P2"
                         },
                         new
                         {
-                            Id = (byte)17,
-                            AnimalTypeId = (byte)3,
+                            Id = (byte)16,
+                            AnimalTypeId = (byte)2,
                             Name = "P3"
                         },
                         new
                         {
-                            Id = (byte)18,
-                            AnimalTypeId = (byte)3,
+                            Id = (byte)17,
+                            AnimalTypeId = (byte)2,
                             Name = "T1"
                         },
                         new
                         {
-                            Id = (byte)19,
-                            AnimalTypeId = (byte)3,
+                            Id = (byte)18,
+                            AnimalTypeId = (byte)2,
                             Name = "T2"
                         },
                         new
                         {
-                            Id = (byte)20,
-                            AnimalTypeId = (byte)3,
+                            Id = (byte)19,
+                            AnimalTypeId = (byte)2,
                             Name = "T3"
                         },
                         new
                         {
-                            Id = (byte)21,
-                            AnimalTypeId = (byte)3,
+                            Id = (byte)20,
+                            AnimalTypeId = (byte)2,
                             Name = "COND"
+                        },
+                        new
+                        {
+                            Id = (byte)21,
+                            AnimalTypeId = (byte)2,
+                            Name = "DEAD"
                         },
                         new
                         {
                             Id = (byte)22,
                             AnimalTypeId = (byte)3,
-                            Name = "DEAD"
-                        },
-                        new
-                        {
-                            Id = (byte)23,
-                            AnimalTypeId = (byte)4,
                             Name = "M"
                         },
                         new
                         {
-                            Id = (byte)24,
-                            AnimalTypeId = (byte)4,
+                            Id = (byte)23,
+                            AnimalTypeId = (byte)3,
                             Name = "COND"
+                        },
+                        new
+                        {
+                            Id = (byte)24,
+                            AnimalTypeId = (byte)3,
+                            Name = "DEAD"
                         },
                         new
                         {
                             Id = (byte)25,
                             AnimalTypeId = (byte)4,
-                            Name = "DEAD"
-                        },
-                        new
-                        {
-                            Id = (byte)26,
-                            AnimalTypeId = (byte)5,
                             Name = "A1"
                         },
                         new
                         {
-                            Id = (byte)27,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)26,
+                            AnimalTypeId = (byte)4,
                             Name = "A2"
                         },
                         new
                         {
-                            Id = (byte)28,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)27,
+                            AnimalTypeId = (byte)4,
                             Name = "A3"
                         },
                         new
                         {
-                            Id = (byte)29,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)28,
+                            AnimalTypeId = (byte)4,
                             Name = "F1"
                         },
                         new
                         {
-                            Id = (byte)30,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)29,
+                            AnimalTypeId = (byte)4,
                             Name = "F2"
                         },
                         new
                         {
-                            Id = (byte)31,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)30,
+                            AnimalTypeId = (byte)4,
                             Name = "F3"
                         },
                         new
                         {
-                            Id = (byte)32,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)31,
+                            AnimalTypeId = (byte)4,
                             Name = "L1"
                         },
                         new
                         {
-                            Id = (byte)33,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)32,
+                            AnimalTypeId = (byte)4,
                             Name = "L2"
                         },
                         new
                         {
-                            Id = (byte)34,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)33,
+                            AnimalTypeId = (byte)4,
                             Name = "L3"
                         },
                         new
                         {
-                            Id = (byte)35,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)34,
+                            AnimalTypeId = (byte)4,
                             Name = "M"
                         },
                         new
                         {
-                            Id = (byte)36,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)35,
+                            AnimalTypeId = (byte)4,
                             Name = "P1"
                         },
                         new
                         {
-                            Id = (byte)37,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)36,
+                            AnimalTypeId = (byte)4,
                             Name = "P2"
                         },
                         new
                         {
-                            Id = (byte)38,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)37,
+                            AnimalTypeId = (byte)4,
                             Name = "P3"
                         },
                         new
                         {
-                            Id = (byte)39,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)38,
+                            AnimalTypeId = (byte)4,
                             Name = "T1"
                         },
                         new
                         {
-                            Id = (byte)40,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)39,
+                            AnimalTypeId = (byte)4,
                             Name = "T2"
                         },
                         new
                         {
-                            Id = (byte)41,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)40,
+                            AnimalTypeId = (byte)4,
                             Name = "T3"
                         },
                         new
                         {
-                            Id = (byte)42,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)41,
+                            AnimalTypeId = (byte)4,
                             Name = "COND"
+                        },
+                        new
+                        {
+                            Id = (byte)42,
+                            AnimalTypeId = (byte)4,
+                            Name = "DEAD"
                         },
                         new
                         {
                             Id = (byte)43,
                             AnimalTypeId = (byte)5,
-                            Name = "DEAD"
-                        },
-                        new
-                        {
-                            Id = (byte)44,
-                            AnimalTypeId = (byte)6,
                             Name = "A1"
                         },
                         new
                         {
-                            Id = (byte)45,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)44,
+                            AnimalTypeId = (byte)5,
                             Name = "A2"
                         },
                         new
                         {
-                            Id = (byte)46,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)45,
+                            AnimalTypeId = (byte)5,
                             Name = "A3"
                         },
                         new
                         {
-                            Id = (byte)47,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)46,
+                            AnimalTypeId = (byte)5,
                             Name = "F1"
                         },
                         new
                         {
-                            Id = (byte)48,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)47,
+                            AnimalTypeId = (byte)5,
                             Name = "F2"
                         },
                         new
                         {
-                            Id = (byte)49,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)48,
+                            AnimalTypeId = (byte)5,
                             Name = "F3"
                         },
                         new
                         {
-                            Id = (byte)50,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)49,
+                            AnimalTypeId = (byte)5,
                             Name = "L1"
                         },
                         new
                         {
-                            Id = (byte)51,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)50,
+                            AnimalTypeId = (byte)5,
                             Name = "L2"
                         },
                         new
                         {
-                            Id = (byte)52,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)51,
+                            AnimalTypeId = (byte)5,
                             Name = "L3"
                         },
                         new
                         {
-                            Id = (byte)53,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)52,
+                            AnimalTypeId = (byte)5,
                             Name = "M"
                         },
                         new
                         {
-                            Id = (byte)54,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)53,
+                            AnimalTypeId = (byte)5,
                             Name = "P1"
                         },
                         new
                         {
-                            Id = (byte)55,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)54,
+                            AnimalTypeId = (byte)5,
                             Name = "P2"
                         },
                         new
                         {
-                            Id = (byte)56,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)55,
+                            AnimalTypeId = (byte)5,
                             Name = "P3"
                         },
                         new
                         {
-                            Id = (byte)57,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)56,
+                            AnimalTypeId = (byte)5,
                             Name = "T1"
                         },
                         new
                         {
-                            Id = (byte)58,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)57,
+                            AnimalTypeId = (byte)5,
                             Name = "T2"
                         },
                         new
                         {
-                            Id = (byte)59,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)58,
+                            AnimalTypeId = (byte)5,
                             Name = "T3"
                         },
                         new
                         {
-                            Id = (byte)60,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)59,
+                            AnimalTypeId = (byte)5,
                             Name = "COND"
+                        },
+                        new
+                        {
+                            Id = (byte)60,
+                            AnimalTypeId = (byte)5,
+                            Name = "DEAD"
                         },
                         new
                         {
                             Id = (byte)61,
                             AnimalTypeId = (byte)6,
-                            Name = "DEAD"
-                        },
-                        new
-                        {
-                            Id = (byte)62,
-                            AnimalTypeId = (byte)7,
                             Name = "A"
                         },
                         new
                         {
-                            Id = (byte)63,
-                            AnimalTypeId = (byte)7,
+                            Id = (byte)62,
+                            AnimalTypeId = (byte)6,
                             Name = "B"
                         },
                         new
                         {
-                            Id = (byte)64,
-                            AnimalTypeId = (byte)7,
+                            Id = (byte)63,
+                            AnimalTypeId = (byte)6,
                             Name = "C"
                         },
                         new
                         {
-                            Id = (byte)65,
-                            AnimalTypeId = (byte)7,
+                            Id = (byte)64,
+                            AnimalTypeId = (byte)6,
                             Name = "F"
                         },
                         new
                         {
-                            Id = (byte)66,
-                            AnimalTypeId = (byte)7,
+                            Id = (byte)65,
+                            AnimalTypeId = (byte)6,
                             Name = "M"
                         },
                         new
                         {
-                            Id = (byte)67,
-                            AnimalTypeId = (byte)7,
+                            Id = (byte)66,
+                            AnimalTypeId = (byte)6,
                             Name = "P"
                         },
                         new
                         {
-                            Id = (byte)68,
-                            AnimalTypeId = (byte)7,
+                            Id = (byte)67,
+                            AnimalTypeId = (byte)6,
                             Name = "T"
                         },
                         new
                         {
-                            Id = (byte)69,
-                            AnimalTypeId = (byte)7,
+                            Id = (byte)68,
+                            AnimalTypeId = (byte)6,
                             Name = "Y"
                         },
                         new
                         {
-                            Id = (byte)70,
-                            AnimalTypeId = (byte)7,
+                            Id = (byte)69,
+                            AnimalTypeId = (byte)6,
                             Name = "COND"
+                        },
+                        new
+                        {
+                            Id = (byte)70,
+                            AnimalTypeId = (byte)6,
+                            Name = "DEAD"
                         },
                         new
                         {
                             Id = (byte)71,
                             AnimalTypeId = (byte)7,
-                            Name = "DEAD"
-                        },
-                        new
-                        {
-                            Id = (byte)72,
-                            AnimalTypeId = (byte)8,
                             Name = "MF"
                         },
                         new
                         {
-                            Id = (byte)73,
-                            AnimalTypeId = (byte)8,
+                            Id = (byte)72,
+                            AnimalTypeId = (byte)7,
                             Name = "MH"
                         },
                         new
                         {
-                            Id = (byte)74,
-                            AnimalTypeId = (byte)8,
+                            Id = (byte)73,
+                            AnimalTypeId = (byte)7,
                             Name = "MM"
                         },
                         new
                         {
-                            Id = (byte)75,
-                            AnimalTypeId = (byte)8,
+                            Id = (byte)74,
+                            AnimalTypeId = (byte)7,
                             Name = "MP"
                         },
                         new
                         {
-                            Id = (byte)76,
-                            AnimalTypeId = (byte)8,
+                            Id = (byte)75,
+                            AnimalTypeId = (byte)7,
                             Name = "ML"
                         },
                         new
                         {
-                            Id = (byte)77,
-                            AnimalTypeId = (byte)8,
+                            Id = (byte)76,
+                            AnimalTypeId = (byte)7,
                             Name = "MX"
                         },
                         new
                         {
-                            Id = (byte)78,
-                            AnimalTypeId = (byte)8,
+                            Id = (byte)77,
+                            AnimalTypeId = (byte)7,
                             Name = "COND"
+                        },
+                        new
+                        {
+                            Id = (byte)78,
+                            AnimalTypeId = (byte)7,
+                            Name = "DEAD"
                         },
                         new
                         {
                             Id = (byte)79,
                             AnimalTypeId = (byte)8,
-                            Name = "DEAD"
-                        },
-                        new
-                        {
-                            Id = (byte)80,
-                            AnimalTypeId = (byte)9,
                             Name = "R"
                         },
                         new
                         {
-                            Id = (byte)81,
-                            AnimalTypeId = (byte)9,
+                            Id = (byte)80,
+                            AnimalTypeId = (byte)8,
                             Name = "COND"
+                        },
+                        new
+                        {
+                            Id = (byte)81,
+                            AnimalTypeId = (byte)8,
+                            Name = "DEAD"
                         },
                         new
                         {
                             Id = (byte)82,
                             AnimalTypeId = (byte)9,
-                            Name = "DEAD"
-                        },
-                        new
-                        {
-                            Id = (byte)83,
-                            AnimalTypeId = (byte)10,
                             Name = "AF1"
                         },
                         new
                         {
-                            Id = (byte)84,
-                            AnimalTypeId = (byte)10,
+                            Id = (byte)83,
+                            AnimalTypeId = (byte)9,
                             Name = "AF2"
                         },
                         new
                         {
-                            Id = (byte)85,
-                            AnimalTypeId = (byte)10,
+                            Id = (byte)84,
+                            AnimalTypeId = (byte)9,
                             Name = "AFH"
                         },
                         new
                         {
-                            Id = (byte)86,
-                            AnimalTypeId = (byte)10,
+                            Id = (byte)85,
+                            AnimalTypeId = (byte)9,
                             Name = "AP"
                         },
                         new
                         {
-                            Id = (byte)87,
-                            AnimalTypeId = (byte)10,
+                            Id = (byte)86,
+                            AnimalTypeId = (byte)9,
                             Name = "M1"
                         },
                         new
                         {
-                            Id = (byte)88,
-                            AnimalTypeId = (byte)10,
+                            Id = (byte)87,
+                            AnimalTypeId = (byte)9,
                             Name = "M2"
                         },
                         new
                         {
-                            Id = (byte)89,
-                            AnimalTypeId = (byte)10,
+                            Id = (byte)88,
+                            AnimalTypeId = (byte)9,
                             Name = "PD1"
                         },
                         new
                         {
-                            Id = (byte)90,
-                            AnimalTypeId = (byte)10,
+                            Id = (byte)89,
+                            AnimalTypeId = (byte)9,
                             Name = "PD2"
                         },
                         new
                         {
-                            Id = (byte)91,
-                            AnimalTypeId = (byte)10,
+                            Id = (byte)90,
+                            AnimalTypeId = (byte)9,
                             Name = "PLG"
                         },
                         new
                         {
-                            Id = (byte)92,
-                            AnimalTypeId = (byte)10,
+                            Id = (byte)91,
+                            AnimalTypeId = (byte)9,
                             Name = "PLG1"
                         },
                         new
                         {
-                            Id = (byte)93,
-                            AnimalTypeId = (byte)10,
+                            Id = (byte)92,
+                            AnimalTypeId = (byte)9,
                             Name = "PLG2"
                         },
                         new
                         {
-                            Id = (byte)94,
-                            AnimalTypeId = (byte)10,
+                            Id = (byte)93,
+                            AnimalTypeId = (byte)9,
                             Name = "COND"
+                        },
+                        new
+                        {
+                            Id = (byte)94,
+                            AnimalTypeId = (byte)9,
+                            Name = "DEAD"
                         },
                         new
                         {
                             Id = (byte)95,
                             AnimalTypeId = (byte)10,
-                            Name = "DEAD"
-                        },
-                        new
-                        {
-                            Id = (byte)96,
-                            AnimalTypeId = (byte)11,
                             Name = "AF1"
                         },
                         new
                         {
-                            Id = (byte)97,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)96,
+                            AnimalTypeId = (byte)10,
                             Name = "AF2"
                         },
                         new
                         {
-                            Id = (byte)98,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)97,
+                            AnimalTypeId = (byte)10,
                             Name = "AFH"
                         },
                         new
                         {
-                            Id = (byte)99,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)98,
+                            AnimalTypeId = (byte)10,
                             Name = "AP"
                         },
                         new
                         {
-                            Id = (byte)100,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)99,
+                            AnimalTypeId = (byte)10,
                             Name = "M1"
                         },
                         new
                         {
-                            Id = (byte)101,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)100,
+                            AnimalTypeId = (byte)10,
                             Name = "M2"
                         },
                         new
                         {
-                            Id = (byte)102,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)101,
+                            AnimalTypeId = (byte)10,
                             Name = "PF1"
                         },
                         new
                         {
-                            Id = (byte)103,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)102,
+                            AnimalTypeId = (byte)10,
                             Name = "PF2"
                         },
                         new
                         {
-                            Id = (byte)104,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)103,
+                            AnimalTypeId = (byte)10,
                             Name = "PLG"
                         },
                         new
                         {
-                            Id = (byte)105,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)104,
+                            AnimalTypeId = (byte)10,
                             Name = "PLG1"
                         },
                         new
                         {
-                            Id = (byte)106,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)105,
+                            AnimalTypeId = (byte)10,
                             Name = "PLG2"
                         },
                         new
                         {
-                            Id = (byte)107,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)106,
+                            AnimalTypeId = (byte)10,
                             Name = "COND"
                         },
                         new
                         {
-                            Id = (byte)108,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)107,
+                            AnimalTypeId = (byte)10,
                             Name = "DEAD"
                         });
                 });
@@ -1417,22 +1406,22 @@ namespace AccountsReceivable.BAL.Migrations
                         new
                         {
                             Id = (byte)0,
-                            Name = "Missing"
-                        },
-                        new
-                        {
-                            Id = (byte)1,
                             Name = "Read"
                         },
                         new
                         {
-                            Id = (byte)2,
+                            Id = (byte)1,
                             Name = "Read/Write"
                         },
                         new
                         {
-                            Id = (byte)3,
+                            Id = (byte)2,
                             Name = "Administrator"
+                        },
+                        new
+                        {
+                            Id = (byte)3,
+                            Name = "Missing"
                         });
                 });
 
@@ -1457,30 +1446,24 @@ namespace AccountsReceivable.BAL.Migrations
                         new
                         {
                             Id = (byte)0,
-                            DisplayName = "Missing",
-                            Name = "MISSING"
-                        },
-                        new
-                        {
-                            Id = (byte)1,
                             DisplayName = "Bobby",
                             Name = "BOBBY"
                         },
                         new
                         {
-                            Id = (byte)2,
+                            Id = (byte)1,
                             DisplayName = "Cattle",
                             Name = "BOVINE"
                         },
                         new
                         {
-                            Id = (byte)3,
+                            Id = (byte)2,
                             DisplayName = "Sheep",
                             Name = "OVINE"
                         },
                         new
                         {
-                            Id = (byte)4,
+                            Id = (byte)3,
                             DisplayName = "Deer",
                             Name = "DEER"
                         });
@@ -1503,32 +1486,32 @@ namespace AccountsReceivable.BAL.Migrations
                         new
                         {
                             Id = (byte)0,
-                            Name = "Missing"
-                        },
-                        new
-                        {
-                            Id = (byte)1,
                             Name = "Pending"
                         },
                         new
                         {
-                            Id = (byte)2,
+                            Id = (byte)1,
                             Name = "Approved"
                         },
                         new
                         {
-                            Id = (byte)3,
+                            Id = (byte)2,
                             Name = "Declined"
                         },
                         new
                         {
-                            Id = (byte)4,
+                            Id = (byte)3,
                             Name = "Overridden"
                         },
                         new
                         {
-                            Id = (byte)5,
+                            Id = (byte)4,
                             Name = "Superseded"
+                        },
+                        new
+                        {
+                            Id = (byte)5,
+                            Name = "Missing"
                         });
                 });
 
@@ -1549,27 +1532,22 @@ namespace AccountsReceivable.BAL.Migrations
                         new
                         {
                             Id = (byte)0,
-                            Name = "Missing"
-                        },
-                        new
-                        {
-                            Id = (byte)1,
                             Name = "Pending"
                         },
                         new
                         {
-                            Id = (byte)2,
+                            Id = (byte)1,
                             Name = "Low"
+                        },
+                        new
+                        {
+                            Id = (byte)2,
+                            Name = "Valid"
                         },
                         new
                         {
                             Id = (byte)3,
                             Name = "High"
-                        },
-                        new
-                        {
-                            Id = (byte)4,
-                            Name = "Valid"
                         });
                 });
 

@@ -61,7 +61,7 @@
     Hover="true"
     Striped="true">
     <Columns>
-        <PropertyColumn Property="x => x.Grade.Name" Title="Grade"/>
+        <PropertyColumn Property="@(x => AnimalTypeHelper.GetInfo(x.Grade.AnimalTypeId).DisplayName + " - " + x.Grade.Name)" Title="Grade"/>
         <PropertyColumn Property="@(x => x.Price.MinWeight + "kg")" Title="Min Weight"/>
         <PropertyColumn Property="@(x => x.Price.MaxWeight + "kg")"  Title="Max Weight"/>
         <PropertyColumn Property="x => x.StockCount" Title="Stock Count"/>

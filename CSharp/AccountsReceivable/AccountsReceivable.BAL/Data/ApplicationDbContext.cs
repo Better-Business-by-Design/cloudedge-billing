@@ -11,93 +11,10 @@ public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
-        // Calculations
-
-        /*var documents = Documents!
-            .Include(document => document.BusinessLogic)
-            .Include(document => document.Animal)
-            .ThenInclude(animal => animal.BusinessLogic)
-            .Where(document => document.BusinessLogic.ScheduleId != null)
-            .ToList();
-
-        foreach (var document in documents)
-        {
-            var schedule = Schedules
-                .Include(schedule => schedule.BusinessLogic)
-                .Include(schedule => schedule.Pricing)
-                .ThenInclude(pricing => pricing.BusinessLogic)
-                .First(schedule => schedule.Id == document.BusinessLogic.ScheduleId);
-
-            document.BusinessLogic.Gst = 0;
-            document.BusinessLogic.Total = 0;
-
-            foreach (var animal in document.Animal)
-            {
-                var bl = animal.BusinessLogic;
-
-                var net = animal.Weight * schedule.Pricing.First(p =>
-                    p.BusinessLogic.GradeId == bl.GradeId && p.MinWeight <= animal.Weight &&
-                    animal.Weight <= p.MaxWeight).Price;
-                bl.Gst = net * (3/23);
-                bl.Total = net;
-                bl.ValidationId = bl.Total < animal.Price ? ValidationId.Low :
-                    bl.Total > animal.Price ? ValidationId.High : ValidationId.Valid;
-
-                document.BusinessLogic.Gst += bl.Gst;
-                document.BusinessLogic.Total += bl.Total;
-            }
-
-            document.BusinessLogic.ValidationId = document.BusinessLogic.Total < document.PaymentAdviceTotalPricePaid ? ValidationId.Low :
-                document.BusinessLogic.Total > document.PaymentAdviceTotalPricePaid ? ValidationId.High : ValidationId.Valid;
-        }
-
-        SaveChanges();*/
-
-        /*
-        foreach (var document in documents)
-        {
-            document.BusinessLogic.StockTotal =
-                Set<AnimalDto>().Count(animal => animal.DocumentDocument == document.Document);
-            document.BusinessLogic.StockWeight = Set<AnimalDto>()
-                .Where(animal => animal.DocumentDocument == document.Document).Sum(animal => animal.Weight);
-        }
-
-        SaveChanges();*/
-
-        /*// Pricing Distribution
-
-        var schedules = Schedules!
-            .AsNoTracking()
-            .Include(schedule => schedule.BusinessLogic)
-            .Where(schedule => schedule.BusinessLogic.StatusId == StatusId.Approved)
-            .ToArray();
-
-        // BCI Calculation
-
-        foreach (var schedule in schedules)
-        {
-            var documents = Documents!
-                .Include(document => document.BusinessLogic)
-                .Include(document => document.BusinessLogic.Plant)
-                .Where(document =>
-                    document.BusinessLogic.StatusId == StatusId.Pending &&
-                    document.BusinessLogic.Plant.MeatworkName == schedule.BusinessLogic.MeatworkName &&
-                    schedule.StartDate <= document.DateProcessed &&
-                    document.DateProcessed <= schedule.EndDate
-                )
-                .ToArray();
-
-            foreach (var document in documents)
-            {
-                document.BusinessLogic.ScheduleId = schedule.Id;
-            }
-        }
-
-        SaveChanges();*/
     }
 
-    public DbSet<Document> Documents { get; set; }
-    public DbSet<Schedule> Schedules { get; set; }
+    public DbSet<Document> Documents { get; set; } = null!;
+    public DbSet<Schedule> Schedules { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -221,7 +138,7 @@ public class ApplicationDbContext : DbContext
                 entity.HasKey(document => new { document.Id });
 
                 entity.Property(document => document.SupplierComments).HasConversion(
-                    convertCollection => string.Join(",", convertCollection),
+                    convertCollection => string.Join(",", convertCollection ?? Array.Empty<string>()),
                     convertString => convertString.Split(",", StringSplitOptions.RemoveEmptyEntries),
                     GetStringValueComparer()
                 );
@@ -248,7 +165,7 @@ public class ApplicationDbContext : DbContext
                 entity.Property(animal => animal.Id).ValueGeneratedOnAdd();
 
                 entity.Property(document => document.Defects).HasConversion(
-                    collection => string.Join(",", collection),
+                    collection => string.Join(",", collection ?? Array.Empty<string>()),
                     convertString => convertString.Split(",", StringSplitOptions.RemoveEmptyEntries),
                     GetStringValueComparer()
                 );
@@ -288,6 +205,16 @@ public class ApplicationDbContext : DbContext
                 );
 
                 entity.ToTable(nameof(SpeciesType), "enum");
+
+                /* Prevent Cascade */
+
+                entity.HasMany<AnimalType>()
+                    .WithOne(animalType => animalType.SpeciesType)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasMany<Document>()
+                    .WithOne(document => document.SpeciesType)
+                    .OnDelete(DeleteBehavior.Restrict);
             }
         );
 
@@ -302,6 +229,20 @@ public class ApplicationDbContext : DbContext
                 );
 
                 entity.ToTable(nameof(AnimalType), "enum");
+
+                /* Prevent Cascade */
+
+                entity.HasMany<Grade>()
+                    .WithOne(grade => grade.AnimalType)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasMany<AnimalTypeSummary>()
+                    .WithOne(animalTypeSummary => animalTypeSummary.AnimalType)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasMany<Uplift>()
+                    .WithOne(uplift => uplift.AnimalType)
+                    .OnDelete(DeleteBehavior.Restrict);
             }
         );
 
@@ -316,6 +257,16 @@ public class ApplicationDbContext : DbContext
                 );
 
                 entity.ToTable(nameof(Grade), "enum");
+
+                /* Prevent Cascade */
+
+                entity.HasMany<Animal>()
+                    .WithOne(animal => animal.Grade)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasMany<Price>()
+                    .WithOne(price => price.Grade)
+                    .OnDelete(DeleteBehavior.Restrict);
             }
         );
 
@@ -330,6 +281,16 @@ public class ApplicationDbContext : DbContext
                 );
 
                 entity.ToTable(nameof(Status), "enum");
+                
+                /* Prevent Cascade */
+
+                entity.HasMany<Document>()
+                    .WithOne(document => document.Status)
+                    .OnDelete(DeleteBehavior.Restrict);
+                
+                entity.HasMany<Schedule>()
+                    .WithOne(schedule => schedule.Status)
+                    .OnDelete(DeleteBehavior.Restrict);
             }
         );
 
@@ -344,6 +305,12 @@ public class ApplicationDbContext : DbContext
                 );
 
                 entity.ToTable(nameof(Role), "enum");
+                
+                /* Prevent Cascade */
+
+                entity.HasMany<User>()
+                    .WithOne(user => user.Role)
+                    .OnDelete(DeleteBehavior.Restrict);
             }
         );
 
@@ -358,6 +325,20 @@ public class ApplicationDbContext : DbContext
                 );
 
                 entity.ToTable(nameof(Validation), "enum");
+                
+                /* Prevent Cascade */
+
+                entity.HasMany<Document>()
+                    .WithOne(document => document.CalcValidation)
+                    .OnDelete(DeleteBehavior.Restrict);
+                
+                entity.HasMany<Document>()
+                    .WithOne(document => document.TransitValidation)
+                    .OnDelete(DeleteBehavior.Restrict);
+                
+                entity.HasMany<Animal>()
+                    .WithOne(animal => animal.CalcValidation)
+                    .OnDelete(DeleteBehavior.Restrict);
             }
         );
 

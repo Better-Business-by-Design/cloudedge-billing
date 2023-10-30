@@ -2,11 +2,12 @@
 
 public enum ValidationId : byte
 {
-    Pending = 0,
+    Missing = 0,
+    Pending = 1,
 
-    Low = 1,
-    Valid = 2,
-    High = 3
+    Low = 2,
+    High = 3,
+    Valid = 4
 }
 
 public class Validation
@@ -19,8 +20,16 @@ public class Validation
 
 public class ValidationHelper
 {
-    private static readonly Dictionary<ValidationId, Validation> _dictionary = new()
+    private static readonly Dictionary<ValidationId, Validation> Dictionary = new()
     {
+        {
+            ValidationId.Missing,
+            new Validation
+            {
+                Id = ValidationId.Missing,
+                Name = "Missing"
+            }
+        },
         {
             ValidationId.Pending,
             new Validation
@@ -57,11 +66,11 @@ public class ValidationHelper
 
     public static Validation GetInfo(ValidationId id)
     {
-        return (_dictionary.TryGetValue(id, out var value) ? value : default) ?? throw new InvalidOperationException();
+        return (Dictionary.TryGetValue(id, out var value) ? value : default) ?? throw new InvalidOperationException();
     }
 
     public static ICollection<Validation> GetAll()
     {
-        return _dictionary.Values;
+        return Dictionary.Values;
     }
 }

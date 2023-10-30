@@ -3,12 +3,14 @@ using AccountsReceivable.BAL.Data;
 using Microsoft.EntityFrameworkCore;
 using AccountsReceivable.BL.Models.Json;
 using AccountsReceivable.BL.Models.Application;
+using AccountsReceivable.BL.Models.Enum;
 
 namespace AccountsReceivable.BAL.Extensions;
 
 public static class DocumentExtensions
 {
-    private static readonly MapperConfiguration _configuration = new MapperConfiguration(cfg =>
+    // ReSharper disable once UnusedMember.Global - UiPath Hook
+    public static readonly MapperConfiguration Configuration = new(cfg =>
     {
         /* Document */
 
@@ -56,7 +58,13 @@ public static class DocumentExtensions
         cfg.ValueTransformers.Add<DateTime?>(val => val.Equals(new DateTime(1900, 1, 1)) ? null : val);
     });
 
-    public static async Task CalculatePrices(this Document baseDocument, ApplicationDbContext dbContext, Schedule? schedule = null)
+    // ReSharper disable once UnusedMember.Global - UiPath Hook
+    public static void CalculatePrices(Document baseDocument, ApplicationDbContext dbContext)
+    {
+        Task.Run(() => CalculatePricesAsync(baseDocument, dbContext)).GetAwaiter().GetResult();
+    }
+    
+    public static async Task CalculatePricesAsync(this Document baseDocument, ApplicationDbContext dbContext, Schedule? schedule = null)
     {
         var document = await dbContext.Documents
             .Include(entity => entity.Plant)
@@ -68,16 +76,17 @@ public static class DocumentExtensions
         schedule ??= await dbContext.Schedules
             .Include(entity => entity.Prices)
             .Include(entity => entity.Uplifts)
+            .Where(entity => entity.StatusId == StatusId.Approved || entity.StatusId == StatusId.Overridden)
             .SingleOrDefaultAsync(entity =>
                 entity.MeatworkName.Equals(document.Plant.MeatworkName) &&
                 entity.StartDate <= document.DateProcessed &&
                 entity.EndDate >= document.DateProcessed
             );
 
-        var stockWeightCost = 0M;
-        var deduction = 0M;
-        var premium = 0M;
-        var net = 0M;
+        document.CalcWeightCostTotal = 0M;
+        document.CalcDeductionCostTotal = 0M;
+        document.CalcPremiumCostTotal = 0M;
+        document.CalcNetCostTotal = 0M;
 
         if (schedule is not null)
         {
@@ -99,25 +108,33 @@ public static class DocumentExtensions
                     uplift.MaxWeight >= animal.Weight
                 ).ToArray();
 
-                animal.CalcPrice = schedulePrice.Cost + (schedulePrice.Cost != 0 ? upliftArray.Sum(uplift => uplift.Rate) : 0);
-                animal.CalcWeightCost = animal.Weight * animal.CalcPrice;
-                animal.CalcDeductionCost = animal.DeductionCost; // TODO
-                animal.CalcPremiumCost = animal.PremiumCost; // TODO
-                animal.CalcNetCost = animal.CalcWeightCost + animal.CalcDeductionCost + animal.CalcPremiumCost;
+                animal.CalcPrice = Math.Round(schedulePrice.Cost + (schedulePrice.Cost != 0 ? upliftArray.Sum(uplift => uplift.Rate) : 0), 2);
+                animal.CalcWeightCost = Math.Round(animal.Weight * animal.CalcPrice, 2);
+                animal.CalcDeductionCost = Math.Round(animal.DeductionCost, 2); // TODO
+                animal.CalcPremiumCost = Math.Round(animal.PremiumCost, 2); // TODO
+                animal.CalcNetCost = Math.Round(animal.CalcWeightCost + animal.CalcDeductionCost + animal.CalcPremiumCost, 2);
 
-                stockWeightCost += animal.CalcWeightCost;
-                deduction += animal.CalcDeductionCost;
-                premium += animal.CalcPremiumCost;
-                net += animal.CalcNetCost;
+                document.CalcWeightCostTotal += animal.CalcWeightCost;
+                document.CalcDeductionCostTotal += animal.CalcDeductionCost;
+                document.CalcPremiumCostTotal += animal.CalcPremiumCost;
+                document.CalcNetCostTotal += animal.CalcNetCost;
             }
+            
+            document.ScheduleId = schedule.Id;
+            document.CalcTimestamp = DateTime.Now;
+            document.CalcValidationId = decimal.Compare(document.CalcNetCostTotal, document.NetCostTotal) switch
+            {
+                -1 => ValidationId.Low,
+                0 => ValidationId.Valid,
+                1 => ValidationId.High,
+                _ => throw new NotImplementedException()
+            };
         }
-
-        document.CalcWeightCostTotal = stockWeightCost;
-        document.CalcDeductionCostTotal = deduction;
-        document.CalcPremiumCostTotal = premium;
-        document.CalcNetCostTotal = net;
-
-        document.ScheduleId = schedule.Id;
-        document.CalcTimestamp = DateTime.Now;
+        else
+        {
+            document.ScheduleId = null;
+            document.CalcTimestamp = null;
+            document.CalcValidationId = ValidationId.Pending;
+        }
     }
 }

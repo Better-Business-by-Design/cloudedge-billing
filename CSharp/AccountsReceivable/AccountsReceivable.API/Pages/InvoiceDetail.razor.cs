@@ -109,7 +109,7 @@ partial class InvoiceDetail
 
     private async Task RecalculatePricing()
     {
-        await _document!.CalculatePrices(DbContext);
+        await _document!.CalculatePricesAsync(DbContext);
         await DbContext.SaveChangesAsync();
 
         Navigation.NavigateTo($"invoices/{_document!.Id}", true);

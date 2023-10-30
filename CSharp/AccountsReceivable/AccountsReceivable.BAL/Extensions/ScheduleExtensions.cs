@@ -1,5 +1,6 @@
 ﻿using AccountsReceivable.BAL.Data;
 using AccountsReceivable.BL.Models.Application;
+using AccountsReceivable.BL.Models.Enum;
 using Microsoft.EntityFrameworkCore;
 
 namespace AccountsReceivable.BAL.Extensions;
@@ -12,6 +13,9 @@ public static class ScheduleExtensions
             .Include(entity => entity.Prices)
             .Include(entity => entity.Uplifts)
             .SingleAsync(entity => entity.Id == baseSchedule.Id);
+
+        if (schedule.StatusId is not (StatusId.Approved or StatusId.Overridden))
+            throw new NotImplementedException();
         
         var documents = await dbContext.Documents
             .Include(entity => entity.Plant)
@@ -25,6 +29,6 @@ public static class ScheduleExtensions
             .ToListAsync();
         
         foreach (var document in documents)
-            await document.CalculatePrices(dbContext, schedule);
+            await document.CalculatePricesAsync(dbContext, schedule);
     }
 }

@@ -109,7 +109,7 @@ partial class Pricing : DataGridPage<Schedule>
                 "StartDate" => schedule => schedule.StartDate,
                 "EndDate" => schedule => schedule.EndDate,
                 "Meatwork.Name" => schedule => schedule.Meatwork.Name,
-                "Status.Id" => schedule => schedule.Status.Id,
+                "StatusId" => schedule => schedule.Status.Id,
                 _ => throw new NotImplementedException()
             };
 
@@ -124,10 +124,5 @@ partial class Pricing : DataGridPage<Schedule>
     protected override void RowClicked(DataGridRowClickEventArgs<Schedule> args)
     {
         Navigation.NavigateTo($"pricing/{args.Item.Id}");
-    }
-
-    protected override string RowStyleFunc(Schedule row, int i)
-    {
-        return base.RowStyleFunc(row, i);
     }
 }

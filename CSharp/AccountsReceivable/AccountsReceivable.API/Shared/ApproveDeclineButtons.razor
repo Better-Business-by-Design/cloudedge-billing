@@ -6,13 +6,13 @@
 
 @if ((Role ?? RoleId.Missing) is RoleId.ReadWrite or RoleId.Administrator)
 {
-    @if (EmailTask is not null)
+    @if (EmailTask is  null)
     {
         <MudIconButton
-            Color="Color.Primary"
+            Color="Color.Default"
             Variant="Variant.Filled"
             Class="ml-2"
-            Icon="@Icons.Material.Filled.Email"
+            Icon="@Icons.Material.Rounded.Email"
             OnClick="@InvokeEmailButtonTask">
         </MudIconButton>
     }

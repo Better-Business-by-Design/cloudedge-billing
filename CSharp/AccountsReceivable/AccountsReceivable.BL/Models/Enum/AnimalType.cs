@@ -2,19 +2,21 @@
 
 public enum AnimalTypeId : byte
 {
-    Bobby = 0,
-    Bull = 1,
-    Cow = 2,
-    MCow = 3,
-    Heifer = 4,
-    Steer = 5,
+    Missing = 0,
+    
+    Bobby = 1,
+    Bull = 2,
+    Cow = 3,
+    MCow = 4,
+    Heifer = 5,
+    Steer = 6,
 
-    Lamb = 6,
-    Mutton = 7,
-    Ram = 8,
+    Lamb = 7,
+    Mutton = 8,
+    Ram = 9,
 
-    Hind = 9,
-    Stag = 10
+    Hind = 10,
+    Stag = 11
 }
 
 public class AnimalType
@@ -33,8 +35,18 @@ public class AnimalType
 
 public class AnimalTypeHelper
 {
-    private static readonly Dictionary<AnimalTypeId, AnimalType> _dictionary = new()
+    private static readonly Dictionary<AnimalTypeId, AnimalType> Dictionary = new()
     {
+        {
+            AnimalTypeId.Missing,
+            new AnimalType
+            {
+                Id = AnimalTypeId.Missing,
+                SpeciesTypeId = SpeciesTypeId.Missing,
+                Name = "MISSING",
+                DisplayName = "Missing"
+            }
+        },
         {
             AnimalTypeId.Bobby,
             new AnimalType
@@ -149,11 +161,11 @@ public class AnimalTypeHelper
 
     public static AnimalType GetInfo(AnimalTypeId id)
     {
-        return (_dictionary.TryGetValue(id, out var value) ? value : default) ?? throw new InvalidOperationException();
+        return (Dictionary.TryGetValue(id, out var value) ? value : default) ?? throw new InvalidOperationException();
     }
 
     public static ICollection<AnimalType> GetAll()
     {
-        return _dictionary.Values;
+        return Dictionary.Values;
     }
 }
