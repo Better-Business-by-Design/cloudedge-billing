@@ -23,8 +23,7 @@ partial class Invoices : DataGridPage<Document>
             .Include(document => document.Plant)
             .Include(document => document.Status)
             .Include(document => document.SpeciesType)
-            .Include(document => document.CalcValidation)
-            .Include(document => document.TransitValidation);
+            .Include(document => document.CalcValidation);
     }
     
     protected override IQueryable<Document> FilterFullQuery(
@@ -90,7 +89,7 @@ partial class Invoices : DataGridPage<Document>
                 Expression<Func<Document, decimal>> selectPredicate = filterDefinition.Title switch
                 {
                     "KillSheet" => document => document.KillSheet,
-                    "Stock Count" => document => document.StockCount,
+                    "Stock Count" => document => document.StockQuantity,
                     "Stock Weight" => document => document.WeightTotal,
                     _ => throw new NotImplementedException()
                 };
@@ -135,11 +134,11 @@ partial class Invoices : DataGridPage<Document>
                 "KillSheet" => document => document.KillSheet,
                 "Farm.Name" => document => document.Farm.Name,
                 "SpeciesType.DisplayName" => document => document.SpeciesType.DisplayName,
-                "StockCount" => document => document.StockCount,
+                "StockQuantity" => document => document.StockQuantity,
                 "WeightTotal" => document => document.WeightTotal,
                 "Plant.Name" => document => document.Plant.Name,
                 "CalcValidationId" => document => document.CalcValidationId,
-                "TransitValidationId" => document => document.TransitValidationId,
+                "TransitQuantity" => document => document.TransitQuantity,
                 "StatusId" => document => document.StatusId,
                 _ => throw new NotImplementedException()
             };

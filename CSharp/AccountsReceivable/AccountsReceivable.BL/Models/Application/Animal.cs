@@ -88,8 +88,8 @@ public class Animal
 
     public decimal CalcNetCost { get; set; }
 
-    public ValidationId CalcValidationId { get; set; } = ValidationId.Pending;
-    public Validation CalcValidation { get; set; } = null!;
+    public ValidationId ValidationId { get; set; } = ValidationId.Pending;
+    public Validation Validation { get; set; } = null!;
 }
 
 /* Nested Classes */

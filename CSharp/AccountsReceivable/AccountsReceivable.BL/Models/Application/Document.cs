@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections;
+using System.ComponentModel.DataAnnotations.Schema;
 using AccountsReceivable.BL.Models.Enum;
 using AccountsReceivable.BL.Models.Source;
 
@@ -48,9 +49,12 @@ public class Document
     public string? ConsignedFrom { get; set; }
 
     public virtual ICollection<Animal>? Animals { get; set; }
-    public virtual ICollection<string>? SupplierComments { get; set; }
+    
+    public virtual ICollection<Comment>? StaffComments { get; set; }
+    
+    
     public virtual ICollection<AnimalTypeSummary> AnimalTypeSummaries { get; set; } = null!;
-
+    
     public SpeciesTypeId SpeciesTypeId { get; set; }
     public virtual SpeciesType SpeciesType { get; set; } = null!;
     
@@ -59,14 +63,13 @@ public class Document
     
     /* Transit */
     
-    // Todo
+    public ushort TransitQuantity { get; set; }
     
-    public ValidationId TransitValidationId { get; set; } = ValidationId.Pending;
-    public virtual Validation TransitValidation { get; set; } = null!;
+    public virtual ICollection<Transit>? Transits { get; set; }
 
     /* SFF Pricing */
 
-    public ushort StockCount { get; set; }
+    public ushort StockQuantity { get; set; }
     
     public decimal WeightTotal { get; set; }
     
@@ -78,7 +81,6 @@ public class Document
 
     public decimal NetCostTotal { get; set; }
     
-
     /* Calculated Pricing - All Pamu prices used calculated values */
     
     public ushort? ScheduleId { get; set; }

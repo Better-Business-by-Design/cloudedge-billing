@@ -4,10 +4,10 @@
 
 @if (_table.Equals("documents"))
 {
-    <MudTable Dense="true" Hover="true" Bordered="true" 
+    <MudTable Dense="true" Hover="true" Bordered="true"
               ServerData="@(new Func<TableState, Task<TableData<Document>>>(DocumentServerReload))"
               OnRowClick="DocumentRowClickEvent" T="Document"
-              RowStyleFunc="RowStyleFunc"
+              RowStyleFunc="RowStyleFunc" Height="calc(100vh - 13.8rem)"
               @ref="_documentTable">
         <ToolBarContent>
             <MudText Typo="Typo.h5">Buyer Created Invoices</MudText>
@@ -56,14 +56,13 @@
                 </MudTableSortLabel>
             </MudTh>
             <MudTh>
-                <MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="validation_field" T="Document">
-                    Validation
+                <MudTableSortLabel SortLabel="ats_field" T="Document">
+                    ATS Quantity
                 </MudTableSortLabel>
             </MudTh>
-
             <MudTh>
-                <MudTableSortLabel SortLabel="ats_field" T="Document">
-                    ATS Status
+                <MudTableSortLabel InitialDirection="SortDirection.Descending" SortLabel="validation_field" T="Document">
+                    Validation
                 </MudTableSortLabel>
             </MudTh>
             <MudTh>
@@ -86,7 +85,7 @@
                 @(context.SpeciesType?.DisplayName ?? "Unknown")
             </MudTd>
             <MudTd>
-                @context.StockCount.ToString()
+                @context.StockQuantity.ToString()
             </MudTd>
             <MudTd>
                 @context.WeightTotal.ToString("0.00")kg
@@ -95,10 +94,10 @@
                 @($"{context.Plant.Name} ({context.Plant.Meatwork.Name})")
             </MudTd>
             <MudTd>
-                @context.CalcValidation.Name
+                @context.TransitQuantity
             </MudTd>
             <MudTd>
-                @context.TransitValidation.Name
+                @context.CalcValidation.Name
             </MudTd>
             <MudTd>
                 @context.Status.Name
@@ -111,7 +110,7 @@
             <MudText>Loading Buyer Created Invoices...</MudText>
         </LoadingContent>
         <PagerContent>
-            <MudTablePager PageSizeOptions="new[] { 20, 40, 80 }"/>
+            <MudTablePager PageSizeOptions="new[] { 25, 50, 100 }"/>
         </PagerContent>
     </MudTable>
 }
@@ -119,7 +118,7 @@ else if (_table.Equals("schedules"))
 {
     <MudTable Dense="true" Hover="true"
               ServerData="@(new Func<TableState, Task<TableData<Schedule>>>(ScheduleServerReload))"
-              OnRowClick="ScheduleRowClickEvent" T="Schedule"
+              OnRowClick="ScheduleRowClickEvent" T="Schedule" Height="calc(100vh - 13.8rem)"
               @ref="_scheduleTable">
         <ToolBarContent>
             <MudText Typo="Typo.h5">Pricing Schedules</MudText>

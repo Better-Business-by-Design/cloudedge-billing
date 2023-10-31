@@ -13,9 +13,6 @@ public static class ScheduleExtensions
             .Include(entity => entity.Prices)
             .Include(entity => entity.Uplifts)
             .SingleAsync(entity => entity.Id == baseSchedule.Id);
-
-        if (schedule.StatusId is not (StatusId.Approved or StatusId.Overridden))
-            throw new NotImplementedException();
         
         var documents = await dbContext.Documents
             .Include(entity => entity.Plant)

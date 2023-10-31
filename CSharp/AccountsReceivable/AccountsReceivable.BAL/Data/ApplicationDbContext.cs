@@ -137,12 +137,6 @@ public class ApplicationDbContext : DbContext
             {
                 entity.HasKey(document => new { document.Id });
 
-                entity.Property(document => document.SupplierComments).HasConversion(
-                    convertCollection => string.Join(",", convertCollection ?? Array.Empty<string>()),
-                    convertString => convertString.Split(",", StringSplitOptions.RemoveEmptyEntries),
-                    GetStringValueComparer()
-                );
-
                 entity.ToTable(nameof(Document), "application");
             }
         );
@@ -174,6 +168,22 @@ public class ApplicationDbContext : DbContext
             }
         );
 
+        modelBuilder.Entity<Comment>(entity =>
+        {
+            entity.HasKey(comment => comment.Id);
+            entity.Property(comment => comment.Id).ValueGeneratedOnAdd();
+            
+            entity.ToTable(nameof(Comment), "application");
+        });
+
+        modelBuilder.Entity<Transit>(entity =>
+        {
+            entity.HasKey(transit => transit.Id);
+            entity.Property(transit => transit.Id).ValueGeneratedOnAdd();
+            
+            entity.ToTable(nameof(Transit), "application");
+        });
+        
         modelBuilder.Entity<DeductionDetail>(entity =>
             {
                 entity.HasKey(deduction => new { deduction.AnimalId, deduction.Code });
@@ -332,28 +342,15 @@ public class ApplicationDbContext : DbContext
                     .WithOne(document => document.CalcValidation)
                     .OnDelete(DeleteBehavior.Restrict);
                 
-                entity.HasMany<Document>()
-                    .WithOne(document => document.TransitValidation)
-                    .OnDelete(DeleteBehavior.Restrict);
-                
                 entity.HasMany<Animal>()
-                    .WithOne(animal => animal.CalcValidation)
+                    .WithOne(animal => animal.Validation)
                     .OnDelete(DeleteBehavior.Restrict);
             }
         );
 
         #endregion
 
-        #region Source
-
-        modelBuilder.Entity<TransitDto>(entity =>
-            {
-                entity.HasKey(transit => transit.Id);
-                entity.Property(transit => transit.Id).ValueGeneratedOnAdd();
-
-                entity.ToTable(nameof(TransitDto), "source");
-            }
-        );
+        /*#region Source
 
         modelBuilder.Entity<DeductionDto>(entity =>
             {
@@ -364,7 +361,7 @@ public class ApplicationDbContext : DbContext
             }
         );
 
-        #endregion
+        #endregion*/
 
         base.OnModelCreating(modelBuilder);
     }

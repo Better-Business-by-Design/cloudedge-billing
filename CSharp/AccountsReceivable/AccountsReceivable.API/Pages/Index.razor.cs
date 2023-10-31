@@ -45,7 +45,6 @@ partial class Index
             .Include(document => document.Status)
             .Include(document => document.SpeciesType)
             .Include(document => document.CalcValidation)
-            .Include(document => document.TransitValidation)
             .Include(document => document.Plant.Meatwork);
 
         var filteredDocumentQueryable =
@@ -63,7 +62,7 @@ partial class Index
                 "species_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
                     document => document.SpeciesTypeId),
                 "stock_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
-                    document => document.StockCount),
+                    document => document.StockQuantity),
                 "weight_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
                     document => document.WeightTotal),
                 "plant_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
@@ -71,7 +70,7 @@ partial class Index
                 "validation_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
                     document => document.CalcValidationId),
                 "ats_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
-                    document => document.TransitValidationId),
+                    document => document.TransitQuantity),
                 "status_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
                     document => document.StatusId),
                 _ => filteredDocumentQueryable

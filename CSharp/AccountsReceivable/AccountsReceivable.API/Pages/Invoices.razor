@@ -13,11 +13,11 @@
         <PropertyColumn Property="@(x => x.KillSheet)"/>
         <PropertyColumn Property="@(x => x.Farm.Name)" Title="Farm"/>
         <PropertyColumn Property="@(x => x.SpeciesType.DisplayName)" Title="Species"/>
-        <PropertyColumn Property="@(x => x.StockCount)" Title="Stock Count"/>
-        <PropertyColumn Property="@(x => x.WeightTotal)" Title="Stock Weight"/>
+        <PropertyColumn Property="@(x => x.StockQuantity)" Title="Quantity"/>
+        <PropertyColumn Property="@(x => x.WeightTotal)" Title="Total Weight"/>
         <PropertyColumn Property="@(x => x.Plant.Name)" Title="Plant (Works)"/>
-        <PropertyColumn Property="@(x => x.CalcValidationId)" Title="Calculation Validation"/>
-        <PropertyColumn Property="@(x => x.TransitValidationId)" Title="ATS Validation"/>
+        <PropertyColumn Property="@(x => x.TransitQuantity)" Title="ATS Quantity"/>
+        <PropertyColumn Property="@(x => x.CalcValidationId)" Title="Validation"/>
         <PropertyColumn Property="@(x => x.StatusId)" Title="Approval Status"/>
     </Columns>
      <NoRecordsContent>

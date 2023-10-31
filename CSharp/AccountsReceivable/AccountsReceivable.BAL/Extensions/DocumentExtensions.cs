@@ -23,7 +23,7 @@ public static class DocumentExtensions
         documentMap.ForMember(document => document.PreviousDocumentId, opt => opt.MapFrom(src => src.PreviousDocument));
         documentMap.ForMember(document => document.AnimalTypeSummaries, opt => opt.MapFrom(src => src.PaymentAdviceAnimalType));
 
-        documentMap.ForMember(document => document.StockCount, opt => opt.MapFrom(src => src.PaymentAdviceTotalStockReceived));
+        documentMap.ForMember(document => document.StockQuantity, opt => opt.MapFrom(src => src.PaymentAdviceTotalStockReceived));
         documentMap.ForMember(document => document.WeightTotal, opt => opt.MapFrom(src => src.PaymentAdviceTotalMeatKg));
         documentMap.ForMember(document => document.WeightCostTotal, opt => opt.MapFrom(src => src.PaymentAdviceTotalPricePaid));
         documentMap.ForMember(document => document.PremiumCostTotal, opt => opt.MapFrom(src => src.AdditionalPremiumsDeductions));

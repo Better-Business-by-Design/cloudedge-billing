@@ -50,9 +50,9 @@ partial class InvoiceDetail
         if (_document is null)
         {
             /*var ds = await DbContext.Documents.Include(s => s.Schedule).ToListAsync();
-            foreach (var d in ds) await d.CalculatePrices(DbContext);
+            foreach (var d in ds) await d.CalculatePricesAsync(DbContext);
             await DbContext.SaveChangesAsync();*/
-            
+
             _document = await DbContext.Documents
                 .Include(document => document.Farm)
                 .Include(document => document.Status)
@@ -85,8 +85,10 @@ partial class InvoiceDetail
                 {
                     Price = price,
                     Grade = price.Grade,
-                    StockCount = (ushort) (document.Animals != null ? document.Animals.Count(animal => animal.GradeId == price.GradeId && animal.Weight <= price.MaxWeight && animal.Weight >= price.MinWeight) : 0),
-                    StockWeight = document.Animals != null ? document.Animals.Where(animal => animal.GradeId == price.GradeId && animal.Weight <= price.MaxWeight && animal.Weight >= price.MinWeight).Sum(animal => animal.Weight) : 0,
+                    StockCount = (ushort)(document.Animals != null ? document.Animals.Count(animal => animal.GradeId == price.GradeId && animal.Weight <= price.MaxWeight && animal.Weight >= price.MinWeight) : 0),
+                    StockWeight = document.Animals != null
+                        ? document.Animals.Where(animal => animal.GradeId == price.GradeId && animal.Weight <= price.MaxWeight && animal.Weight >= price.MinWeight).Sum(animal => animal.Weight)
+                        : 0,
                     Cost = document.Animals != null ? document.Animals.First(animal => animal.GradeId == price.GradeId && animal.Weight <= price.MaxWeight && animal.Weight >= price.MinWeight).Price : 0,
                     CalcCost = document.Animals != null ? document.Animals.First(animal => animal.GradeId == price.GradeId && animal.Weight <= price.MaxWeight && animal.Weight >= price.MinWeight).CalcPrice : 0
                 }
@@ -103,8 +105,15 @@ partial class InvoiceDetail
 
     private string RowStyleFunc(PriceAnimals priceAnimals, int index)
     {
-        return $"background-color: {(priceAnimals.Cost == priceAnimals.CalcCost ? Colors.LightGreen.Lighten4 : Colors.DeepOrange.Lighten4)}";
+        var striped = index % 2 == 1;
+        var valid = priceAnimals.Cost == priceAnimals.CalcCost; // Switch to Validation
 
+        return "background-color: " + (
+            striped && valid ? Colors.LightGreen.Lighten3 :
+            valid ? Colors.LightGreen.Lighten4 :
+            striped ? Colors.DeepOrange.Lighten3 :
+            Colors.DeepOrange.Lighten4
+        );
     }
 
     private async Task RecalculatePricing()

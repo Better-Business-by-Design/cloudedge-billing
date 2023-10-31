@@ -23,7 +23,8 @@
     </MudToolBar>
 }
 
-<MudTable Dense="true" Hover="true" ServerData="@(new Func<TableState, Task<TableData<Price>>>(ServerReload))" @ref="_table" T="Price">
+<MudTable Dense="true" Hover="true" ServerData="@(new Func<TableState, Task<TableData<Price>>>(ServerReload))" @ref="_table" T="Price"
+          Height="calc(100vh - 12.8rem)">
     <HeaderContent>
         <MudTh>
             <MudTableSortLabel SortLabel="species_field" T="Price">
