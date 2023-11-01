@@ -16,7 +16,5 @@ public class Price
 
     public decimal MaxWeight { get; set; }
 
-    public decimal Modifier { get; set; }
-
     public decimal Cost { get; set; }
 }

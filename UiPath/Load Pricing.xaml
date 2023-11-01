@@ -1,4 +1,4 @@
-<Activity mc:Ignorable="sap sap2010" x:Class="Load_Pricing" sap2010:ExpressionActivityEditor.ExpressionActivityEditor="C#" sap:VirtualizedContainerService.HintSize="833.6,1327.2" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:abd="clr-namespace:AccountsReceivable.BAL.Data;assembly=AccountsReceivable.BAL" xmlns:abma="clr-namespace:AccountsReceivable.BL.Models.Application;assembly=AccountsReceivable.BL" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:me="clr-namespace:Microsoft.EntityFrameworkCore;assembly=Microsoft.EntityFrameworkCore" xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data.Common" xmlns:si="clr-namespace:System.IO;assembly=System.Private.CoreLib" xmlns:sp="clr-namespace:Spire.Pdf;assembly=Spire.Pdf" xmlns:spgf="clr-namespace:Spire.Pdf.General.Find;assembly=Spire.Pdf" xmlns:udcdw="clr-namespace:UiPath.Data.ConnectionUI.Dialog.Workaround;assembly=UiPath.Database" xmlns:ue="clr-namespace:UiPath.Excel;assembly=UiPath.Excel.Activities" xmlns:ueab="clr-namespace:UiPath.Excel.Activities.Business;assembly=UiPath.Excel.Activities" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity mc:Ignorable="sap sap2010" x:Class="Load_Pricing" sap2010:ExpressionActivityEditor.ExpressionActivityEditor="C#" sap:VirtualizedContainerService.HintSize="1076,1325.6" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:abd="clr-namespace:AccountsReceivable.BAL.Data;assembly=AccountsReceivable.BAL" xmlns:abma="clr-namespace:AccountsReceivable.BL.Models.Application;assembly=AccountsReceivable.BL" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:me="clr-namespace:Microsoft.EntityFrameworkCore;assembly=Microsoft.EntityFrameworkCore" xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:sc="clr-namespace:System.Collections;assembly=System.Private.CoreLib" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data.Common" xmlns:si="clr-namespace:System.IO;assembly=System.Private.CoreLib" xmlns:sp="clr-namespace:Spire.Pdf;assembly=Spire.Pdf" xmlns:spgf="clr-namespace:Spire.Pdf.General.Find;assembly=Spire.Pdf" xmlns:udcdw="clr-namespace:UiPath.Data.ConnectionUI.Dialog.Workaround;assembly=UiPath.Database" xmlns:ue="clr-namespace:UiPath.Excel;assembly=UiPath.Excel.Activities" xmlns:ueab="clr-namespace:UiPath.Excel.Activities.Business;assembly=UiPath.Excel.Activities" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
       <x:String>AccountsReceivable.BAL.Data</x:String>
@@ -46,6 +46,7 @@
       <x:String>UiPath.Platform.ResourceHandling</x:String>
       <x:String>UiPath.Shared.Activities</x:String>
       <x:String>UiPath.Shared.Activities.Business</x:String>
+      <x:String>System.Linq.Expressions</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -127,7 +128,7 @@
       <AssemblyReference>WindowsBase</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Load Pricing" sap:VirtualizedContainerService.HintSize="608,1262.4" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="Load Pricing" sap:VirtualizedContainerService.HintSize="608,1260.8" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="abd:ApplicationDbContext" Name="DbContext" />
     </Sequence.Variables>
@@ -136,7 +137,7 @@
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <InvokeMethod DisplayName="Invoke - SNI Workaround" sap:VirtualizedContainerService.HintSize="545.6,134.4" sap2010:WorkflowViewState.IdRef="InvokeMethod_1" MethodName="SNILoadWorkaround" TargetType="udcdw:DbWorkarounds">
+    <InvokeMethod DisplayName="Invoke - SNI Workaround" sap:VirtualizedContainerService.HintSize="545.6,133.6" sap2010:WorkflowViewState.IdRef="InvokeMethod_1" MethodName="SNILoadWorkaround" TargetType="udcdw:DbWorkarounds">
       <InArgument x:TypeArguments="x:Boolean">True</InArgument>
     </InvokeMethod>
     <ui:MultipleAssign DisplayName="Assign - DbContext" sap:VirtualizedContainerService.HintSize="545.6,117.6" sap2010:WorkflowViewState.IdRef="MultipleAssign_1">
@@ -240,7 +241,7 @@
                 </InvokeMethod.TargetObject>
               </InvokeMethod>
             </Sequence>
-            <Sequence sap2010:Annotation.AnnotationText="Create Excel File and Export to Database" DisplayName="Process Excel" sap:VirtualizedContainerService.HintSize="635.2,2624.8" sap2010:WorkflowViewState.IdRef="Sequence_8">
+            <Sequence sap2010:Annotation.AnnotationText="Create Excel File and Export to Database" DisplayName="Process Excel" sap:VirtualizedContainerService.HintSize="640,3707.2" sap2010:WorkflowViewState.IdRef="Sequence_8">
               <Sequence.Variables>
                 <Variable x:TypeArguments="abma:Schedule" Name="Schedule" />
                 <Variable x:TypeArguments="sd:DataTable" Name="PricingTable" />
@@ -254,7 +255,7 @@
                   <x:Boolean x:Key="IsPinned">False</x:Boolean>
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>
-              <Assign DisplayName="Assign - Temp Path" sap:VirtualizedContainerService.HintSize="572.8,81.6" sap2010:WorkflowViewState.IdRef="Assign_5">
+              <Assign DisplayName="Assign - Temp Path" sap:VirtualizedContainerService.HintSize="577.6,80.8" sap2010:WorkflowViewState.IdRef="Assign_5">
                 <Assign.To>
                   <OutArgument x:TypeArguments="x:String">
                     <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_14">TempPath</CSharpReference>
@@ -266,7 +267,7 @@
                   </InArgument>
                 </Assign.Value>
               </Assign>
-              <ui:CopyFile ContinueOnError="{x:Null}" DisplayName="Copy - Schedule" sap:VirtualizedContainerService.HintSize="572.8,155.2" sap2010:WorkflowViewState.IdRef="CopyFile_1" Overwrite="True">
+              <ui:CopyFile ContinueOnError="{x:Null}" DisplayName="Copy - Schedule" sap:VirtualizedContainerService.HintSize="577.6,155.2" sap2010:WorkflowViewState.IdRef="CopyFile_1" Overwrite="True">
                 <ui:CopyFile.Destination>
                   <InArgument x:TypeArguments="x:String">
                     <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_59">TempPath</CSharpValue>
@@ -278,19 +279,19 @@
                   </InArgument>
                 </ui:CopyFile.Path>
               </ui:CopyFile>
-              <ueab:ExcelProcessScopeX LaunchMethod="{x:Null}" LaunchTimeout="{x:Null}" ProcessMode="{x:Null}" ShowExcelWindow="{x:Null}" DisplayAlerts="False" DisplayName="Excel - Process Scope" ExistingProcessAction="ForceKill" FileConflictResolution="CloseWithoutSaving" sap:VirtualizedContainerService.HintSize="572.8,1572" sap2010:WorkflowViewState.IdRef="ExcelProcessScopeX_1" MacroSettings="DisableAll">
+              <ueab:ExcelProcessScopeX LaunchMethod="{x:Null}" LaunchTimeout="{x:Null}" ProcessMode="{x:Null}" ShowExcelWindow="{x:Null}" DisplayAlerts="False" DisplayName="Excel - Process Scope" ExistingProcessAction="ForceKill" FileConflictResolution="CloseWithoutSaving" sap:VirtualizedContainerService.HintSize="577.6,1571.2" sap2010:WorkflowViewState.IdRef="ExcelProcessScopeX_1" MacroSettings="DisableAll">
                 <ueab:ExcelProcessScopeX.Body>
                   <ActivityAction x:TypeArguments="ui:IExcelProcess">
                     <ActivityAction.Argument>
                       <DelegateInArgument x:TypeArguments="ui:IExcelProcess" Name="ExcelProcessScopeTag" />
                     </ActivityAction.Argument>
-                    <ueab:ExcelApplicationCard Password="{x:Null}" ReadFormatting="{x:Null}" AutoSave="False" CreateNewFile="False" DisplayName="Use - Pricing File" sap:VirtualizedContainerService.HintSize="539.2,1485.6" sap2010:WorkflowViewState.IdRef="ExcelApplicationCard_1" ResizeWindow="None">
+                    <ueab:ExcelApplicationCard Password="{x:Null}" ReadFormatting="{x:Null}" AutoSave="False" CreateNewFile="False" DisplayName="Use - Pricing File" sap:VirtualizedContainerService.HintSize="539.2,1484.8" sap2010:WorkflowViewState.IdRef="ExcelApplicationCard_1" ResizeWindow="None">
                       <ueab:ExcelApplicationCard.Body>
                         <ActivityAction x:TypeArguments="ue:IWorkbookQuickHandle">
                           <ActivityAction.Argument>
                             <DelegateInArgument x:TypeArguments="ue:IWorkbookQuickHandle" Name="Excel" />
                           </ActivityAction.Argument>
-                          <Sequence DisplayName="Load Pricing" sap:VirtualizedContainerService.HintSize="505.6,1216" sap2010:WorkflowViewState.IdRef="Sequence_3">
+                          <Sequence DisplayName="Load Pricing" sap:VirtualizedContainerService.HintSize="505.6,1215.2" sap2010:WorkflowViewState.IdRef="Sequence_3">
                             <Sequence.Variables>
                               <Variable x:TypeArguments="x:String" Name="Meatwork" />
                             </Sequence.Variables>
@@ -299,7 +300,7 @@
                                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                               </scg:Dictionary>
                             </sap:WorkflowViewStateService.ViewState>
-                            <Assign DisplayName="Assign - Meatwork" sap:VirtualizedContainerService.HintSize="443.2,81.6" sap2010:WorkflowViewState.IdRef="Assign_2">
+                            <Assign DisplayName="Assign - Meatwork" sap:VirtualizedContainerService.HintSize="443.2,80.8" sap2010:WorkflowViewState.IdRef="Assign_2">
                               <Assign.To>
                                 <OutArgument x:TypeArguments="x:String">
                                   <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference`1_9">Meatwork</CSharpReference>
@@ -359,7 +360,7 @@
                                 <Sequence sap2010:WorkflowViewState.IdRef="Sequence_10" />
                               </If.Else>
                             </If>
-                            <ueab:ReadRangeX DisplayName="Read - PricingDto" sap:VirtualizedContainerService.HintSize="443.2,169.6" sap2010:WorkflowViewState.IdRef="ReadRangeX_3" ReadFormatting="DisplayValue" VisibleOnly="False">
+                            <ueab:ReadRangeX DisplayName="Read - PricingDto" sap:VirtualizedContainerService.HintSize="443.2,169.6" sap2010:WorkflowViewState.IdRef="ReadRangeX_3" VisibleOnly="False">
                               <ueab:ReadRangeX.Range>
                                 <InArgument x:TypeArguments="ue:IReadRangeRef">
                                   <CSharpValue x:TypeArguments="ue:IReadRangeRef" sap2010:WorkflowViewState.IdRef="CSharpValue`1_28">Excel.Sheet[Meatwork + "-PricingDto"]</CSharpValue>
@@ -383,14 +384,14 @@
                   </ActivityAction>
                 </ueab:ExcelProcessScopeX.Body>
               </ueab:ExcelProcessScopeX>
-              <ui:DeleteFileX DisplayName="Delete - Output File" sap:VirtualizedContainerService.HintSize="572.8,80.8" sap2010:WorkflowViewState.IdRef="DeleteFileX_1">
+              <ui:DeleteFileX DisplayName="Delete - Output File" sap:VirtualizedContainerService.HintSize="577.6,80.8" sap2010:WorkflowViewState.IdRef="DeleteFileX_1">
                 <ui:DeleteFileX.Path>
                   <InArgument x:TypeArguments="x:String">
                     <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_61">TempPath</CSharpValue>
                   </InArgument>
                 </ui:DeleteFileX.Path>
               </ui:DeleteFileX>
-              <Assign DisplayName="Assign - Schedule" sap:VirtualizedContainerService.HintSize="572.8,83.2" sap2010:WorkflowViewState.IdRef="Assign_4">
+              <Assign DisplayName="Assign - Schedule" sap:VirtualizedContainerService.HintSize="577.6,84.8" sap2010:WorkflowViewState.IdRef="Assign_4">
                 <Assign.To>
                   <OutArgument x:TypeArguments="abma:Schedule">
                     <CSharpReference x:TypeArguments="abma:Schedule" sap2010:WorkflowViewState.IdRef="CSharpReference`1_13">Schedule</CSharpReference>
@@ -398,24 +399,107 @@
                 </Assign.To>
                 <Assign.Value>
                   <InArgument x:TypeArguments="abma:Schedule">
-                    <CSharpValue x:TypeArguments="abma:Schedule" sap2010:WorkflowViewState.IdRef="CSharpValue`1_64" xml:space="preserve">ScheduleTable.AsEnumerable().Select(ScheduleRow =&gt; 
+                    <CSharpValue x:TypeArguments="abma:Schedule" sap2010:WorkflowViewState.IdRef="CSharpValue`1_66" xml:space="preserve">ScheduleTable.AsEnumerable().Select(ScheduleRow =&gt; 
 	new Schedule {
 		StartDate = Convert.ToDateTime(ScheduleRow["StartDate"]),
 		EndDate = Convert.ToDateTime(ScheduleRow["EndDate"]),
 		MeatworkName = Convert.ToString(ScheduleRow["Meatwork"]),
-		Prices = PricingTable.AsEnumerable().Select(PricingRow =&gt; new Price {
-			GradeId = GradeHelper.GetAll().Single(Grade =&gt; Grade.Name.Equals(Convert.ToString(PricingRow["Grade"]), StringComparison.OrdinalIgnoreCase) &amp;&amp; Grade.AnimalTypeId == AnimalTypeHelper.GetAll().Single(AnimalType =&gt; AnimalType.Name.Equals(Convert.ToString(PricingRow["AnimalType"]),  StringComparison.OrdinalIgnoreCase)).Id).Id,
-			MinWeight = Convert.ToDecimal(PricingRow["MinWeight"]),
-			MaxWeight = Convert.ToDecimal(PricingRow["MaxWeight"]),
-			Modifier = Convert.ToDecimal(PricingRow["Modifier"]),
-			Cost = Convert.ToDecimal(PricingRow["Price"])
-		}).ToList()
+		Prices = new List&lt;Price&gt;()
 	}
 ).Single()</CSharpValue>
                   </InArgument>
                 </Assign.Value>
               </Assign>
-              <InvokeMethod DisplayName="Invoke - Add Schedule" sap:VirtualizedContainerService.HintSize="572.8,134.4" sap2010:WorkflowViewState.IdRef="InvokeMethod_7" MethodName="Add">
+              <ui:ForEach x:TypeArguments="sd:DataRow" CurrentIndex="{x:Null}" DisplayName="For Each - Pricing Row" sap:VirtualizedContainerService.HintSize="577.6,1044" sap2010:WorkflowViewState.IdRef="ForEach`1_1">
+                <ui:ForEach.Body>
+                  <ActivityAction x:TypeArguments="sd:DataRow">
+                    <ActivityAction.Argument>
+                      <DelegateInArgument x:TypeArguments="sd:DataRow" Name="PricingRow" />
+                    </ActivityAction.Argument>
+                    <ui:ForEach x:TypeArguments="x:String" CurrentIndex="{x:Null}" DisplayName="For Each - Animal Type" sap:VirtualizedContainerService.HintSize="544,856" sap2010:WorkflowViewState.IdRef="ForEach`1_2">
+                      <ui:ForEach.Body>
+                        <ActivityAction x:TypeArguments="x:String">
+                          <ActivityAction.Argument>
+                            <DelegateInArgument x:TypeArguments="x:String" Name="AnimalType" />
+                          </ActivityAction.Argument>
+                          <ui:ForEach x:TypeArguments="x:String" CurrentIndex="{x:Null}" DisplayName="For Each - Grade" sap:VirtualizedContainerService.HintSize="510.4,668" sap2010:WorkflowViewState.IdRef="ForEach`1_3">
+                            <ui:ForEach.Body>
+                              <ActivityAction x:TypeArguments="x:String">
+                                <ActivityAction.Argument>
+                                  <DelegateInArgument x:TypeArguments="x:String" Name="Grade" />
+                                </ActivityAction.Argument>
+                                <Sequence DisplayName="Create Price" sap:VirtualizedContainerService.HintSize="476.8,480" sap2010:WorkflowViewState.IdRef="Sequence_13">
+                                  <Sequence.Variables>
+                                    <Variable x:TypeArguments="abma:Price" Name="Price" />
+                                  </Sequence.Variables>
+                                  <sap:WorkflowViewStateService.ViewState>
+                                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                    </scg:Dictionary>
+                                  </sap:WorkflowViewStateService.ViewState>
+                                  <Assign DisplayName="Assign - Price" sap:VirtualizedContainerService.HintSize="433.6,84.8" sap2010:WorkflowViewState.IdRef="Assign_6">
+                                    <Assign.To>
+                                      <OutArgument x:TypeArguments="abma:Price">
+                                        <CSharpReference x:TypeArguments="abma:Price" sap2010:WorkflowViewState.IdRef="CSharpReference`1_15">Price</CSharpReference>
+                                      </OutArgument>
+                                    </Assign.To>
+                                    <Assign.Value>
+                                      <InArgument x:TypeArguments="abma:Price">
+                                        <CSharpValue x:TypeArguments="abma:Price" sap2010:WorkflowViewState.IdRef="CSharpValue`1_75" xml:space="preserve">new Price {
+	GradeId = GradeHelper.GetAll().Single(CurrentGrade =&gt; CurrentGrade.Name.Equals(Grade, StringComparison.OrdinalIgnoreCase) &amp;&amp; CurrentGrade.AnimalTypeId == AnimalTypeHelper.GetAll().Single(CurrentAnimalType =&gt; CurrentAnimalType.Name.Equals(AnimalType,  StringComparison.OrdinalIgnoreCase)).Id).Id,
+	MinWeight = Convert.ToDecimal(PricingRow["MinWeight"]),
+	MaxWeight = Convert.ToDecimal(PricingRow["MaxWeight"]),
+	Cost = Convert.ToDecimal(PricingRow["BasePrice"]) + (
+		Convert.ToDecimal(PricingRow["BasePrice"]) != 0 ? (
+			Grade.EndsWith("1") ? Convert.ToDecimal(PricingRow["Class1"]) : Grade.EndsWith("3") ? Convert.ToDecimal(PricingRow["Class3"]) : 0 + 
+			Convert.ToDecimal(PricingRow["GradeModifier"])
+		) : 0
+	)
+}</CSharpValue>
+                                      </InArgument>
+                                    </Assign.Value>
+                                  </Assign>
+                                  <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="433.6,90.4" sap2010:WorkflowViewState.IdRef="WriteLine_2">
+                                    <InArgument x:TypeArguments="x:String">
+                                      <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue`1_76">Convert.ToDecimal(PricingRow["BasePrice"]).ToString()</CSharpValue>
+                                    </InArgument>
+                                  </WriteLine>
+                                  <InvokeMethod DisplayName="Invoke - Add Price" sap:VirtualizedContainerService.HintSize="433.6,135.2" sap2010:WorkflowViewState.IdRef="InvokeMethod_9" MethodName="Add">
+                                    <InvokeMethod.TargetObject>
+                                      <InArgument x:TypeArguments="scg:ICollection(abma:Price)">
+                                        <CSharpValue x:TypeArguments="scg:ICollection(abma:Price)" sap2010:WorkflowViewState.IdRef="CSharpValue`1_70">Schedule.Prices</CSharpValue>
+                                      </InArgument>
+                                    </InvokeMethod.TargetObject>
+                                    <InArgument x:TypeArguments="abma:Price">
+                                      <CSharpValue x:TypeArguments="abma:Price" sap2010:WorkflowViewState.IdRef="CSharpValue`1_72">Price</CSharpValue>
+                                    </InArgument>
+                                  </InvokeMethod>
+                                </Sequence>
+                              </ActivityAction>
+                            </ui:ForEach.Body>
+                            <ui:ForEach.Values>
+                              <InArgument x:TypeArguments="sc:IEnumerable">
+                                <CSharpValue x:TypeArguments="sc:IEnumerable" sap2010:WorkflowViewState.IdRef="CSharpValue`1_69">Convert.ToString(PricingRow["Grade"]).Split(new string[] { "," }, StringSplitOptions.None)</CSharpValue>
+                              </InArgument>
+                            </ui:ForEach.Values>
+                          </ui:ForEach>
+                        </ActivityAction>
+                      </ui:ForEach.Body>
+                      <ui:ForEach.Values>
+                        <InArgument x:TypeArguments="sc:IEnumerable">
+                          <CSharpValue x:TypeArguments="sc:IEnumerable" sap2010:WorkflowViewState.IdRef="CSharpValue`1_68">Convert.ToString(PricingRow["AnimalType"]).Split(new string[] { "," }, StringSplitOptions.None)</CSharpValue>
+                        </InArgument>
+                      </ui:ForEach.Values>
+                    </ui:ForEach>
+                  </ActivityAction>
+                </ui:ForEach.Body>
+                <ui:ForEach.Values>
+                  <InArgument x:TypeArguments="sc:IEnumerable">
+                    <CSharpValue x:TypeArguments="sc:IEnumerable" sap2010:WorkflowViewState.IdRef="CSharpValue`1_67">PricingTable.AsEnumerable()</CSharpValue>
+                  </InArgument>
+                </ui:ForEach.Values>
+              </ui:ForEach>
+              <InvokeMethod DisplayName="Invoke - Add Schedule" sap:VirtualizedContainerService.HintSize="577.6,133.6" sap2010:WorkflowViewState.IdRef="InvokeMethod_7" MethodName="Add">
                 <InvokeMethod.TargetObject>
                   <InArgument x:TypeArguments="me:DbSet(abma:Schedule)">
                     <CSharpValue x:TypeArguments="me:DbSet(abma:Schedule)" sap2010:WorkflowViewState.IdRef="CSharpValue`1_37">DbContext.Set&lt;Schedule&gt;()</CSharpValue>
@@ -425,7 +509,7 @@
                   <CSharpValue x:TypeArguments="abma:Schedule" sap2010:WorkflowViewState.IdRef="CSharpValue`1_36">Schedule</CSharpValue>
                 </InArgument>
               </InvokeMethod>
-              <InvokeMethod DisplayName="Invoke - Save Changes" sap:VirtualizedContainerService.HintSize="572.8,134.4" sap2010:WorkflowViewState.IdRef="InvokeMethod_8" MethodName="SaveChanges">
+              <InvokeMethod DisplayName="Invoke - Save Changes" sap:VirtualizedContainerService.HintSize="577.6,133.6" sap2010:WorkflowViewState.IdRef="InvokeMethod_8" MethodName="SaveChanges">
                 <InvokeMethod.TargetObject>
                   <InArgument x:TypeArguments="abd:ApplicationDbContext">
                     <CSharpValue x:TypeArguments="abd:ApplicationDbContext" sap2010:WorkflowViewState.IdRef="CSharpValue`1_6">DbContext</CSharpValue>
@@ -437,7 +521,7 @@
         </ActivityAction>
       </ui:ForEachFileX.Body>
     </ui:ForEachFileX>
-    <InvokeMethod DisplayName="Invoke - Dispose" sap:VirtualizedContainerService.HintSize="545.6,134.4" sap2010:WorkflowViewState.IdRef="InvokeMethod_2" MethodName="Dispose">
+    <InvokeMethod DisplayName="Invoke - Dispose" sap:VirtualizedContainerService.HintSize="545.6,133.6" sap2010:WorkflowViewState.IdRef="InvokeMethod_2" MethodName="Dispose">
       <InvokeMethod.TargetObject>
         <InArgument x:TypeArguments="abd:ApplicationDbContext">
           <CSharpValue x:TypeArguments="abd:ApplicationDbContext" sap2010:WorkflowViewState.IdRef="CSharpValue`1_4">DbContext</CSharpValue>

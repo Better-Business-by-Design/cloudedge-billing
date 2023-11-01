@@ -76,14 +76,14 @@ partial class InvoiceDetail
 
         var fullQuery = DbContext.Documents
             .AsNoTracking()
-            .Include(document => document.Schedule!.Prices)
-            .ThenInclude(prices => prices.Grade)
-            .Include(document => document.Animals!)
-            .ThenInclude(animal => animal.Grade)
+            .Include(document => document.Schedule!.Prices).ThenInclude(prices => prices.Grade)
+            .Include(document => document.Animals!).ThenInclude(animal => animal.Grade)
+            .Include(document => document.Animals!).ThenInclude(animal => animal.Grade.AnimalType)
             .Where(document => document.Id.Equals(Id))
             .SelectMany(document => document.Schedule!.Prices.Select(price => new PriceAnimals
                 {
                     Price = price,
+                    AnimalType = price.Grade.AnimalType,
                     Grade = price.Grade,
                     StockCount = (ushort)(document.Animals != null ? document.Animals.Count(animal => animal.GradeId == price.GradeId && animal.Weight <= price.MaxWeight && animal.Weight >= price.MinWeight) : 0),
                     StockWeight = document.Animals != null

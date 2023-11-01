@@ -13,6 +13,7 @@ public class InvoiceDetails
 public class PriceAnimals
 {
     public Price Price { get; set; } = null!;
+    public AnimalType AnimalType { get; set; } = null!;
     public Grade Grade { get; set; } = null!;
     
     public ushort StockCount { get; set; }
