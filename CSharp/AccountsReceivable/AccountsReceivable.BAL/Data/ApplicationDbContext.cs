@@ -1,7 +1,6 @@
 ﻿using AccountsReceivable.BL.Models.Account;
 using AccountsReceivable.BL.Models.Application;
 using AccountsReceivable.BL.Models.Enum;
-using AccountsReceivable.BL.Models.Source;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -19,7 +18,8 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Latin1_General_100_CI_AS");
-        foreach (var property in modelBuilder.Model.GetEntityTypes().SelectMany(entity => entity.GetProperties()).Where(property => property.ClrType == typeof(decimal) || property.ClrType == typeof(decimal?)))
+        foreach (var property in modelBuilder.Model.GetEntityTypes().SelectMany(entity => entity.GetProperties())
+                     .Where(property => property.ClrType == typeof(decimal) || property.ClrType == typeof(decimal?)))
         {
             property.SetPrecision(9);
             property.SetScale(2);
@@ -37,7 +37,7 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Audit>(entity =>
             {
-                entity.HasKey(audit => new { audit.UserId, audit.Timestamp });
+                entity.HasKey(audit => new {audit.UserId, audit.Timestamp});
 
                 entity.ToTable(nameof(Audit), "account");
             }
@@ -73,7 +73,7 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Supplier>(entity =>
             {
-                entity.HasKey(supplier => new { supplier.FarmCostCentre, supplier.MeatworkName });
+                entity.HasKey(supplier => new {supplier.FarmCostCentre, supplier.MeatworkName});
 
                 entity.ToTable(nameof(Supplier), "application");
             }
@@ -135,7 +135,7 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Document>(entity =>
             {
-                entity.HasKey(document => new { document.Id });
+                entity.HasKey(document => new {document.Id});
 
                 entity.ToTable(nameof(Document), "application");
             }
@@ -172,21 +172,25 @@ public class ApplicationDbContext : DbContext
         {
             entity.HasKey(comment => comment.Id);
             entity.Property(comment => comment.Id).ValueGeneratedOnAdd();
-            
+
             entity.ToTable(nameof(Comment), "application");
         });
 
         modelBuilder.Entity<Transit>(entity =>
         {
             entity.HasKey(transit => transit.Id);
-            entity.Property(transit => transit.Id).ValueGeneratedOnAdd();
-            
+
+            entity.HasOne<Document>(transit => transit.Document)
+                .WithMany(document => document.Transits)
+                .HasForeignKey(transit => transit.DocumentId)
+                .OnDelete(DeleteBehavior.SetNull);
+
             entity.ToTable(nameof(Transit), "application");
         });
-        
+
         modelBuilder.Entity<DeductionDetail>(entity =>
             {
-                entity.HasKey(deduction => new { deduction.AnimalId, deduction.Code });
+                entity.HasKey(deduction => new {deduction.AnimalId, deduction.Code});
 
                 entity.ToTable(nameof(DeductionDetail), "application");
             }
@@ -194,7 +198,7 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<PremiumDetail>(entity =>
             {
-                entity.HasKey(premium => new { premium.AnimalId, premium.Code });
+                entity.HasKey(premium => new {premium.AnimalId, premium.Code});
 
                 entity.ToTable(nameof(PremiumDetail), "application");
             }
@@ -224,6 +228,10 @@ public class ApplicationDbContext : DbContext
 
                 entity.HasMany<Document>()
                     .WithOne(document => document.SpeciesType)
+                    .OnDelete(DeleteBehavior.Restrict);
+                
+                entity.HasMany<Transit>()
+                    .WithOne(transit => transit.SpeciesType)
                     .OnDelete(DeleteBehavior.Restrict);
             }
         );
@@ -291,13 +299,13 @@ public class ApplicationDbContext : DbContext
                 );
 
                 entity.ToTable(nameof(Status), "enum");
-                
+
                 /* Prevent Cascade */
 
                 entity.HasMany<Document>()
                     .WithOne(document => document.Status)
                     .OnDelete(DeleteBehavior.Restrict);
-                
+
                 entity.HasMany<Schedule>()
                     .WithOne(schedule => schedule.Status)
                     .OnDelete(DeleteBehavior.Restrict);
@@ -315,7 +323,7 @@ public class ApplicationDbContext : DbContext
                 );
 
                 entity.ToTable(nameof(Role), "enum");
-                
+
                 /* Prevent Cascade */
 
                 entity.HasMany<User>()
@@ -335,13 +343,13 @@ public class ApplicationDbContext : DbContext
                 );
 
                 entity.ToTable(nameof(Validation), "enum");
-                
+
                 /* Prevent Cascade */
 
                 entity.HasMany<Document>()
                     .WithOne(document => document.CalcValidation)
                     .OnDelete(DeleteBehavior.Restrict);
-                
+
                 entity.HasMany<Animal>()
                     .WithOne(animal => animal.Validation)
                     .OnDelete(DeleteBehavior.Restrict);
@@ -349,19 +357,6 @@ public class ApplicationDbContext : DbContext
         );
 
         #endregion
-
-        /*#region Source
-
-        modelBuilder.Entity<DeductionDto>(entity =>
-            {
-                entity.HasKey(deduction => deduction.Id);
-                entity.Property(deduction => deduction.Id).ValueGeneratedOnAdd();
-
-                entity.ToTable(nameof(DeductionDto), "source");
-            }
-        );
-
-        #endregion*/
 
         base.OnModelCreating(modelBuilder);
     }

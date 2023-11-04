@@ -4,6 +4,7 @@ using AccountsReceivable.BAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccountsReceivable.BAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231104224500_transit")]
+    partial class transit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -613,6 +615,7 @@ namespace AccountsReceivable.BAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DocumentId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Quantity")
@@ -1865,12 +1868,13 @@ namespace AccountsReceivable.BAL.Migrations
                     b.HasOne("AccountsReceivable.BL.Models.Application.Document", "Document")
                         .WithMany("Transits")
                         .HasForeignKey("DocumentId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("AccountsReceivable.BL.Models.Enum.SpeciesType", "SpeciesType")
                         .WithMany()
                         .HasForeignKey("SpeciesTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Document");

@@ -1,4 +1,5 @@
 ﻿using System.Security.Authentication;
+using AccountsReceivable.API.Shared;
 using AccountsReceivable.API.ViewModels;
 using AccountsReceivable.BAL.Data;
 using AccountsReceivable.BAL.Extensions;
@@ -47,11 +48,12 @@ partial class InvoiceDetail
             /*var ds = await DbContext.Documents.Include(s => s.Schedule).ToListAsync();
             foreach (var d in ds) await d.CalculatePricesAsync(DbContext);
             await DbContext.SaveChangesAsync();*/
-            
+
             _document = await DbContext.Documents
                 .Include(document => document.Farm)
                 .Include(document => document.Status)
                 .Include(document => document.Plant)
+                .Include(document => document.StaffComments)
                 .Include(document => document.Plant.Meatwork)
                 .FirstOrDefaultAsync(document => document.Id == Id);
 
@@ -88,7 +90,7 @@ partial class InvoiceDetail
             result.ValidAnimals.First().ValidationId,
             result.Price.MinWeight,
             result.Price.MaxWeight,
-            (ushort)result.ValidAnimals.Count(),
+            (ushort) result.ValidAnimals.Count(),
             result.ValidAnimals.Sum(animal => animal.Weight),
             result.ValidAnimals.Sum(animal => animal.PremiumCost),
             result.ValidAnimals.Sum(animal => animal.CalcPremiumCost),
@@ -112,10 +114,78 @@ partial class InvoiceDetail
 
         return "background-color: " + (
             //striped && valid ? Colors.LightGreen.Lighten4 :
-            valid ? Colors.LightGreen.Lighten4 :
-            //striped ? Colors.DeepOrange.Lighten4 :
-            Colors.DeepOrange.Lighten4
+            valid
+                ? Colors.LightGreen.Lighten4
+                :
+                //striped ? Colors.DeepOrange.Lighten4 :
+                Colors.DeepOrange.Lighten4
         );
+    }
+
+    private async Task OpenComments()
+    {
+        if (_document == null || User == null) throw new NullReferenceException();
+
+        var users = await DbContext.Set<User>()
+            .AsNoTracking()
+            .ToListAsync();
+
+        var parameters = new DialogParameters<CommentDialog>
+        {
+            {dialog => dialog.DocumentId, _document.Id},
+            {dialog => dialog.Comments, _document.StaffComments},
+            {dialog => dialog.Users, users},
+            {dialog => dialog.CurrentUser, User.EmailAddress}
+        };
+
+        var options = new DialogOptions
+        {
+            CloseButton = true,
+
+            MaxWidth = MaxWidth.ExtraLarge,
+            FullWidth = true
+        };
+
+        var dialog = await DialogService.ShowAsync<CommentDialog>("Comments", parameters, options);
+        await dialog.Result; // Wait for Dialog to Close
+
+        await DbContext.SaveChangesAsync();
+    }
+
+    private async Task OpenTransit()
+    {
+        if (_document == null || User == null) throw new NullReferenceException();
+
+        var transits = await DbContext.Set<Transit>()
+            .Include(transit => transit.SpeciesType)
+            .Where(transit =>
+                (transit.DocumentId == null || transit.DocumentId.Equals(_document.Id)) &&
+                _document.DateProcessed.AddDays(-7) <= transit.Date &&
+                transit.Date <= _document.DateProcessed.AddDays(7))
+            .ToListAsync();
+
+        var parameters = new DialogParameters<TransitDialog>
+        {
+            {dialog => dialog.DocumentId, _document.Id},
+            {dialog => dialog.Transits, transits}
+        };
+
+        var options = new DialogOptions
+        {
+            CloseButton = true,
+
+            MaxWidth = MaxWidth.ExtraLarge,
+            FullWidth = true
+        };
+
+        var dialog = await DialogService.ShowAsync<TransitDialog>("Animals in Transit", parameters, options);
+        await dialog.Result; // Wait for Dialog to Close
+
+        _document.TransitQuantity = (ushort) transits
+            .Where(transit => transit.DocumentId != null && transit.DocumentId.Equals(_document.Id))
+            .Sum(transit => transit.Quantity);
+
+        await DbContext.SaveChangesAsync();
     }
 
     private async Task RecalculatePricing()

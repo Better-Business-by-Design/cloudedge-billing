@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.ComponentModel.DataAnnotations.Schema;
-using AccountsReceivable.BL.Models.Enum;
-using AccountsReceivable.BL.Models.Source;
+﻿using AccountsReceivable.BL.Models.Enum;
 
 namespace AccountsReceivable.BL.Models.Application;
 
@@ -13,6 +10,8 @@ public class Document
     public virtual Document? PreviousDocument { get; set; }
 
     public string DocumentType { get; set; } = null!;
+
+    public byte DocumentVersion { get; set; } = 1;
 
     public DateTime DateProcessed { get; set; }
 
