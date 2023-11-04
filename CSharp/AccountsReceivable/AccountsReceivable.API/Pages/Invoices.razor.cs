@@ -155,19 +155,4 @@ partial class Invoices : DataGridPage<Document>
     {
         Navigation.NavigateTo($"invoices/{args.Item.Id}");
     }
-
-    protected override string RowStyleFunc(Document row, int i)
-    {
-        var color = row.StatusId switch
-            {
-                StatusId.Pending => Colors.LightBlue.Lighten4,
-                StatusId.Approved => Colors.LightGreen.Lighten4,
-                StatusId.Overridden => Colors.Red.Lighten4,
-                StatusId.Declined => Colors.Red.Lighten2,
-                StatusId.Superseded => Colors.Grey.Lighten4,
-                StatusId.Missing => Colors.Red.Lighten1,
-                _ => Colors.Shades.White
-            };
-        return $"background-color: {color}";
-    }
 }

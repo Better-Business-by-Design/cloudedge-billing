@@ -14,7 +14,7 @@ namespace AccountsReceivable.BAL.Migrations
                 keyColumn: "Id",
                 keyValue: (byte)0,
                 columns: new[] { "DisplayName", "Name" },
-                values: new object[] { "Missing", "MISSING" });
+                values: new object[] { "None", "MISSING" });
 
             migrationBuilder.UpdateData(
                 schema: "enum",
@@ -94,7 +94,7 @@ namespace AccountsReceivable.BAL.Migrations
                 keyColumn: "Id",
                 keyValue: (byte)0,
                 column: "Name",
-                value: "Missing");
+                value: "None");
 
             migrationBuilder.UpdateData(
                 schema: "enum",
@@ -862,7 +862,7 @@ namespace AccountsReceivable.BAL.Migrations
                 keyColumn: "Id",
                 keyValue: (byte)0,
                 column: "Name",
-                value: "Missing");
+                value: "None");
 
             migrationBuilder.UpdateData(
                 schema: "enum",
@@ -894,7 +894,7 @@ namespace AccountsReceivable.BAL.Migrations
                 keyColumn: "Id",
                 keyValue: (byte)0,
                 columns: new[] { "DisplayName", "Name" },
-                values: new object[] { "Missing", "MISSING" });
+                values: new object[] { "None", "MISSING" });
 
             migrationBuilder.UpdateData(
                 schema: "enum",

@@ -1,51 +1,90 @@
 ﻿@page "/management"
 
-<Breadcrumb Items="_breadcrumb" />
-
-<PageInformation>
-    <Interactions>
-        @foreach (var managementPage in Enum.GetValues<ManagementPage>())
-        {
-            <button class="btn @(_managementPage == managementPage ? "btn-success" : "btn-secondary") ms-1" onclick="@(() => LoadPage(managementPage))" role="button">
-                @managementPage
-            </button>
-        }
-    </Interactions>
-</PageInformation>
-
-@switch (_managementPage)
+@if (User is not { RoleId: RoleId.Administrator })
 {
-    case ManagementPage.Users:
-        <h4>User Management</h4>
-        break;
-    case ManagementPage.Upcharge:
-        <h4>Upcharge Management</h4>
-        <MudToolBar Class="gap-4">
-            <MudSelect T="Meatwork" ToStringFunc="_meatworkConverter" Label="Works">
-                @foreach (var meatwork in DbContext.Set<Meatwork>().ToList())
+    <MudAlert Severity="Severity.Error">You are not authorized to access this resource.</MudAlert>
+}
+else
+{
+    <Breadcrumb Items="_breadcrumb"/>
+
+    <MudTabs Outlined="true" Position="Position.Top" Border="true" ApplyEffectsToContainer="true" Style="height: calc(100vh - 6.6rem);">
+        <MudTabPanel Text="Users">
+            <ChildContent>
+                @foreach (var user in Users)
                 {
-                    <MudSelectItem Value="@meatwork"/>
+                    <MudCard Outlined="true" Square="false" Class="pa-2 ma-2">
+                        <MudGrid Spacing="1">
+                            <MudItem xs="4">
+                                <MudField Label="Email Address" Variant="Variant.Outlined">@user.EmailAddress</MudField>
+                            </MudItem>
+                            <MudItem xs="4">
+                                <MudTextField T="string"Label="Name" Variant="Variant.Outlined" @bind-Value="@user.Name">@user.Name</MudTextField>
+                            </MudItem>
+                            <MudItem xs="4">
+                                <MudField Label="Role" Variant="Variant.Outlined" InnerPadding="false">
+                                    <MudRadioGroup T="RoleId" @bind-SelectedOption="@user.RoleId" Disabled="@user.EmailAddress.Equals(User?.EmailAddress)">
+                                        @foreach (var role in RoleHelper.GetAll())
+                                        {
+                                            <MudRadio T="RoleId" Option="@role.Id" Color="Color.Primary">@role.Name</MudRadio>
+                                        }
+                                    </MudRadioGroup>
+                                </MudField>
+                            </MudItem>
+                        </MudGrid>
+                    </MudCard>
                 }
-            </MudSelect>
-            <MudSelect Label="Animal Type" ToStringFunc="_animalTypeConverter" T="AnimalType">
-                @foreach (var animalType in DbContext.Set<AnimalType>().ToList())
-                {
-                    <MudSelectItem Value="@animalType"/>
-                }
-            </MudSelect>
-            <MudDatePicker Label="Start Date"/>
-            <MudDatePicker Label="End Date"/>
-            <MudNumericField Label="Min Weight" Format="N1" Min="0.0" Max="999.0" Step="0.5" T="double"/>
-            <MudNumericField Label="Max Weight" Format="N1" Min="0.0" Max="999.0" Step="0.5" T="double"/>
-            <MudButton Color="Color.Primary" Variant="Variant.Filled">Submit</MudButton>
-        </MudToolBar>
-        break;
-    case ManagementPage.Premiums:
-        <h4>Premiums Management</h4>
-        break;
-    case ManagementPage.Deductions:
-        <h4>Deductions Management</h4>
-        break;
-    default:
-        throw new ArgumentOutOfRangeException();
+            </ChildContent>
+        </MudTabPanel>
+        <MudTabPanel Text="Uplifts">
+            <ChildContent>
+
+            </ChildContent>
+        </MudTabPanel>
+        <MudTabPanel Text="Premiums">
+            <ChildContent>
+
+            </ChildContent>
+        </MudTabPanel>
+        <MudTabPanel Text="Deductions">
+            <ChildContent>
+
+            </ChildContent>
+        </MudTabPanel>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" Class="ma-2" OnClick="SaveChanges">
+            Save Changes
+        </MudButton>
+    </MudTabs>
+
+    @switch (_managementPage)
+    {
+        case ManagementPage.Upcharge:
+            <h4>Upcharge Management</h4>
+            <MudToolBar Class="gap-4">
+                <MudSelect T="Meatwork" ToStringFunc="_meatworkConverter" Label="Works">
+                    @foreach (var meatwork in DbContext.Set<Meatwork>().ToList())
+                    {
+                        <MudSelectItem Value="@meatwork"/>
+                    }
+                </MudSelect>
+                <MudSelect Label="Animal Type" ToStringFunc="_animalTypeConverter" T="AnimalType">
+                    @foreach (var animalType in DbContext.Set<AnimalType>().ToList())
+                    {
+                        <MudSelectItem Value="@animalType"/>
+                    }
+                </MudSelect>
+                <MudDatePicker Label="Start Date"/>
+                <MudDatePicker Label="End Date"/>
+                <MudNumericField Label="Min Weight" Format="N1" Min="0.0" Max="999.0" Step="0.5" T="double"/>
+                <MudNumericField Label="Max Weight" Format="N1" Min="0.0" Max="999.0" Step="0.5" T="double"/>
+                <MudButton Color="Color.Primary" Variant="Variant.Filled">Submit</MudButton>
+            </MudToolBar>
+            break;
+        case ManagementPage.Premiums:
+            <h4>Premiums Management</h4>
+            break;
+        case ManagementPage.Deductions:
+            <h4>Deductions Management</h4>
+            break;
+    }
 }

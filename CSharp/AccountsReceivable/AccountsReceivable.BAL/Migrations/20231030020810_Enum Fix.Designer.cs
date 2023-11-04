@@ -644,8 +644,8 @@ namespace AccountsReceivable.BAL.Migrations
                         new
                         {
                             Id = (byte)0,
-                            DisplayName = "Missing",
-                            Name = "MISSING",
+                            DisplayName = "None",
+                            Name = "None",
                             SpeciesTypeId = (byte)0
                         },
                         new
@@ -750,7 +750,7 @@ namespace AccountsReceivable.BAL.Migrations
                         {
                             Id = (byte)0,
                             AnimalTypeId = (byte)0,
-                            Name = "Missing"
+                            Name = "None"
                         },
                         new
                         {
@@ -1419,7 +1419,7 @@ namespace AccountsReceivable.BAL.Migrations
                         new
                         {
                             Id = (byte)0,
-                            Name = "Missing"
+                            Name = "None"
                         },
                         new
                         {
@@ -1459,7 +1459,7 @@ namespace AccountsReceivable.BAL.Migrations
                         new
                         {
                             Id = (byte)0,
-                            DisplayName = "Missing",
+                            DisplayName = "None",
                             Name = "MISSING"
                         },
                         new
@@ -1505,7 +1505,7 @@ namespace AccountsReceivable.BAL.Migrations
                         new
                         {
                             Id = (byte)0,
-                            Name = "Missing"
+                            Name = "None"
                         },
                         new
                         {
@@ -1551,7 +1551,7 @@ namespace AccountsReceivable.BAL.Migrations
                         new
                         {
                             Id = (byte)0,
-                            Name = "Missing"
+                            Name = "None"
                         },
                         new
                         {

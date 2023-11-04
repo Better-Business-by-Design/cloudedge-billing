@@ -70,8 +70,7 @@ public static class DocumentExtensions
             .Include(entity => entity.Plant)
             .Include(entity => entity.Animals!)
             .ThenInclude(entity => entity.Grade)
-            .SingleAsync(entity => entity.Id.Equals(baseDocument.Id)
-            );
+            .SingleAsync(entity => entity.Id.Equals(baseDocument.Id));
 
         schedule ??= await dbContext.Schedules
             .Include(entity => entity.Prices)
@@ -92,16 +91,8 @@ public static class DocumentExtensions
         {
             foreach (var animal in document.Animals!)
             {
-                var schedulePrice = schedule.Prices.Where(price =>
-                    price.GradeId == animal.GradeId &&
-                    price.MaxWeight >= animal.Weight
-                ).MinBy(price => price.MaxWeight);
-
-                if (schedulePrice is null)
-                {
-                    continue;
-                }
-
+                var schedulePrice = schedule.Prices.Single(price => price.GradeId == animal.GradeId && price.MaxWeight >= animal.Weight && animal.Weight >= price.MinWeight);
+                
                 var upliftArray = schedule.Uplifts.Where(uplift =>
                     uplift.AnimalTypeId == animal.Grade.AnimalTypeId &&
                     uplift.MinWeight <= animal.Weight &&

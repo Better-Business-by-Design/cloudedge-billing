@@ -2,7 +2,7 @@
 
 public enum ValidationId : byte
 {
-    Missing = 0,
+    None = 0,
     Pending = 1,
 
     Low = 2,
@@ -23,11 +23,11 @@ public class ValidationHelper
     private static readonly Dictionary<ValidationId, Validation> Dictionary = new()
     {
         {
-            ValidationId.Missing,
+            ValidationId.None,
             new Validation
             {
-                Id = ValidationId.Missing,
-                Name = "Missing"
+                Id = ValidationId.None,
+                Name = "None"
             }
         },
         {

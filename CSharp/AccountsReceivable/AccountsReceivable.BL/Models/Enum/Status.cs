@@ -2,7 +2,7 @@
 
 public enum StatusId : byte
 {
-    Missing = 0,
+    None = 0,
     Pending = 1,
 
     Approved = 2,
@@ -25,11 +25,11 @@ public class StatusHelper
     private static readonly Dictionary<StatusId, Status> Dictionary = new()
     {
         {
-            StatusId.Missing,
+            StatusId.None,
             new Status
             {
-                Id = StatusId.Missing,
-                Name = "Missing"
+                Id = StatusId.None,
+                Name = "None"
             }
         },
         {

@@ -10,7 +10,7 @@
     RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc"
     FixedHeader="true" Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 9.8rem)" Outlined="true">
     <Columns>
-        <PropertyColumn Property="@(x => x.StartDate)" Format="dd/MM/yyyy" Title="Start Date"/>
+        <PropertyColumn Property="@(x => x.StartDate)" Format="dd/MM/yyyy" Title="Start Date" InitialDirection="SortDirection.Descending"/>
         <PropertyColumn Property="@(x => x.EndDate)" Format="dd/MM/yyyy" Title="End Date"/>
         <PropertyColumn Property="@(x => x.Meatwork.Name)" Title="Works"/>
         <PropertyColumn Property="@(x => x.StatusId)" Title="Status"/>

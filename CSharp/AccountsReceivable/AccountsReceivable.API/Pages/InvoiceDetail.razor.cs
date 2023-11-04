@@ -15,8 +15,6 @@ namespace AccountsReceivable.API.Pages;
 partial class InvoiceDetail
 {
     private Document? _document;
-    private string _searchString = string.Empty;
-    private bool _showAnimalId;
 
     private readonly List<BreadcrumbItem> _breadcrumb = new()
     {
@@ -25,10 +23,7 @@ partial class InvoiceDetail
         new BreadcrumbItem("Detail", null, true)
     };
 
-    private MudTable<Animal> _table = null!;
-    private MudDataGrid<PriceAnimals> _dataGrid = null!;
-
-    private int _totalItems;
+    private MudDataGrid<AnimalPriceGroup> _dataGrid = null!;
 
     [CascadingParameter]
     private User? User { get; set; }
@@ -45,14 +40,14 @@ partial class InvoiceDetail
     [Inject]
     private IDialogService DialogService { get; set; } = default!;
 
-    private async Task<GridData<PriceAnimals>> GridServerReload(GridState<PriceAnimals> state)
+    private async Task<GridData<AnimalPriceGroup>> GridServerReload(GridState<AnimalPriceGroup> state)
     {
         if (_document is null)
         {
             /*var ds = await DbContext.Documents.Include(s => s.Schedule).ToListAsync();
             foreach (var d in ds) await d.CalculatePricesAsync(DbContext);
             await DbContext.SaveChangesAsync();*/
-
+            
             _document = await DbContext.Documents
                 .Include(document => document.Farm)
                 .Include(document => document.Status)
@@ -64,54 +59,61 @@ partial class InvoiceDetail
             {
                 Navigation.NavigateTo("invoices");
 
-                return new GridData<PriceAnimals>
+                return new GridData<AnimalPriceGroup>
                 {
-                    TotalItems = _totalItems,
-                    Items = Array.Empty<PriceAnimals>()
+                    TotalItems = 0,
+                    Items = Array.Empty<AnimalPriceGroup>()
                 };
             }
 
             StateHasChanged();
         }
 
-        var fullQuery = DbContext.Documents
+        var fullQuery = await DbContext.Documents
             .AsNoTracking()
-            .Include(document => document.Schedule!.Prices).ThenInclude(prices => prices.Grade)
+            .Include(document => document.Schedule!.Prices).ThenInclude(price => price.Grade.AnimalType)
             .Include(document => document.Animals!).ThenInclude(animal => animal.Grade)
-            .Include(document => document.Animals!).ThenInclude(animal => animal.Grade.AnimalType)
             .Where(document => document.Id.Equals(Id))
-            .SelectMany(document => document.Schedule!.Prices.Select(price => new PriceAnimals
+            .SelectMany(document => document.Schedule!.Prices.Select(price => new
                 {
                     Price = price,
-                    AnimalType = price.Grade.AnimalType,
-                    Grade = price.Grade,
-                    StockCount = (ushort)(document.Animals != null ? document.Animals.Count(animal => animal.GradeId == price.GradeId && animal.Weight <= price.MaxWeight && animal.Weight >= price.MinWeight) : 0),
-                    StockWeight = document.Animals != null
-                        ? document.Animals.Where(animal => animal.GradeId == price.GradeId && animal.Weight <= price.MaxWeight && animal.Weight >= price.MinWeight).Sum(animal => animal.Weight)
-                        : 0,
-                    Cost = document.Animals != null ? document.Animals.First(animal => animal.GradeId == price.GradeId && animal.Weight <= price.MaxWeight && animal.Weight >= price.MinWeight).Price : 0,
-                    CalcCost = document.Animals != null ? document.Animals.First(animal => animal.GradeId == price.GradeId && animal.Weight <= price.MaxWeight && animal.Weight >= price.MinWeight).CalcPrice : 0
+                    ValidAnimals = document.Animals!.Where(animal => animal.GradeId == price.GradeId && animal.Weight <= price.MaxWeight && animal.Weight >= price.MinWeight)
                 }
-            ).Where(animalPrice => animalPrice.StockCount != 0));
+            ).Where(result => result.ValidAnimals.Any()))
+            .ToListAsync();
 
-        _totalItems = fullQuery.Count();
+        var animalPriceGroups = fullQuery.Select(result => new AnimalPriceGroup(
+            result.Price.Grade.AnimalTypeId,
+            result.Price.GradeId,
+            result.ValidAnimals.First().ValidationId,
+            result.Price.MinWeight,
+            result.Price.MaxWeight,
+            (ushort)result.ValidAnimals.Count(),
+            result.ValidAnimals.Sum(animal => animal.Weight),
+            result.ValidAnimals.Sum(animal => animal.PremiumCost),
+            result.ValidAnimals.Sum(animal => animal.CalcPremiumCost),
+            result.ValidAnimals.Sum(animal => animal.DeductionCost),
+            result.ValidAnimals.Sum(animal => animal.CalcDeductionCost),
+            result.ValidAnimals.First().Price,
+            result.ValidAnimals.First().CalcPrice
+        )).ToList();
 
-        return new GridData<PriceAnimals>
+        return new GridData<AnimalPriceGroup>
         {
-            TotalItems = _totalItems,
-            Items = await fullQuery.ToArrayAsync()
+            TotalItems = animalPriceGroups.Count,
+            Items = animalPriceGroups
         };
     }
 
-    private string RowStyleFunc(PriceAnimals priceAnimals, int index)
+    private string RowStyleFunc(AnimalPriceGroup animalPriceGroup, int index)
     {
-        var striped = index % 2 == 1;
-        var valid = priceAnimals.Cost == priceAnimals.CalcCost; // Switch to Validation
+        //var striped = index % 2 == 1;
+        var valid = animalPriceGroup.Cost == animalPriceGroup.CalcCost; // Switch to Validation
 
         return "background-color: " + (
-            striped && valid ? Colors.LightGreen.Lighten3 :
+            //striped && valid ? Colors.LightGreen.Lighten4 :
             valid ? Colors.LightGreen.Lighten4 :
-            striped ? Colors.DeepOrange.Lighten3 :
+            //striped ? Colors.DeepOrange.Lighten4 :
             Colors.DeepOrange.Lighten4
         );
     }

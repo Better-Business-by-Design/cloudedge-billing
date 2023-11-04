@@ -6,10 +6,10 @@
 <MudDataGrid 
     @ref="DataGrid" T="Document" ServerData="@(new Func<GridState<Document>, Task<GridData<Document>>>(GridServerReload))"
     SortMode="SortMode.Multiple" Filterable="true" FilterMode="DataGridFilterMode.ColumnFilterMenu"
-    RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc"
+    RowClick="@RowClicked"
     Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 9.8rem)">
     <Columns>
-        <PropertyColumn Property="@(x => x.DateProcessed)" Format="dd/MM/yyyy" Title="Date"/>
+        <PropertyColumn Property="@(x => x.DateProcessed)" Format="dd/MM/yyyy" Title="Date" InitialDirection="SortDirection.Descending"/>
         <PropertyColumn Property="@(x => x.KillSheet)"/>
         <PropertyColumn Property="@(x => x.Farm.Name)" Title="Farm"/>
         <PropertyColumn Property="@(x => x.SpeciesType.DisplayName)" Title="Species"/>

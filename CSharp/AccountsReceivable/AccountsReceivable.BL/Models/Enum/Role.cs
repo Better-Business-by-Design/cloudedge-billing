@@ -2,7 +2,7 @@
 
 public enum RoleId : byte
 {
-    Missing = 0,
+    None = 0,
     
     Read = 1,
     ReadWrite = 2,
@@ -22,11 +22,11 @@ public class RoleHelper
     private static readonly Dictionary<RoleId, Role> Dictionary = new()
     {
         {
-            RoleId.Missing,
+            RoleId.None,
             new Role
             {
-                Id = RoleId.Missing,
-                Name = "Missing"
+                Id = RoleId.None,
+                Name = "None"
             }
         },
         {

@@ -2,7 +2,7 @@
 
 public enum GradeId : byte
 {
-    Missing = 0,
+    None = 0,
     
     Bobby_BV  = 1,
     Bobby_COND  = 2,
@@ -141,12 +141,12 @@ public class GradeHelper
     private static readonly Dictionary<GradeId, Grade> Dictionary = new()
     {
         {
-            GradeId.Missing,
+            GradeId.None,
             new Grade
             {
-                Id = GradeId.Missing,
-                AnimalTypeId = AnimalTypeId.Missing,
-                Name = "Missing"
+                Id = GradeId.None,
+                AnimalTypeId = AnimalTypeId.None,
+                Name = "None"
             }
         },
         {

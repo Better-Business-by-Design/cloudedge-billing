@@ -4,7 +4,7 @@
 @inject ILogger<ApproveDeclineButtons> Logger
 @inject IDialogService DialogService
 
-@if ((Role ?? RoleId.Missing) is RoleId.ReadWrite or RoleId.Administrator)
+@if ((Role ?? RoleId.None) is RoleId.ReadWrite or RoleId.Administrator)
 {
     @if (EmailTask is  null)
     {
@@ -102,9 +102,9 @@
 
     private async Task<bool> OpenAuthRequiredDialog(string changeString)
     {
-        if ((Role ?? RoleId.Missing) is not (RoleId.ReadWrite or RoleId.Administrator))
+        if ((Role ?? RoleId.None) is not (RoleId.ReadWrite or RoleId.Administrator))
         {
-            throw new AuthenticationException($"User with role {(Role ?? RoleId.Missing).ToString()} doesn't have permission to change Status values, needs either {RoleId.ReadWrite.ToString()} or {RoleId.Administrator.ToString()}");
+            throw new AuthenticationException($"User with role {(Role ?? RoleId.None).ToString()} doesn't have permission to change Status values, needs either {RoleId.ReadWrite.ToString()} or {RoleId.Administrator.ToString()}");
         }
 
         var result = await DialogService.ShowMessageBox(
@@ -117,17 +117,17 @@
 
     private bool IsStatusNotPendingOrDeclined()
     {
-        return (Status ?? StatusId.Missing) is not (StatusId.Pending or StatusId.Declined);
+        return (Status ?? StatusId.None) is not (StatusId.Pending or StatusId.Declined);
     }
 
     private bool IsStatusNotPending()
     {
-        return (Status ?? StatusId.Missing) is not StatusId.Pending;
+        return (Status ?? StatusId.None) is not StatusId.Pending;
     }
     
     private bool IsStatusApproved()
     {
-        return (Status ?? StatusId.Missing) is StatusId.Approved;
+        return (Status ?? StatusId.None) is StatusId.Approved;
     }
 
 }

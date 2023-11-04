@@ -1421,7 +1421,7 @@ namespace AccountsReceivable.BAL.Migrations
                         new
                         {
                             Id = (byte)3,
-                            Name = "Missing"
+                            Name = "None"
                         });
                 });
 
@@ -1511,7 +1511,7 @@ namespace AccountsReceivable.BAL.Migrations
                         new
                         {
                             Id = (byte)5,
-                            Name = "Missing"
+                            Name = "None"
                         });
                 });
 

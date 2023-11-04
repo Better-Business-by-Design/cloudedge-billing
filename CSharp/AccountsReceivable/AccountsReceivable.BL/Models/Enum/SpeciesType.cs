@@ -2,7 +2,7 @@
 
 public enum SpeciesTypeId : byte
 {
-    Missing = 0,
+    None = 0,
 
     Bobby = 1,
     Bovine = 2,
@@ -24,12 +24,12 @@ public class SpeciesTypeHelper
     private static readonly Dictionary<SpeciesTypeId, SpeciesType> Dictionary = new()
     {
         {
-            SpeciesTypeId.Missing,
+            SpeciesTypeId.None,
             new SpeciesType
             {
-                Id = SpeciesTypeId.Missing,
-                Name = "MISSING",
-                DisplayName = "Missing"
+                Id = SpeciesTypeId.None,
+                Name = "NONE",
+                DisplayName = "None"
             }
         },
         {

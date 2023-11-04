@@ -1,4 +1,4 @@
-<Activity mc:Ignorable="sap sap2010" x:Class="Load_Documents" sap2010:ExpressionActivityEditor.ExpressionActivityEditor="C#" sap:VirtualizedContainerService.HintSize="1121.6,3674.4" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:a="clr-namespace:AutoMapper;assembly=AutoMapper" xmlns:abd="clr-namespace:AccountsReceivable.BAL.Data;assembly=AccountsReceivable.BAL" xmlns:abe="clr-namespace:AccountsReceivable.BAL.Extensions;assembly=AccountsReceivable.BAL" xmlns:abma="clr-namespace:AccountsReceivable.BL.Models.Application;assembly=AccountsReceivable.BL" xmlns:abme="clr-namespace:AccountsReceivable.BL.Models.Enum;assembly=AccountsReceivable.BL" xmlns:abmj="clr-namespace:AccountsReceivable.BL.Models.Json;assembly=AccountsReceivable.BL" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:sc="clr-namespace:System.ComponentModel;assembly=System.ComponentModel.TypeConverter" xmlns:sc1="clr-namespace:System.Collections;assembly=System.Private.CoreLib" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:si="clr-namespace:System.IO;assembly=System.Private.CoreLib" xmlns:stt="clr-namespace:System.Threading.Tasks;assembly=System.Private.CoreLib" xmlns:udcdw="clr-namespace:UiPath.Data.ConnectionUI.Dialog.Workaround;assembly=UiPath.Database" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity mc:Ignorable="sap sap2010" x:Class="Load_Documents" sap2010:ExpressionActivityEditor.ExpressionActivityEditor="C#" sap:VirtualizedContainerService.HintSize="1217.6,3706.4" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:a="clr-namespace:AutoMapper;assembly=AutoMapper" xmlns:abd="clr-namespace:AccountsReceivable.BAL.Data;assembly=AccountsReceivable.BAL" xmlns:abe="clr-namespace:AccountsReceivable.BAL.Extensions;assembly=AccountsReceivable.BAL" xmlns:abma="clr-namespace:AccountsReceivable.BL.Models.Application;assembly=AccountsReceivable.BL" xmlns:abme="clr-namespace:AccountsReceivable.BL.Models.Enum;assembly=AccountsReceivable.BL" xmlns:abmj="clr-namespace:AccountsReceivable.BL.Models.Json;assembly=AccountsReceivable.BL" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:sc="clr-namespace:System.ComponentModel;assembly=System.ComponentModel.TypeConverter" xmlns:sc1="clr-namespace:System.Collections;assembly=System.Private.CoreLib" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:si="clr-namespace:System.IO;assembly=System.Private.CoreLib" xmlns:stt="clr-namespace:System.Threading.Tasks;assembly=System.Private.CoreLib" xmlns:udcdw="clr-namespace:UiPath.Data.ConnectionUI.Dialog.Workaround;assembly=UiPath.Database" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
       <x:String>AccountsReceivable.BAL.Data</x:String>
@@ -125,7 +125,7 @@
       <AssemblyReference>System.Threading.Tasks.Parallel</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Load Documents" sap:VirtualizedContainerService.HintSize="764,3609.6" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="Load Documents" sap:VirtualizedContainerService.HintSize="764,3641.6" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="abd:ApplicationDbContext" Name="DbContext" />
       <Variable x:TypeArguments="scg:List(abma:Supplier)" Name="Suppliers" />
@@ -181,7 +181,7 @@
         </scg:List>
       </ui:MultipleAssign.AssignOperations>
     </ui:MultipleAssign>
-    <ui:ForEachFileX DisplayName="For Each - Document in Folder" Filter="*.json" Folder="Data\\Input" sap:VirtualizedContainerService.HintSize="701.6,2928.8" sap2010:WorkflowViewState.IdRef="ForEachFileX_1" IncludeSubDirectories="False" OrderBy="NameAscFirst" SkipFolderWithoutPermission="False">
+    <ui:ForEachFileX DisplayName="For Each - Document in Folder" Filter="*.json" Folder="Data\\Input" sap:VirtualizedContainerService.HintSize="701.6,2960.8" sap2010:WorkflowViewState.IdRef="ForEachFileX_1" IncludeSubDirectories="False" OrderBy="NameAscFirst" SkipFolderWithoutPermission="False">
       <ui:ForEachFileX.Body>
         <ActivityAction x:TypeArguments="si:FileInfo, x:Int32">
           <ActivityAction.Argument1>
@@ -190,19 +190,19 @@
           <ActivityAction.Argument2>
             <DelegateInArgument x:TypeArguments="x:Int32" Name="CurrentIndex" />
           </ActivityAction.Argument2>
-          <Sequence DisplayName="Process Json Documents" sap:VirtualizedContainerService.HintSize="668,2665.6" sap2010:WorkflowViewState.IdRef="Sequence_11">
+          <Sequence DisplayName="Process Json Documents" sap:VirtualizedContainerService.HintSize="668,2697.6" sap2010:WorkflowViewState.IdRef="Sequence_11">
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>
-            <ui:ForEach x:TypeArguments="abmj:DocumentDto" DisplayName="For Each - DocumentDto in RootDto" sap:VirtualizedContainerService.HintSize="605.6,2553.6" sap2010:WorkflowViewState.IdRef="ForEach`1_2">
+            <ui:ForEach x:TypeArguments="abmj:DocumentDto" DisplayName="For Each - DocumentDto in RootDto" sap:VirtualizedContainerService.HintSize="605.6,2585.6" sap2010:WorkflowViewState.IdRef="ForEach`1_2">
               <ui:ForEach.Body>
                 <ActivityAction x:TypeArguments="abmj:DocumentDto">
                   <ActivityAction.Argument>
                     <DelegateInArgument x:TypeArguments="abmj:DocumentDto" Name="DocumentDto" />
                   </ActivityAction.Argument>
-                  <Sequence DisplayName="Handle Documents" sap:VirtualizedContainerService.HintSize="572,2365.6" sap2010:WorkflowViewState.IdRef="Sequence_4">
+                  <Sequence DisplayName="Handle Documents" sap:VirtualizedContainerService.HintSize="572,2397.6" sap2010:WorkflowViewState.IdRef="Sequence_4">
                     <Sequence.Variables>
                       <Variable x:TypeArguments="x:Int32" Name="AnimalIndex" />
                       <Variable x:TypeArguments="abma:Document" Name="Document" />
@@ -290,7 +290,7 @@
                         </scg:List>
                       </ui:MultipleAssign.AssignOperations>
                     </ui:MultipleAssign>
-                    <ui:IfElseIf DisplayName="If - Previous Document Exists" sap:VirtualizedContainerService.HintSize="528.8,344" sap2010:WorkflowViewState.IdRef="IfElseIf_1">
+                    <ui:IfElseIf DisplayName="If - Previous Document Exists" sap:VirtualizedContainerService.HintSize="528.8,376" sap2010:WorkflowViewState.IdRef="IfElseIf_1">
                       <ui:IfElseIf.ConditionBlocks>
                         <sc:BindingList x:TypeArguments="ui:IfElseIfBlock" AllowEdit="True" AllowNew="True" AllowRemove="True" RaiseListChangedEvents="True">
                           <ui:IfElseIfBlock BlockType="If">
@@ -300,9 +300,23 @@
                               </InArgument>
                             </ui:IfElseIfBlock.Condition>
                             <ui:IfElseIfBlock.Then>
-                              <ui:MultipleAssign DisplayName="Assign - Previous Document" sap:VirtualizedContainerService.HintSize="478.4,148" sap2010:WorkflowViewState.IdRef="MultipleAssign_4">
+                              <ui:MultipleAssign DisplayName="Assign - Previous Document" sap:VirtualizedContainerService.HintSize="478.4,180" sap2010:WorkflowViewState.IdRef="MultipleAssign_4">
                                 <ui:MultipleAssign.AssignOperations>
                                   <scg:List x:TypeArguments="ui:AssignOperation" Capacity="4">
+                                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_17">
+                                      <ui:AssignOperation.To>
+                                        <OutArgument x:TypeArguments="abme:StatusId">
+                                          <CSharpReference x:TypeArguments="abme:StatusId" sap2010:WorkflowViewState.IdRef="CSharpReference`1_45">Document.StatusId</CSharpReference>
+                                        </OutArgument>
+                                      </ui:AssignOperation.To>
+                                      <ui:AssignOperation.Value>
+                                        <InArgument x:TypeArguments="abme:StatusId">
+                                          <CSharpValue x:TypeArguments="abme:StatusId" sap2010:WorkflowViewState.IdRef="CSharpValue`1_133" xml:space="preserve">Document.DocumentType.Equals("BCC") ?
+	StatusId.Superseded :
+	Document.StatusId</CSharpValue>
+                                        </InArgument>
+                                      </ui:AssignOperation.Value>
+                                    </ui:AssignOperation>
                                     <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_15">
                                       <ui:AssignOperation.To>
                                         <OutArgument x:TypeArguments="abma:Document">
