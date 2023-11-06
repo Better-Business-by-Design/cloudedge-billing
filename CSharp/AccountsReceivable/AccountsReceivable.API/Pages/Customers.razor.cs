@@ -152,6 +152,6 @@ partial class Customers : DataGridPage<Customer>
     
     protected override void RowClicked(DataGridRowClickEventArgs<Customer> args)
     {
-        Console.WriteLine("Customer row clicked!");
+        Navigation.NavigateTo($"customers/{args.Item.Id}");
     }
 }

@@ -1,0 +1,182 @@
+@page "/customers/{Id}"
+@using AccountsReceivable.BAL.Data
+@using Microsoft.EntityFrameworkCore
+@using System.Linq.Expressions
+@inherits DataGridPage<LineItem>
+
+<Breadcrumb Items="_breadcrumb"/>
+
+<MudDataGrid
+    @ref="DataGrid" T="LineItem" ServerData="@(new Func<GridState<LineItem>, Task<GridData<LineItem>>>(GridServerReload))"
+    SortMode="SortMode.Multiple" Filterable="true" FilterMode="DataGridFilterMode.ColumnFilterMenu"
+    RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc"
+    Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 9.8rem)">
+    <Columns>
+        <PropertyColumn Property="@(x => x.Id)" Title="ID"/>
+        <PropertyColumn Property="@(x => x.CustomerName)" Title="Customer Name"/>
+        <PropertyColumn Property="@(x => x.Description)" Title="Description"/>
+        <PropertyColumn Property="@(x => x.Quantity)" Title="Quantity"/>
+        <PropertyColumn Property="@(x => x.UnitPrice)" Title="UnitPrice"/>
+        <PropertyColumn Property="@(x => x.Discount)" Title="Discount"/>
+        <PropertyColumn Property="@(x => x.Account)" Title="Account"/>
+        <PropertyColumn Property="@(x => x.Business)" Title="Business"/>
+    </Columns>
+     <NoRecordsContent>
+         <MudText>No matching line items found</MudText>
+     </NoRecordsContent>
+     <LoadingContent>
+         <MudText>Loading Line Items...</MudText>
+     </LoadingContent>
+    <PagerContent>
+        <MudDataGridPager T="LineItem" PageSizeOptions="new[] { 25, 50, 100 }"/>
+    </PagerContent>
+</MudDataGrid>
+
+
+
+@code {
+
+    private Customer? _item;
+
+    private readonly List<BreadcrumbItem> _breadcrumb = new()
+    {
+        new BreadcrumbItem("Home", ""),
+        new BreadcrumbItem("Customers", "customers"),
+        new BreadcrumbItem("Line Items", null, true)
+    };
+    
+    [Parameter]
+    public string? Id { get; set; }
+
+    [Inject]
+    protected virtual ApplicationDbContext DbContext { get; set; } = default!;
+
+    [Inject]
+    protected virtual NavigationManager Navigation { get; set; } = default!;
+
+    [Inject]
+    protected virtual IDialogService DialogService { get; set; } = default!;
+
+    protected override IQueryable<LineItem> BuildFullQuery()
+    {
+        return DbContext.LineItems
+            .AsNoTracking()
+            .Where(item => item.CustomerId == Convert.ToInt32(Id));
+    }
+
+    protected override IQueryable<LineItem> FilterFullQuery(
+        IQueryable<LineItem> fullQuery, 
+        IEnumerable<IFilterDefinition<LineItem>> filterDefinitions)
+    {
+        var filteredQuery = fullQuery;
+        foreach (var filterDefinition in filterDefinitions)
+        {
+            if (filterDefinition.Operator is null) { continue; }
+            var logicOperator = filterDefinition.Operator!;
+            
+            if (filterDefinition.Value is null && filterDefinition.Operator is not ("is empty" or "is not empty")) 
+            {
+                continue;
+            }
+            
+            Expression<Func<LineItem, bool>> fullPredicate;
+            
+            // Annoying that this can't be a switch
+            if (filterDefinition.FieldType.IsString)
+            {
+                var value = filterDefinition.Value?.ToString() ?? string.Empty;
+                
+                Expression<Func<LineItem, string>> selectPredicate = filterDefinition.Title switch
+                {
+                    "Customer Name" => item => item.CustomerName ?? string.Empty,
+                    "Description" => item => item.Description ?? string.Empty,
+                    "Account" => item => item.Account ?? string.Empty,
+                    "Business" => item => item.Business ?? string.Empty,
+                    _ => throw new NotImplementedException($"{filterDefinition.Title} not implemented in string filters.")
+                };
+
+                var logicPredicate = GenerateStringLogicPredicate(logicOperator, value);
+
+                fullPredicate = selectPredicate.Compose(logicPredicate);
+            } 
+            else if (filterDefinition.FieldType.IsBoolean)
+            {
+                throw new NotImplementedException(
+                    $"No boolean filtering implemented for Line Items table, including not for {filterDefinition.Title}");
+            } 
+            else if (filterDefinition.FieldType.IsEnum)
+            {
+                throw new NotImplementedException(
+                    $"No enum filtering implemented for Line Items table, including not for {filterDefinition.Title}");
+            } 
+            else if (filterDefinition.FieldType.IsGuid)
+            {
+                throw new NotImplementedException(
+                    $"No boolean filtering implemented for Line Items table, including not for {filterDefinition.Title}");
+            } 
+            else if (filterDefinition.FieldType.IsNumber)
+            {
+                var value = Convert.ToDecimal(filterDefinition.Value ?? 0);
+                Expression<Func<LineItem, decimal>> selectPredicate = filterDefinition.Title switch
+                {
+                    "ID" => item => item.Id,
+                    "Quantity" => item => Convert.ToDecimal(item.Quantity ?? 0),
+                    "Unit Price" => item => item.UnitPrice ?? 0,
+                    "Discount" => item => item.Discount ?? 0,
+                    _ => throw new NotImplementedException($"{filterDefinition.Title} not implemented in decimal filters.")
+                };
+
+                var logicPredicate = GenerateDecimalLogicPredicate(logicOperator, value);
+
+                fullPredicate = selectPredicate.Compose(logicPredicate);
+            } 
+            else if (filterDefinition.FieldType.IsDateTime)
+            {
+                throw new NotImplementedException(
+                    $"No datetime filtering implemented for Line Items table, including not for {filterDefinition.Title}");
+            }
+            else
+            {
+                throw new NotImplementedException(
+                    $"No {filterDefinition.FieldType} filtering implemented for Line Items table.");
+            }
+            filteredQuery = filteredQuery.Where(fullPredicate);
+        }
+
+        return filteredQuery;
+    }
+
+    protected override IOrderedQueryable<LineItem> OrderFilteredQuery(IQueryable<LineItem> filteredQuery, IEnumerable<SortDefinition<LineItem>> sortDefinitions)
+    {
+        var orderedQuery = filteredQuery.OrderBy(item => true);
+    // ReSharper disable once LoopCanBeConvertedToQuery
+        foreach (var sortDefinition in sortDefinitions)
+        {
+            Expression<Func<LineItem, object>> keySelector = sortDefinition.SortBy switch
+            {
+                "Id" => item => item.Id,
+                "CustomerName" => item => item.CustomerName ?? string.Empty,
+                "Description" => item => item.Description ?? string.Empty,
+                "Quantity" => item => item.Quantity ?? 0,
+                "UnitPrice" => item => item.UnitPrice ?? 0, 
+                "Discount" => item => item.Discount ?? 0,
+                "Account" => item => item.Account ?? string.Empty,
+                "Business" => item => item.Business ?? string.Empty,
+                _ => throw new NotImplementedException(
+                    $"Sorting not implemented for {sortDefinition.SortBy} column in Line Items table.")
+                };
+
+            orderedQuery = sortDefinition.Descending
+                ? orderedQuery.ThenByDescending(keySelector)
+                : orderedQuery.ThenBy(keySelector);
+        }
+
+        return orderedQuery;
+    }
+
+    protected override void RowClicked(DataGridRowClickEventArgs<LineItem> args)
+    {
+        Console.WriteLine("Line Item row clicked!");
+    }
+
+}

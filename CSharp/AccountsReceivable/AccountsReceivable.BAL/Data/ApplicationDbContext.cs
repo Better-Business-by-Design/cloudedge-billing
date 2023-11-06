@@ -12,6 +12,7 @@ public class ApplicationDbContext : DbContext
     }
 
     public DbSet<Customer> Customers { get; set; } = null!;
+    public DbSet<LineItem> LineItems { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -72,7 +73,7 @@ public class ApplicationDbContext : DbContext
                 .HasForeignKey(item => item.CustomerId)
                 .OnDelete(DeleteBehavior.Cascade);
             
-            entity.ToTable("line_items");
+            entity.ToTable("line_items", "cloudedge");
         });
 
         #endregion
