@@ -1,7 +1,10 @@
 ﻿@page "/customers"
 @inherits DataGridPage<Customer>
 
-<Breadcrumb Items="_breadcrumb" />
+<div class="@(ShowBreadcrumb ? "d-block" : "d-none")">
+    <Breadcrumb Items="_breadcrumb"/>
+</div>
+
 
 <MudDataGrid
     @ref="DataGrid" T="Customer" ServerData="@(new Func<GridState<Customer>, Task<GridData<Customer>>>(GridServerReload))"
@@ -9,12 +12,12 @@
     RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc"
     Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 9.8rem)">
     <Columns>
-        <PropertyColumn Property="@(x => x.Id)" Title="Id"/>
+        <PropertyColumn Property="@(x => x.Id)" Title="ID"/>
         <PropertyColumn Property="@(x => x.ParentName)" Title="Parent Name"/>
         <PropertyColumn Property="@(x => x.CustomerName)" Title="Customer Name"/>
-        <PropertyColumn Property="@(x => x.DomainUuid)" Title="Domain Uuid"/>
+        <PropertyColumn Property="@(x => x.DomainUuid)" Title="Domain UUID"/>
         <PropertyColumn Property="@(x => x.InvoiceName)" Title="Invoice Name"/>
-        <PropertyColumn Property="@(x => x.PayMonthlyPlanId)" Title="Plan Id"/>
+        <PropertyColumn Property="@(x => x.PayMonthlyPlan != null ? x.PayMonthlyPlan.PlanName : string.Empty)" Title="Plan Name"/>
         <PropertyColumn Property="@(x => x.IsActive)" Title="Is Active"/>
         <PropertyColumn Property="@(x => x.Location)" Title="Location"/>
     </Columns>

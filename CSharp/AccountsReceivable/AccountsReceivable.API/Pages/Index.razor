@@ -2,10 +2,6 @@
 
 <Breadcrumb Items="_breadcrumb"/>
 
-<MudButton Variant="Variant.Filled" Color="@(Color.Primary)" OnClick="@(() => Console.WriteLine("Table button clicked!"))">
-    <MudText Color="Color.Inherit">Buyer Created Invoices (@_customersDataGrid.TotalItems)</MudText>
-</MudButton>
-
 <div class="d-block">
     <Customers
         @ref="_customersDataGrid"

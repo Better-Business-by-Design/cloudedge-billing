@@ -14,13 +14,14 @@ partial class Customers : DataGridPage<Customer>
     private readonly List<BreadcrumbItem> _breadcrumb = new()
     {
         new BreadcrumbItem("Home", ""),
-        new BreadcrumbItem("Buyer Created Invoices", null, true)
+        new BreadcrumbItem("Customers", null, true)
     };
 
     protected override IQueryable<Customer> BuildFullQuery()
     {
         return DbContext.Customers
-            .AsNoTracking();
+            .AsNoTracking()
+            .Include(customer => customer.PayMonthlyPlan);
     }
     
     protected override IQueryable<Customer> FilterFullQuery(
@@ -50,6 +51,7 @@ partial class Customers : DataGridPage<Customer>
                     "Parent Name" => customer => customer.ParentName,
                     "Customer Name" => customer => customer.CustomerName ?? string.Empty,
                     "Invoice Name" => customer => customer.InvoiceName ?? string.Empty,
+                    "Plan Name" => customer => customer.PayMonthlyPlan != null ? customer.PayMonthlyPlan.PlanName : string.Empty, 
                     "Location" => customer => customer.Location ?? string.Empty,
                     _ => throw new NotImplementedException()
                 };
@@ -91,8 +93,16 @@ partial class Customers : DataGridPage<Customer>
             } 
             else if (filterDefinition.FieldType.IsNumber)
             {
-                throw new NotImplementedException(
-                    $"No number filtering implemented for Customers table, including not for {filterDefinition.Title}");
+                var value = Convert.ToDecimal(filterDefinition.Value ?? 0);
+                Expression<Func<Customer, decimal>> selectPredicate = filterDefinition.Title switch
+                {
+                    "ID" => customer => customer.Id,
+                    _ => throw new NotImplementedException()
+                };
+
+                var logicPredicate = GenerateDecimalLogicPredicate(logicOperator, value);
+
+                fullPredicate = selectPredicate.Compose(logicPredicate);
             } 
             else if (filterDefinition.FieldType.IsDateTime)
             {
@@ -125,7 +135,7 @@ partial class Customers : DataGridPage<Customer>
                 "CustomerName" => customer => customer.CustomerName ?? string.Empty,
                 "DomainUuid" => customer => customer.DomainUuid ?? Guid.Empty,
                 "InvoiceName" => customer => customer.InvoiceName ?? string.Empty,
-                "PayMonthlyPlanId" => customer => customer.PayMonthlyPlanId ?? 0,
+                "PayMonthlyPlan.PlanName" => customer => customer.PayMonthlyPlan != null ? customer.PayMonthlyPlan.PlanName : string.Empty, 
                 "IsActive" => customer => customer.IsActive,
                 "Location" => customer => customer.Location ?? string.Empty,
                 _ => throw new NotImplementedException(
