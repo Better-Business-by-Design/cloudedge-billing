@@ -9,8 +9,8 @@ namespace AccountsReceivable.API.Pages;
 
 partial class Index
 {
-    private InvoicesIndex _invoicesDataGrid;
-    private PricingIndex _pricingDataGrid;
+    private Invoices _invoicesDataGrid;
+    private Pricing _pricingDataGrid;
 
     private int _numInvoices;
     private int _numPricingSchedules;
@@ -35,6 +35,16 @@ partial class Index
         StateHasChanged();
     }
 
+    protected async Task InvoicesStaticFilter(IQueryable<Document> fullQuery)
+    {
+        fullQuery = fullQuery.Where(document => document.StatusId == StatusId.Pending);
+    }
+    
+    protected async Task PricingStaticFilter(IQueryable<Schedule> fullQuery)
+    {
+        fullQuery = fullQuery.Where(schedule => schedule.StatusId == StatusId.Pending);
+    }
+    
     protected async Task InvoicesServerReloaded(int totalItems)
     {
         _numInvoices = totalItems;

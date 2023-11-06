@@ -17,14 +17,21 @@ public abstract class DataGridPage<T> : ComponentBase
 
     [Inject]
     protected virtual NavigationManager Navigation { get; set; } = default!;
+
+    [Parameter] public bool ShowBreadcrumb { get; set; } = true;
+    [Parameter] public bool StatusEditable { get; set; } = true;
     
     [Parameter]
     public EventCallback<int> OnGridServerReload { get; set; }
+    
+    [Parameter]
+    public EventCallback<IQueryable<T>> StaticFilter { get; set; }
 
     
-    protected virtual async Task<GridData<T>> GridServerReload(GridState<T> state)
+    protected async Task<GridData<T>> GridServerReload(GridState<T> state)
     {
         var fullQuery = BuildFullQuery();
+        await StaticFilter.InvokeAsync(fullQuery);
         var filteredQuery = FilterFullQuery(fullQuery, state.FilterDefinitions);
         var orderedQuery = OrderFilteredQuery(filteredQuery, state.SortDefinitions);
 

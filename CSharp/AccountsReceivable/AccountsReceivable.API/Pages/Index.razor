@@ -10,8 +10,20 @@
 </MudButton>
 
 <div class="@(_table.Equals("documents") ? "d-block" : "d-none")">
-    <InvoicesIndex @ref="_invoicesDataGrid" OnGridServerReload="@InvoicesServerReloaded"/>
+    <Invoices 
+        @ref="_invoicesDataGrid" 
+        StaticFilter="@InvoicesStaticFilter"
+        OnGridServerReload="@InvoicesServerReloaded" 
+        ShowBreadcrumb="false"
+        StatusEditable="false"
+        />
 </div>
 <div class="@(_table.Equals("schedules") ? "d-block" : "d-none")">
-    <PricingIndex @ref="_pricingDataGrid" OnGridServerReload="@PricingServerReloaded"/>
+    <Pricing
+        @ref="_pricingDataGrid"
+        StaticFilter="@PricingStaticFilter"
+        OnGridServerReload="@PricingServerReloaded" 
+        ShowBreadcrumb="false"
+        StatusEditable="false"
+        />
 </div>

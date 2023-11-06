@@ -18,7 +18,7 @@
         <PropertyColumn Property="@(x => x.Plant.Name + " (" + x.Plant.Meatwork.Name + ')')" Title="Plant"/>
         <PropertyColumn Property="@(x => x.TransitQuantity)" Title="ATS Quantity"/>
         <PropertyColumn Property="@(x => x.CalcValidationId)" Title="Validation" InitialDirection="SortDirection.Descending"/>
-        <PropertyColumn Property="@(x => x.StatusId)" Title="Approval Status" Sortable="false" Filterable="false"/>
+        <PropertyColumn Property="@(x => x.StatusId)" Title="Approval Status" Sortable="StatusEditable" Filterable="StatusEditable"/>
     </Columns>
      <NoRecordsContent>
          <MudText>No matching Created Invoices found</MudText>
