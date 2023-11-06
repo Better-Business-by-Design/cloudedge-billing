@@ -1,32 +1,40 @@
-@using Microsoft.Extensions.Logging
-@using AccountsReceivable.BL.Models.Enum
-@using System.Security.Authentication
-@inject ILogger<ApproveDeclineButtons> Logger
-@inject IDialogService DialogService
-
-@if ((Role ?? RoleId.Missing) is RoleId.ReadWrite or RoleId.Administrator)
+@if ((Role ?? RoleId.None) is RoleId.ReadWrite or RoleId.Administrator)
 {
-    @if (EmailTask is not null)
-    {
-        <MudIconButton
-            Color="Color.Primary"
-            Variant="Variant.Filled"
-            Class="ml-2"
-            Icon="@Icons.Material.Filled.Email"
-            OnClick="@InvokeEmailButtonTask">
-        </MudIconButton>
-    }
-
     @if (RecalculateTask is not null)
     {
+        <MudTooltip Text="Recalculate Pricing">
+            <MudIconButton
+                Color="Color.Inherit"
+                Variant="Variant.Filled"
+                Class="ml-2"
+                Icon="@Icons.Material.Filled.Calculate"
+                OnClick="@RecalculateTask"
+                Disabled="@IsStatusApproved()"/>
+        </MudTooltip>
+    }
+    
+    @if (CommentTask is not null)
+    {
+        <MudTooltip Text="Comments">
+            <MudIconButton
+                Color="Color.Default"
+                Variant="Variant.Filled"
+                Class="ml-2"
+                Icon="@Icons.Material.Rounded.Email"
+                OnClick="@InvokeCommentTask" />
+        </MudTooltip>
+    }
+    
+    @if (TransitTask is not null)
+    {
         <MudButton
-            Color="Color.Inherit"
+            Color="Color.Secondary"
             Variant="Variant.Filled"
             Class="ml-2"
-            StartIcon="@Icons.Material.Filled.Calculate"
-            OnClick="@RecalculateTask"
-            Disabled="@IsStatusApproved()">
-            Recalculate
+            StartIcon="@Icons.Material.Filled.DirectionsTransit"
+            OnClick="@TransitTask"
+            Disabled="@IsStatusNotPendingOrDeclined()">
+            ATS
         </MudButton>
     }
 
@@ -53,81 +61,4 @@
             Decline
         </MudButton>
     }
-}
-
-@code {
-
-    [Parameter]
-    public RoleId? Role { get; set; }
-
-    [Parameter]
-    public StatusId? Status { get; set; }
-
-    [Parameter]
-    public Func<Task>? EmailTask { get; set; }
-
-    [Parameter]
-    public Func<Task>? RecalculateTask { get; set; }
-
-    [Parameter]
-    public Func<Task>? SetApprovedTask { get; set; }
-
-    [Parameter]
-    public Func<Task>? SetDeclinedTask { get; set; }
-
-    [Parameter]
-    public string? DetailObjectType { get; set; }
-
-    private async void InvokeEmailButtonTask()
-    {
-        await EmailTask?.Invoke()!;
-    }
-
-    private async void RecalculateButton()
-    {
-        await RecalculateTask?.Invoke()!;
-    }
-
-    private async void OpenApproveDialog()
-    {
-        var result = await OpenAuthRequiredDialog("approve");
-        if (result) await SetApprovedTask?.Invoke()!;
-    }
-
-    private async void OpenDeclineDialog()
-    {
-        var result = await OpenAuthRequiredDialog("decline");
-        if (result) await SetDeclinedTask?.Invoke()!;
-    }
-
-    private async Task<bool> OpenAuthRequiredDialog(string changeString)
-    {
-        if ((Role ?? RoleId.Missing) is not (RoleId.ReadWrite or RoleId.Administrator))
-        {
-            throw new AuthenticationException($"User with role {(Role ?? RoleId.Missing).ToString()} doesn't have permission to change Status values, needs either {RoleId.ReadWrite.ToString()} or {RoleId.Administrator.ToString()}");
-        }
-
-        var result = await DialogService.ShowMessageBox(
-            "Approval Confirmation",
-            "Are you sure you want to " + changeString + " this " + (DetailObjectType ?? "Object") + "?",
-            "Approve", cancelText: "Cancel");
-
-        return result ?? false;
-    }
-
-    private bool IsStatusNotPendingOrDeclined()
-    {
-        return (Status ?? StatusId.Missing) is not (StatusId.Pending or StatusId.Declined);
-    }
-
-    private bool IsStatusNotPending()
-    {
-        return (Status ?? StatusId.Missing) is not StatusId.Pending;
-    }
-    
-    private bool IsStatusApproved()
-    {
-        return (Status ?? StatusId.Missing) is StatusId.Approved;
-    }
-
 }

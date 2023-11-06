@@ -2,10 +2,11 @@
 
 public enum RoleId : byte
 {
-    Read = 0,
-    ReadWrite = 1,
-    Administrator = 2,
-    Missing = 3
+    None = 0,
+    
+    Read = 1,
+    ReadWrite = 2,
+    Administrator = 3,
 }
 
 public class Role
@@ -18,8 +19,16 @@ public class Role
 
 public class RoleHelper
 {
-    private static readonly Dictionary<RoleId, Role> _dictionary = new()
+    private static readonly Dictionary<RoleId, Role> Dictionary = new()
     {
+        {
+            RoleId.None,
+            new Role
+            {
+                Id = RoleId.None,
+                Name = "None"
+            }
+        },
         {
             RoleId.Read,
             new Role
@@ -43,24 +52,16 @@ public class RoleHelper
                 Id = RoleId.Administrator,
                 Name = "Administrator"
             }
-        },
-        {
-            RoleId.Missing,
-            new Role
-            {
-                Id = RoleId.Missing,
-                Name = "Missing"
-            }
         }
     };
 
     public static Role GetInfo(RoleId id)
     {
-        return (_dictionary.TryGetValue(id, out var value) ? value : default) ?? throw new InvalidOperationException();
+        return (Dictionary.TryGetValue(id, out var value) ? value : default) ?? throw new InvalidOperationException();
     }
 
     public static ICollection<Role> GetAll()
     {
-        return _dictionary.Values;
+        return Dictionary.Values;
     }
 }

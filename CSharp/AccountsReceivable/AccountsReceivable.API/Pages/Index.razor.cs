@@ -12,14 +12,15 @@ partial class Index
     private InvoicesIndex _invoicesDataGrid;
     private MudTable<Document> _documentTable = null!;
     private MudTable<Schedule> _scheduleTable = null!;
+
     private readonly List<BreadcrumbItem> _breadcrumb = new()
     {
         new BreadcrumbItem("Home", null, true)
     };
-    
+
     private int _documentTotal;
     private int _scheduleTotal;
-    
+
 
     private string _table = "documents";
 
@@ -44,6 +45,7 @@ partial class Index
             .Include(document => document.Plant)
             .Include(document => document.Status)
             .Include(document => document.SpeciesType)
+            .Include(document => document.CalcValidation)
             .Include(document => document.Plant.Meatwork);
 
         var filteredDocumentQueryable =
@@ -61,17 +63,17 @@ partial class Index
                 "species_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
                     document => document.SpeciesTypeId),
                 "stock_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
-                    document => document.StockCount),
+                    document => document.StockQuantity),
                 "weight_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
                     document => document.WeightTotal),
                 "plant_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
                     document => document.Plant.Name),
                 "validation_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
-                    document => document.CalcTimestamp == null ? 1 : document.NetCostTotal == document.CalcNetCostTotal ? 2 : 3),
+                    document => document.CalcValidationId),
+                "ats_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
+                    document => document.TransitQuantity),
                 "status_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
                     document => document.StatusId),
-                "ats_field" => filteredDocumentQueryable.OrderByDirection(state.SortDirection,
-                    document => document.TransitId),
                 _ => filteredDocumentQueryable
             }
             : filteredDocumentQueryable;
@@ -127,9 +129,19 @@ partial class Index
 
     private string RowStyleFunc(Document document, int index)
     {
-        return $"background-color: {(document.CalcTimestamp == null ? "" : document.NetCostTotal == document.CalcNetCostTotal ? Colors.LightGreen.Lighten4 : Colors.DeepOrange.Lighten4)}";
+        var color = document.CalcValidationId switch
+        {
+            ValidationId.Pending => Colors.Shades.White,
+
+            ValidationId.Low => Colors.Red.Lighten4,
+            ValidationId.Valid => Colors.Green.Lighten4,
+            ValidationId.High => Colors.Red.Lighten4,
+
+            _ => throw new NotImplementedException()
+        };
+        return $"background-color:{color};";
     }
-    
+
     private async Task<TableData<Schedule>> ScheduleServerReload(TableState state)
     {
         var reloadTuple = await ServerReload(state);

@@ -14,65 +14,91 @@
         <MudSpacer/>
         <MudText Typo="Typo.h6">Plant: <b>@($"{_document.Plant.Name} ({_document.Plant.Meatwork.Name})")</b></MudText>
         <MudSpacer/>
+        <MudText Typo="Typo.h6">Version: <b>@_document.DocumentVersion</b></MudText>
+        <MudSpacer/>
+
+        <MudDivider Vertical="true"/>
 
         <ApproveDeclineButtons
             Role="@User?.RoleId"
             Status="@_document?.StatusId"
+            CommentTask="@(() => OpenComments())"
             RecalculateTask="@(() => RecalculatePricing())"
+            TransitTask="@(() => OpenTransit())"
             SetApprovedTask="@(() => SetStatusApproved())"
             SetDeclinedTask="@(() => SetStatusDeclined())"
             DetailObjectType="Buyer Created Invoice"/>
-
     </MudToolBar>
 
-    var rows = new List<Tuple<string, string, string>>
-    {
-        new("Net Total", _document.NetCostTotal.ToString("C"), _document.CalcNetCostTotal.ToString("C")),
-        new("Stock Received", _document.StockCount.ToString(), string.Empty),
-        new("Stock Weight (KG)", _document.WeightTotal.ToString("N2"), string.Empty)
-    };
+    <MudDivider/>
 
-    <MudTable Items="rows" Dense="true">
-        <HeaderContent>
-            <MudTh></MudTh>
-            <MudTh>SFF</MudTh>
-            <MudTh>Calculated</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd>
-                @context.Item1
-            </MudTd>
-            <MudTd>
-                @context.Item2
-            </MudTd>
-            <MudTd>
-                @context.Item3
-            </MudTd>
-        </RowTemplate>
-    </MudTable>
+    <MudGrid Spacing="0" Justify="Justify.SpaceEvenly" Class="my-1">
+        <MudItem xs="6">
+            @{
+                var rows = new List<Tuple<string, string>>
+                {
+                    new("Net Total", _document.NetCostTotal.ToString("C")),
+                    new("Stock Received", _document.StockQuantity.ToString()),
+                    new("Stock Weight (KG)", _document.WeightTotal.ToString("N2"))
+                };
+            }
+            <MudTable Items="rows" Dense="true" Bordered="true" Class="mx-1">
+                <RowTemplate>
+                    <MudTd>
+                        @context.Item1
+                    </MudTd>
+                    <MudTd>
+                        @context.Item2
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudItem>
+        <MudItem xs="6">
+            @{
+                var rows = new List<Tuple<string, string>>
+                {
+                    new("Calculated Net Total", _document.CalcNetCostTotal.ToString("C")),
+                    new("Stock Transit", _document.TransitQuantity.ToString()),
+                };
+            }
+            <MudTable Items="rows" Dense="true" Bordered="true" Class="mx-1">
+                <RowTemplate>
+                    <MudTd>
+                        @context.Item1
+                    </MudTd>
+                    <MudTd>
+                        @context.Item2
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudItem>
+    </MudGrid>
 }
 
 <MudDataGrid
     @ref="_dataGrid"
-    T="PriceAnimals"
-    ServerData="@(new Func<GridState<PriceAnimals>, Task<GridData<PriceAnimals>>>(GridServerReload))"
-    RowStyleFunc="RowStyleFunc"
-    Dense="true"
-    Hover="true"
-    Striped="true">
+    T="AnimalPriceGroup"
+    ServerData="@(new Func<GridState<AnimalPriceGroup>, Task<GridData<AnimalPriceGroup>>>(GridServerReload))"
+    RowStyleFunc="RowStyleFunc" SortMode="SortMode.None" FixedHeader="true"
+    Dense="true" Bordered="true" Square="true" Height="calc(100vh - 16.3rem)">
     <Columns>
-        <PropertyColumn Property="x => x.Grade.Name" Title="Grade"/>
-        <PropertyColumn Property="@(x => x.Price.MinWeight + "kg")" Title="Min Weight"/>
-        <PropertyColumn Property="@(x => x.Price.MaxWeight + "kg")"  Title="Max Weight"/>
-        <PropertyColumn Property="x => x.StockCount" Title="Stock Count"/>
+        <PropertyColumn Property="@(x => x.AnimalType.DisplayName)" Title="Animal Type"/>
+        <PropertyColumn Property="@(x => x.Grade.Name)" Title="Grade"/>
+        <PropertyColumn Property="@(x => x.MinWeight + "kg")" Title="Min Weight"/>
+        <PropertyColumn Property="@(x => x.MaxWeight + "kg")" Title="Max Weight"/>
+        <PropertyColumn Property="@(x => x.StockCount)" Title="Stock Count"/>
         <PropertyColumn Property="@(x => x.StockWeight + "kg")" Title="Stock Weight"/>
-        <PropertyColumn Property="x => x.Cost" Title="SFF Price"/>
-        <PropertyColumn Property="x => x.CalcCost" Title="Calculated Price"/>
+        <PropertyColumn Property="@(x => x.PremiumCost)" Title="Premiums"/>
+        <PropertyColumn Property="@(x => x.CalcPremiumCost)" Title="Calculated Premiums"/>
+        <PropertyColumn Property="@(x => x.DeductionCost)" Title="Deductions"/>
+        <PropertyColumn Property="@(x => x.CalcDeductionCost)" Title="Calculated Deductions"/>
+        <PropertyColumn Property="@(x => x.Cost)" Title="SFF Price"/>
+        <PropertyColumn Property="@(x => x.CalcCost)" Title="Calculated Price"/>
     </Columns>
     <NoRecordsContent>
-        <MudText>No matching Created Invoices found</MudText>
+        <MudText>No Animals Found</MudText>
     </NoRecordsContent>
     <LoadingContent>
-        <MudText>Loading Buyer Created Invoices...</MudText>
+        <MudText>Loading Animals...</MudText>
     </LoadingContent>
 </MudDataGrid>

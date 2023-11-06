@@ -4,26 +4,21 @@
 <Breadcrumb Items="_breadcrumb" />
 
 <MudDataGrid 
-    @ref="DataGrid"
-    T="Document"
-    ServerData="@(new Func<GridState<Document>, Task<GridData<Document>>>(GridServerReload))"
-    SortMode="SortMode.Multiple"
-    Filterable="true"
+    @ref="DataGrid" T="Document" ServerData="@(new Func<GridState<Document>, Task<GridData<Document>>>(GridServerReload))"
+    SortMode="SortMode.Multiple" Filterable="true" FilterMode="DataGridFilterMode.ColumnFilterMenu"
     RowClick="@RowClicked"
-    Dense="true"
-    Hover="true"
-    Striped="true"
-    RowStyleFunc="@RowStyleFunc">
+    Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 9.8rem)">
     <Columns>
-        <PropertyColumn Property="x => x.DateProcessed" Format="dd/MM/yyyy" Title="Date"/>
-        <PropertyColumn Property="x => x.KillSheet"/>
-        <PropertyColumn Property="x => x.Farm.Name" Title="Farm"/>
-        <PropertyColumn Property="x => x.SpeciesType.DisplayName" Title="Species"/>
-        <PropertyColumn Property="x => x.StockCount" Title="Stock Count"/>
-        <PropertyColumn Property="x => x.WeightTotal" Title="Stock Weight"/>
-        <PropertyColumn Property="x => x.Plant.Name" Title="Plant (Works)"/>
-        <PropertyColumn Property="x => x.StatusId" Title="Approval Status"/>
-        @* <PropertyColumn Property="x => x.TransitId" Title="ATS Status"/> *@
+        <PropertyColumn Property="@(x => x.DateProcessed)" Format="dd/MM/yyyy" Title="Date" InitialDirection="SortDirection.Descending"/>
+        <PropertyColumn Property="@(x => x.KillSheet)"/>
+        <PropertyColumn Property="@(x => x.Farm.Name)" Title="Farm"/>
+        <PropertyColumn Property="@(x => x.SpeciesType.DisplayName)" Title="Species"/>
+        <PropertyColumn Property="@(x => x.StockQuantity)" Title="Quantity"/>
+        <PropertyColumn Property="@(x => x.WeightTotal)" Title="Total Weight"/>
+        <PropertyColumn Property="@(x => x.Plant.Name)" Title="Plant (Works)"/>
+        <PropertyColumn Property="@(x => x.TransitQuantity)" Title="ATS Quantity"/>
+        <PropertyColumn Property="@(x => x.CalcValidationId)" Title="Validation"/>
+        <PropertyColumn Property="@(x => x.StatusId)" Title="Approval Status"/>
     </Columns>
      <NoRecordsContent>
          <MudText>No matching Created Invoices found</MudText>
@@ -32,6 +27,6 @@
          <MudText>Loading Buyer Created Invoices...</MudText>
      </LoadingContent>
     <PagerContent>
-        <MudDataGridPager T="Document" PageSizeOptions="new[] { 20, 40, 80 }"/>
+        <MudDataGridPager T="Document" PageSizeOptions="new[] { 25, 50, 100 }"/>
     </PagerContent>
 </MudDataGrid>

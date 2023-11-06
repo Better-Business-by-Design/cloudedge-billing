@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccountsReceivable.BAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231026195445_Initial")]
-    partial class Initial
+    [Migration("20231030003012_Enum Cascade")]
+    partial class EnumCascade
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -87,6 +87,9 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Property<decimal>("CalcPrice")
                         .HasPrecision(9, 2)
                         .HasColumnType("decimal(9,2)");
+
+                    b.Property<byte>("CalcValidationId")
+                        .HasColumnType("tinyint");
 
                     b.Property<decimal>("CalcWeightCost")
                         .HasPrecision(9, 2)
@@ -189,6 +192,8 @@ namespace AccountsReceivable.BAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CalcValidationId");
+
                     b.HasIndex("DocumentId");
 
                     b.HasIndex("GradeId");
@@ -274,6 +279,9 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Property<DateTime?>("CalcTimestamp")
                         .HasColumnType("datetime2");
 
+                    b.Property<byte>("CalcValidationId")
+                        .HasColumnType("tinyint");
+
                     b.Property<decimal>("CalcWeightCostTotal")
                         .HasPrecision(9, 2)
                         .HasColumnType("decimal(9,2)");
@@ -347,7 +355,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Property<int?>("ScheduleId")
                         .HasColumnType("int");
 
-                    b.Property<byte?>("SpeciesTypeId")
+                    b.Property<byte>("SpeciesTypeId")
                         .HasColumnType("tinyint");
 
                     b.Property<byte>("StatusId")
@@ -363,8 +371,8 @@ namespace AccountsReceivable.BAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TransitId")
-                        .HasColumnType("int");
+                    b.Property<byte>("TransitValidationId")
+                        .HasColumnType("tinyint");
 
                     b.Property<decimal>("WeightCostTotal")
                         .HasPrecision(9, 2)
@@ -375,6 +383,8 @@ namespace AccountsReceivable.BAL.Migrations
                         .HasColumnType("decimal(9,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CalcValidationId");
 
                     b.HasIndex("FarmCostCentre");
 
@@ -388,7 +398,7 @@ namespace AccountsReceivable.BAL.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.HasIndex("TransitId");
+                    b.HasIndex("TransitValidationId");
 
                     b.ToTable("Document", "application");
                 });
@@ -1622,7 +1632,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.HasOne("AccountsReceivable.BL.Models.Enum.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Role");
@@ -1630,6 +1640,12 @@ namespace AccountsReceivable.BAL.Migrations
 
             modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Animal", b =>
                 {
+                    b.HasOne("AccountsReceivable.BL.Models.Enum.Validation", "CalcValidation")
+                        .WithMany()
+                        .HasForeignKey("CalcValidationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("AccountsReceivable.BL.Models.Application.Document", "Document")
                         .WithMany("Animals")
                         .HasForeignKey("DocumentId")
@@ -1639,8 +1655,10 @@ namespace AccountsReceivable.BAL.Migrations
                     b.HasOne("AccountsReceivable.BL.Models.Enum.Grade", "Grade")
                         .WithMany()
                         .HasForeignKey("GradeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("CalcValidation");
 
                     b.Navigation("Document");
 
@@ -1652,7 +1670,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.HasOne("AccountsReceivable.BL.Models.Enum.AnimalType", "AnimalType")
                         .WithMany()
                         .HasForeignKey("AnimalTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("AccountsReceivable.BL.Models.Application.Document", "Document")
@@ -1679,6 +1697,12 @@ namespace AccountsReceivable.BAL.Migrations
 
             modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Document", b =>
                 {
+                    b.HasOne("AccountsReceivable.BL.Models.Enum.Validation", "CalcValidation")
+                        .WithMany()
+                        .HasForeignKey("CalcValidationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("AccountsReceivable.BL.Models.Application.Farm", "Farm")
                         .WithMany()
                         .HasForeignKey("FarmCostCentre")
@@ -1701,17 +1725,23 @@ namespace AccountsReceivable.BAL.Migrations
 
                     b.HasOne("AccountsReceivable.BL.Models.Enum.SpeciesType", "SpeciesType")
                         .WithMany()
-                        .HasForeignKey("SpeciesTypeId");
+                        .HasForeignKey("SpeciesTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("AccountsReceivable.BL.Models.Enum.Status", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AccountsReceivable.BL.Models.Source.TransitDto", "Transit")
+                    b.HasOne("AccountsReceivable.BL.Models.Enum.Validation", "TransitValidation")
                         .WithMany()
-                        .HasForeignKey("TransitId");
+                        .HasForeignKey("TransitValidationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CalcValidation");
 
                     b.Navigation("Farm");
 
@@ -1725,7 +1755,7 @@ namespace AccountsReceivable.BAL.Migrations
 
                     b.Navigation("Status");
 
-                    b.Navigation("Transit");
+                    b.Navigation("TransitValidation");
                 });
 
             modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Plant", b =>
@@ -1755,7 +1785,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.HasOne("AccountsReceivable.BL.Models.Enum.Grade", "Grade")
                         .WithMany()
                         .HasForeignKey("GradeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("AccountsReceivable.BL.Models.Application.Schedule", "Schedule")
@@ -1780,7 +1810,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.HasOne("AccountsReceivable.BL.Models.Enum.Status", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Meatwork");
@@ -1812,7 +1842,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.HasOne("AccountsReceivable.BL.Models.Enum.AnimalType", "AnimalType")
                         .WithMany()
                         .HasForeignKey("AnimalTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("AccountsReceivable.BL.Models.Application.Schedule", "Schedule")
@@ -1831,7 +1861,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.HasOne("AccountsReceivable.BL.Models.Enum.SpeciesType", "SpeciesType")
                         .WithMany()
                         .HasForeignKey("SpeciesTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("SpeciesType");
@@ -1842,7 +1872,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.HasOne("AccountsReceivable.BL.Models.Enum.AnimalType", "AnimalType")
                         .WithMany()
                         .HasForeignKey("AnimalTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("AnimalType");

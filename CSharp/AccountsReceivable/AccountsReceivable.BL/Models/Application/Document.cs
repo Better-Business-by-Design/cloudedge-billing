@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using AccountsReceivable.BL.Models.Enum;
-using AccountsReceivable.BL.Models.Source;
+﻿using AccountsReceivable.BL.Models.Enum;
 
 namespace AccountsReceivable.BL.Models.Application;
 
@@ -12,6 +10,8 @@ public class Document
     public virtual Document? PreviousDocument { get; set; }
 
     public string DocumentType { get; set; } = null!;
+
+    public byte DocumentVersion { get; set; } = 1;
 
     public DateTime DateProcessed { get; set; }
 
@@ -48,27 +48,27 @@ public class Document
     public string? ConsignedFrom { get; set; }
 
     public virtual ICollection<Animal>? Animals { get; set; }
-    public virtual ICollection<string>? SupplierComments { get; set; }
+    
+    public virtual ICollection<Comment>? StaffComments { get; set; }
+    
+    
     public virtual ICollection<AnimalTypeSummary> AnimalTypeSummaries { get; set; } = null!;
-
+    
     public SpeciesTypeId SpeciesTypeId { get; set; }
     public virtual SpeciesType SpeciesType { get; set; } = null!;
-
-    public ushort? ScheduleId { get; set; }
-    public virtual Schedule? Schedule { get; set; }
-
-    public ushort? TransitId { get; set; }
-    public virtual TransitDto? Transit { get; set; }
-
+    
     public StatusId StatusId { get; set; } = StatusId.Pending;
     public virtual Status Status { get; set; } = null!;
-
-    /*public ValidationId ValidationId { get; set; } = ValidationId.Pending;
-    public virtual Validation Validation { get; set; } = null!;*/
+    
+    /* Transit */
+    
+    public ushort TransitQuantity { get; set; }
+    
+    public virtual ICollection<Transit>? Transits { get; set; }
 
     /* SFF Pricing */
 
-    public ushort StockCount { get; set; }
+    public ushort StockQuantity { get; set; }
     
     public decimal WeightTotal { get; set; }
     
@@ -80,8 +80,10 @@ public class Document
 
     public decimal NetCostTotal { get; set; }
     
-
     /* Calculated Pricing - All Pamu prices used calculated values */
+    
+    public ushort? ScheduleId { get; set; }
+    public virtual Schedule? Schedule { get; set; }
     
     public decimal CalcWeightCostTotal { get; set; }
 
@@ -93,8 +95,10 @@ public class Document
     
     public DateTime? CalcTimestamp { get; set; }
 
-    [NotMapped]
-    public bool? Validation => CalcTimestamp.HasValue ? NetCostTotal == CalcNetCostTotal : null;
+    public ValidationId CalcValidationId { get; set; } = ValidationId.Pending;
+    public virtual Validation CalcValidation { get; set; } = null!;
+    
+    
 }
 
 /* Nested Classes */

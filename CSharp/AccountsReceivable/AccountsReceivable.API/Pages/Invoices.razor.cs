@@ -24,7 +24,8 @@ partial class Invoices : DataGridPage<Document>
             .Include(document => document.Farm)
             .Include(document => document.Plant)
             .Include(document => document.Status)
-            .Include(document => document.SpeciesType);
+            .Include(document => document.SpeciesType)
+            .Include(document => document.CalcValidation);
     }
     
     protected override IQueryable<Document> FilterFullQuery(
@@ -90,7 +91,7 @@ partial class Invoices : DataGridPage<Document>
                 Expression<Func<Document, decimal>> selectPredicate = filterDefinition.Title switch
                 {
                     "KillSheet" => document => document.KillSheet,
-                    "Stock Count" => document => document.StockCount,
+                    "Stock Count" => document => document.StockQuantity,
                     "Stock Weight" => document => document.WeightTotal,
                     _ => throw new NotImplementedException()
                 };
@@ -134,12 +135,13 @@ partial class Invoices : DataGridPage<Document>
                 "DateProcessed" => document => document.DateProcessed,
                 "KillSheet" => document => document.KillSheet,
                 "Farm.Name" => document => document.Farm.Name,
-                "SpeciesType" => document => document.SpeciesType.DisplayName,
-                "StockCount" => document => document.StockCount,
+                "SpeciesType.DisplayName" => document => document.SpeciesType.DisplayName,
+                "StockQuantity" => document => document.StockQuantity,
                 "WeightTotal" => document => document.WeightTotal,
                 "Plant.Name" => document => document.Plant.Name,
+                "CalcValidationId" => document => document.CalcValidationId,
+                "TransitQuantity" => document => document.TransitQuantity,
                 "StatusId" => document => document.StatusId,
-                "TransitId" => document => document.TransitId == null ? string.Empty : document.TransitId,
                 _ => throw new NotImplementedException()
             };
 
@@ -154,20 +156,5 @@ partial class Invoices : DataGridPage<Document>
     protected override void RowClicked(DataGridRowClickEventArgs<Document> args)
     {
         Navigation.NavigateTo($"invoices/{args.Item.Id}");
-    }
-
-    protected override string RowStyleFunc(Document row, int i)
-    {
-        var color = row.StatusId switch
-            {
-                StatusId.Pending => Colors.LightBlue.Lighten4,
-                StatusId.Approved => Colors.LightGreen.Lighten4,
-                StatusId.Overridden => Colors.Red.Lighten4,
-                StatusId.Declined => Colors.Red.Lighten2,
-                StatusId.Superseded => Colors.Grey.Lighten4,
-                StatusId.Missing => Colors.Red.Lighten1,
-                _ => Colors.Shades.White
-            };
-        return $"background-color: {color}";
     }
 }

@@ -608,7 +608,7 @@ namespace AccountsReceivable.BAL.Migrations
                     { (byte)0, "Read" },
                     { (byte)1, "Read/Write" },
                     { (byte)2, "Administrator" },
-                    { (byte)3, "Missing" }
+                    { (byte)3, "None" }
                 });
 
             migrationBuilder.InsertData(
@@ -634,7 +634,7 @@ namespace AccountsReceivable.BAL.Migrations
                     { (byte)2, "Declined" },
                     { (byte)3, "Overridden" },
                     { (byte)4, "Superseded" },
-                    { (byte)5, "Missing" }
+                    { (byte)5, "None" }
                 });
 
             migrationBuilder.InsertData(

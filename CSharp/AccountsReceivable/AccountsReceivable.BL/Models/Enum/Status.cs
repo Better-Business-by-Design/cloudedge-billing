@@ -2,15 +2,14 @@
 
 public enum StatusId : byte
 {
-    Pending = 0,
+    None = 0,
+    Pending = 1,
 
-    Approved = 1,
-    Declined = 2,
+    Approved = 2,
+    Declined = 3,
 
-    Overridden = 3,
-    Superseded = 4,
-    
-    Missing = 5
+    Overridden = 4,
+    Superseded = 5
 }
 
 public class Status
@@ -23,8 +22,16 @@ public class Status
 
 public class StatusHelper
 {
-    private static readonly Dictionary<StatusId, Status> _dictionary = new()
+    private static readonly Dictionary<StatusId, Status> Dictionary = new()
     {
+        {
+            StatusId.None,
+            new Status
+            {
+                Id = StatusId.None,
+                Name = "None"
+            }
+        },
         {
             StatusId.Pending,
             new Status
@@ -64,24 +71,16 @@ public class StatusHelper
                 Id = StatusId.Superseded,
                 Name = "Superseded"
             }
-        },
-        {
-            StatusId.Missing,
-            new Status()
-            {
-                Id = StatusId.Missing,
-                Name = "Missing"
-            }
         }
     };
 
     public static Status GetInfo(StatusId id)
     {
-        return (_dictionary.TryGetValue(id, out var value) ? value : default) ?? throw new InvalidOperationException();
+        return (Dictionary.TryGetValue(id, out var value) ? value : default) ?? throw new InvalidOperationException();
     }
 
     public static ICollection<Status> GetAll()
     {
-        return _dictionary.Values;
+        return Dictionary.Values;
     }
 }

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 
-namespace AccountsReceivable.API.Pages;
+namespace AccountsReceivable.API.Shared;
 
 public abstract class DataGridPage<T> : ComponentBase
 {

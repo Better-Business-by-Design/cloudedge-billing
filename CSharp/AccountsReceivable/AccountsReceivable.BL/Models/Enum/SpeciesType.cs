@@ -2,10 +2,12 @@
 
 public enum SpeciesTypeId : byte
 {
-    Bobby = 0,
-    Bovine = 1,
-    Ovine = 2,
-    Deer = 3
+    None = 0,
+
+    Bobby = 1,
+    Bovine = 2,
+    Ovine = 3,
+    Deer = 4
 }
 
 public class SpeciesType
@@ -19,8 +21,17 @@ public class SpeciesType
 
 public class SpeciesTypeHelper
 {
-    private static readonly Dictionary<SpeciesTypeId, SpeciesType> _dictionary = new()
+    private static readonly Dictionary<SpeciesTypeId, SpeciesType> Dictionary = new()
     {
+        {
+            SpeciesTypeId.None,
+            new SpeciesType
+            {
+                Id = SpeciesTypeId.None,
+                Name = "NONE",
+                DisplayName = "None"
+            }
+        },
         {
             SpeciesTypeId.Bobby,
             new SpeciesType
@@ -61,11 +72,11 @@ public class SpeciesTypeHelper
 
     public static SpeciesType GetInfo(SpeciesTypeId id)
     {
-        return (_dictionary.TryGetValue(id, out var value) ? value : default) ?? throw new InvalidOperationException();
+        return (Dictionary.TryGetValue(id, out var value) ? value : default) ?? throw new InvalidOperationException();
     }
 
     public static ICollection<SpeciesType> GetAll()
     {
-        return _dictionary.Values;
+        return Dictionary.Values;
     }
 }

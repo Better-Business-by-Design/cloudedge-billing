@@ -1,5 +1,6 @@
 ﻿using AccountsReceivable.BAL.Data;
 using AccountsReceivable.BL.Models.Application;
+using AccountsReceivable.BL.Models.Enum;
 using Microsoft.EntityFrameworkCore;
 
 namespace AccountsReceivable.BAL.Extensions;
@@ -25,6 +26,6 @@ public static class ScheduleExtensions
             .ToListAsync();
         
         foreach (var document in documents)
-            await document.CalculatePrices(dbContext, schedule);
+            await document.CalculatePricesAsync(dbContext, schedule);
     }
 }

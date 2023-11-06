@@ -63,9 +63,9 @@ public class Animal
     /* SFF Pricing */
 
     public decimal Weight { get; set; }
-    
+
     public decimal Price { get; set; }
-    
+
     public decimal WeightCost { get; set; }
 
     public decimal DeductionCost { get; set; }
@@ -73,7 +73,7 @@ public class Animal
     public decimal PremiumCost { get; set; }
 
     public decimal NetCost { get; set; }
-    
+
 
     /* Calculated Pricing - All Pamu prices used calculated values */
 
@@ -87,9 +87,9 @@ public class Animal
     public decimal CalcPremiumCost { get; set; }
 
     public decimal CalcNetCost { get; set; }
-    
-    [NotMapped]
-    public bool Validation => NetCost == CalcNetCost;
+
+    public ValidationId ValidationId { get; set; } = ValidationId.Pending;
+    public Validation Validation { get; set; } = null!;
 }
 
 /* Nested Classes */
