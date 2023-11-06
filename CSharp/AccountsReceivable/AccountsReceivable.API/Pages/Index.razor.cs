@@ -9,6 +9,7 @@ namespace AccountsReceivable.API.Pages;
 
 partial class Index
 {
+    private InvoicesIndex _invoicesDataGrid;
     private MudTable<Document> _documentTable = null!;
     private MudTable<Schedule> _scheduleTable = null!;
     private readonly List<BreadcrumbItem> _breadcrumb = new()

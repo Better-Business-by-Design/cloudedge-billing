@@ -2,6 +2,7 @@
 using AccountsReceivable.API.Shared;
 using AccountsReceivable.BL.Models.Application;
 using AccountsReceivable.BL.Models.Enum;
+using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 
@@ -9,6 +10,7 @@ namespace AccountsReceivable.API.Pages;
 
 partial class Invoices : DataGridPage<Document>
 {
+    
     private readonly List<BreadcrumbItem> _breadcrumb = new()
     {
         new BreadcrumbItem("Home", ""),
