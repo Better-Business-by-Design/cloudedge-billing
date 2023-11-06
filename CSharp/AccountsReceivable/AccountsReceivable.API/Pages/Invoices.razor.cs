@@ -23,6 +23,7 @@ partial class Invoices : DataGridPage<Document>
             .AsNoTracking()
             .Include(document => document.Farm)
             .Include(document => document.Plant)
+            .Include(document => document.Plant.Meatwork)
             .Include(document => document.Status)
             .Include(document => document.SpeciesType)
             .Include(document => document.CalcValidation);
@@ -52,7 +53,7 @@ partial class Invoices : DataGridPage<Document>
                 Expression<Func<Document, string>> selectPredicate = filterDefinition.Title switch
                 {
                     "Farm" => document => document.Farm.Name,
-                    "Plant (Works)" => document => document.Plant.Name,
+                    "Plant (Works)" => document => document.Plant.Name + '(' + document.Plant.Meatwork.Name + ')',
                     _ => throw new NotImplementedException()
                 };
 
@@ -156,5 +157,20 @@ partial class Invoices : DataGridPage<Document>
     protected override void RowClicked(DataGridRowClickEventArgs<Document> args)
     {
         Navigation.NavigateTo($"invoices/{args.Item.Id}");
+    }
+
+    protected override string RowStyleFunc(Document document, int i)
+    {
+        var color = document.CalcValidationId switch
+        {
+            ValidationId.Pending => Colors.Shades.White,
+
+            ValidationId.Low => Colors.Red.Lighten4,
+            ValidationId.Valid => Colors.Green.Lighten4,
+            ValidationId.High => Colors.Red.Lighten4,
+
+            _ => throw new NotImplementedException()
+        };
+        return $"background-color:{color};";
     }
 }

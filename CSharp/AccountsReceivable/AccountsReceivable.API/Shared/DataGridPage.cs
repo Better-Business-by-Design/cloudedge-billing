@@ -17,7 +17,11 @@ public abstract class DataGridPage<T> : ComponentBase
 
     [Inject]
     protected virtual NavigationManager Navigation { get; set; } = default!;
+    
+    [Parameter]
+    public EventCallback<int> OnGridServerReload { get; set; }
 
+    
     protected virtual async Task<GridData<T>> GridServerReload(GridState<T> state)
     {
         var fullQuery = BuildFullQuery();
@@ -25,6 +29,7 @@ public abstract class DataGridPage<T> : ComponentBase
         var orderedQuery = OrderFilteredQuery(filteredQuery, state.SortDefinitions);
 
         TotalItems = orderedQuery.Count();
+        await OnGridServerReload.InvokeAsync(TotalItems);
         return new GridData<T>()
         {
             TotalItems = TotalItems,
