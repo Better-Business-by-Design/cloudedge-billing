@@ -1,0 +1,31 @@
+﻿@page "/plans"
+@inherits DataGridPage<PayMonthlyPlan>
+
+<div class="@(ShowBreadcrumb ? "d-block" : "d-none")">
+    <Breadcrumb Items="_breadcrumb"/>
+</div>
+
+
+<MudDataGrid
+    @ref="DataGrid" T="PayMonthlyPlan" ServerData="@(new Func<GridState<PayMonthlyPlan>, Task<GridData<PayMonthlyPlan>>>(GridServerReload))"
+    SortMode="SortMode.Multiple" Filterable="true" FilterMode="DataGridFilterMode.ColumnFilterMenu"
+    RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc"
+    Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 9.8rem)">
+    <Columns>
+        <PropertyColumn Property="@(x => x.PlanId)" Title="ID"/>
+        <PropertyColumn Property="@(x => x.PlanName)" Title="Name"/>
+        <PropertyColumn Property="@(x => x.LocalSize)" Title="Local Size"/>
+        <PropertyColumn Property="@(x => x.NationalSize)" Title="National Size"/>
+        <PropertyColumn Property="@(x => x.MobileSize)" Title="Mobile Size"/>
+        <PropertyColumn Property="@(x => x.Price)" Title="Price"/>
+    </Columns>
+     <NoRecordsContent>
+         <MudText>No matching plans found</MudText>
+     </NoRecordsContent>
+     <LoadingContent>
+         <MudText>Loading plans...</MudText>
+     </LoadingContent>
+    <PagerContent>
+        <MudDataGridPager T="PayMonthlyPlan" PageSizeOptions="new[] { 25, 50, 100 }"/>
+    </PagerContent>
+</MudDataGrid>

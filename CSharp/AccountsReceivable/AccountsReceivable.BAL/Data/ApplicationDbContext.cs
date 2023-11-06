@@ -13,6 +13,8 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<Customer> Customers { get; set; } = null!;
     public DbSet<LineItem> LineItems { get; set; } = null!;
+    
+    public DbSet<PayMonthlyPlan> PayMonthlyPlans { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
