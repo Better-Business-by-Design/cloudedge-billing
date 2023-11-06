@@ -15,11 +15,10 @@
         <PropertyColumn Property="@(x => x.SpeciesTypeId)" Title="Species"/>
         <PropertyColumn Property="@(x => x.StockQuantity)" Title="Stock Count"/>
         <PropertyColumn Property="@(x => x.WeightTotal.ToString("0.00") + "kg")" Title="Stock Weight"/>
-        <PropertyColumn Property="@(x => x.Plant.Name)" Title="Plant (Works)"/>
-        <PropertyColumn Property="@(x => x.Plant.Name + " (" + x.Plant.Meatwork.Name + ')')" Title="Plant (Works)"/>
+        <PropertyColumn Property="@(x => x.Plant.Name + " (" + x.Plant.Meatwork.Name + ')')" Title="Plant"/>
         <PropertyColumn Property="@(x => x.TransitQuantity)" Title="ATS Quantity"/>
         <PropertyColumn Property="@(x => x.CalcValidationId)" Title="Validation" InitialDirection="SortDirection.Descending"/>
-        <PropertyColumn Property="@(x => x.StatusId)" Title="Approval Status"/>
+        <PropertyColumn Property="@(x => x.StatusId)" Title="Approval Status" Sortable="false" Filterable="false"/>
     </Columns>
      <NoRecordsContent>
          <MudText>No matching Created Invoices found</MudText>

@@ -1,4 +1,3 @@
-@page "/PricingIndex"
 @inherits Pricing
 
 @{
@@ -6,5 +5,9 @@
 }
 
 @code {
-    
+    protected override IQueryable<Schedule> FilterFullQuery(IQueryable<Schedule> fullQuery, IEnumerable<IFilterDefinition<Schedule>> filterDefinitions)
+    {
+        fullQuery = fullQuery.Where(schedule => schedule.StatusId == StatusId.Pending);
+        return base.FilterFullQuery(fullQuery, filterDefinitions);
+    }
 }

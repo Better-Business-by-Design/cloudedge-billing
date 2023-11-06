@@ -18,11 +18,15 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Latin1_General_100_CI_AS");
-        foreach (var property in modelBuilder.Model.GetEntityTypes().SelectMany(entity => entity.GetProperties())
-                     .Where(property => property.ClrType == typeof(decimal) || property.ClrType == typeof(decimal?)))
+        
+        var decimalEntities = modelBuilder.Model.GetEntityTypes()
+            .SelectMany(entity => entity.GetProperties())
+            .Where(property => property.ClrType == typeof(decimal) || property.ClrType == typeof(decimal?));
+        
+        foreach (var property in decimalEntities)
         {
             property.SetPrecision(9);
-            property.SetScale(2);
+            property.SetScale(3);
         }
 
         #region Account
@@ -37,7 +41,7 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Audit>(entity =>
             {
-                entity.HasKey(audit => new {audit.UserId, audit.Timestamp});
+                entity.HasKey(audit => new { audit.UserId, audit.Timestamp });
 
                 entity.ToTable(nameof(Audit), "account");
             }
@@ -73,7 +77,7 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Supplier>(entity =>
             {
-                entity.HasKey(supplier => new {supplier.FarmCostCentre, supplier.MeatworkName});
+                entity.HasKey(supplier => new { supplier.FarmCostCentre, supplier.MeatworkName });
 
                 entity.ToTable(nameof(Supplier), "application");
             }
@@ -135,7 +139,7 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Document>(entity =>
             {
-                entity.HasKey(document => new {document.Id});
+                entity.HasKey(document => new { document.Id });
 
                 entity.ToTable(nameof(Document), "application");
             }
@@ -190,7 +194,7 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<DeductionDetail>(entity =>
             {
-                entity.HasKey(deduction => new {deduction.AnimalId, deduction.Code});
+                entity.HasKey(deduction => new { deduction.AnimalId, deduction.Code });
 
                 entity.ToTable(nameof(DeductionDetail), "application");
             }
@@ -198,7 +202,7 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<PremiumDetail>(entity =>
             {
-                entity.HasKey(premium => new {premium.AnimalId, premium.Code});
+                entity.HasKey(premium => new { premium.AnimalId, premium.Code });
 
                 entity.ToTable(nameof(PremiumDetail), "application");
             }
@@ -229,7 +233,7 @@ public class ApplicationDbContext : DbContext
                 entity.HasMany<Document>()
                     .WithOne(document => document.SpeciesType)
                     .OnDelete(DeleteBehavior.Restrict);
-                
+
                 entity.HasMany<Transit>()
                     .WithOne(transit => transit.SpeciesType)
                     .OnDelete(DeleteBehavior.Restrict);

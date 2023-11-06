@@ -1,12 +1,13 @@
 ﻿@page "/"
 
 <Breadcrumb Items="_breadcrumb"/>
-    <MudButton Variant="Variant.Filled" Color="@(_table!.Equals("documents") ? Color.Primary : Color.Inherit)" OnClick="@(() => SwitchTable("documents"))">
-        <MudText Color="Color.Inherit">Buyer Created Invoices (@_invoicesDataGrid.TotalItems)</MudText>
-    </MudButton>
-    <MudButton Variant="Variant.Filled" Color="@(_table!.Equals("schedules") ? Color.Primary : Color.Inherit)" OnClick="@(() => SwitchTable("schedules"))" Class="ml-2">
-        <MudText Color="Color.Inherit">Pricing Schedules (@_pricingDataGrid.TotalItems)</MudText>
-    </MudButton>
+
+<MudButton Variant="Variant.Filled" Color="@(_table!.Equals("documents") ? Color.Primary : Color.Inherit)" OnClick="@(() => SwitchTable("documents"))">
+    <MudText Color="Color.Inherit">Buyer Created Invoices (@_invoicesDataGrid.TotalItems)</MudText>
+</MudButton>
+<MudButton Variant="Variant.Filled" Color="@(_table!.Equals("schedules") ? Color.Primary : Color.Inherit)" OnClick="@(() => SwitchTable("schedules"))" Class="ml-2">
+    <MudText Color="Color.Inherit">Pricing Schedules (@_pricingDataGrid.TotalItems)</MudText>
+</MudButton>
 
 <div class="@(_table.Equals("documents") ? "d-block" : "d-none")">
     <InvoicesIndex @ref="_invoicesDataGrid" OnGridServerReload="@InvoicesServerReloaded"/>
@@ -14,4 +15,3 @@
 <div class="@(_table.Equals("schedules") ? "d-block" : "d-none")">
     <PricingIndex @ref="_pricingDataGrid" OnGridServerReload="@PricingServerReloaded"/>
 </div>
-
