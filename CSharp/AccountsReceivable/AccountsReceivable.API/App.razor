@@ -6,18 +6,8 @@
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
             <PageTitle>Pāmu - Accounts Receivable</PageTitle>
-            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
-                <NotAuthorized>
-                    @if (context.User.Identity?.IsAuthenticated != true)
-                    {
-                        <RedirectToLogin/>
-                    }
-                    else
-                    {
-                        <MudAlert>You are not authorized to access this resource.</MudAlert>
-                    }
-                </NotAuthorized>
-            </AuthorizeRouteView>
+            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+            </RouteView>
             <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
         </Found>
         <NotFound>

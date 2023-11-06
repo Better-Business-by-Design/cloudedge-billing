@@ -1,6 +1,5 @@
 using System.Security.Authentication;
 using AccountsReceivable.BAL.Data;
-using AccountsReceivable.BL.Models.Account;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
@@ -21,7 +20,6 @@ public class Program
             {
                 builder.Configuration.Bind("AzureAd", options);
                 options.Events ??= new OpenIdConnectEvents();
-                options.Events.OnTokenValidated += OnTokenValidated;
             });
         builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
         builder.Services.AddAuthorization(options => { options.FallbackPolicy = options.DefaultPolicy; });
@@ -59,30 +57,5 @@ public class Program
         app.MapFallbackToPage("/_Host");
 
         app.Run();
-    }
-
-    private static async Task OnTokenValidated(TokenValidatedContext context)
-    {
-        var name = context.Principal?.Claims.FirstOrDefault(c => c.Type.Equals("name"))?.Value;
-        var email = context.Principal?.Claims.FirstOrDefault(c => c.Type.Equals("preferred_username"))?.Value;
-
-        if (name is null || email is null) throw new AuthenticationException();
-
-        var dbContext = context.HttpContext.RequestServices.GetRequiredService<ApplicationDbContext>();
-        var user = await dbContext
-            .Set<User>()
-            .FirstOrDefaultAsync(user => EF.Functions.Like(user.EmailAddress, email));
-
-        if (user is null)
-        {
-            user = new User
-            {
-                EmailAddress = email,
-                Name = name
-            };
-
-            await dbContext.Set<User>().AddAsync(user);
-            await dbContext.SaveChangesAsync();
-        }
     }
 }

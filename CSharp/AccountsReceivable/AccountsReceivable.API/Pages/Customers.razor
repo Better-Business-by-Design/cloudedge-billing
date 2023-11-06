@@ -1,0 +1,30 @@
+﻿@page "/customers"
+@inherits DataGridPage<Customer>
+
+<Breadcrumb Items="_breadcrumb" />
+
+<MudDataGrid
+    @ref="DataGrid" T="Customer" ServerData="@(new Func<GridState<Customer>, Task<GridData<Customer>>>(GridServerReload))"
+    SortMode="SortMode.Multiple" Filterable="true" FilterMode="DataGridFilterMode.ColumnFilterMenu"
+    RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc"
+    Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 9.8rem)">
+    <Columns>
+        <PropertyColumn Property="@(x => x.Id)" Title="Id"/>
+        <PropertyColumn Property="@(x => x.ParentName)" Title="Parent Name"/>
+        <PropertyColumn Property="@(x => x.CustomerName)" Title="Customer Name"/>
+        <PropertyColumn Property="@(x => x.DomainUuid)" Title="Domain Uuid"/>
+        <PropertyColumn Property="@(x => x.InvoiceName)" Title="Invoice Name"/>
+        <PropertyColumn Property="@(x => x.PayMonthlyPlanId)" Title="Plan Id"/>
+        <PropertyColumn Property="@(x => x.IsActive)" Title="Is Active"/>
+        <PropertyColumn Property="@(x => x.Location)" Title="Location"/>
+    </Columns>
+     <NoRecordsContent>
+         <MudText>No matching Customers found</MudText>
+     </NoRecordsContent>
+     <LoadingContent>
+         <MudText>Loading Customers...</MudText>
+     </LoadingContent>
+    <PagerContent>
+        <MudDataGridPager T="Customer" PageSizeOptions="new[] { 25, 50, 100 }"/>
+    </PagerContent>
+</MudDataGrid>

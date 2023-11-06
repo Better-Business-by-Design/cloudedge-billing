@@ -114,5 +114,29 @@ public abstract class DataGridPage<T> : ComponentBase
             _ => throw new NotImplementedException()
         };
     }
+
+    protected static Expression<Func<bool, bool>> GenerateBooleanLogicPredicate(string logicOperator, bool value)
+    {
+        return logicOperator switch
+        {
+            "is" => property => property == value,
+            _ => throw new NotImplementedException(
+                $"'{logicOperator}' is not implemented in Boolean logic predicate building.")
+        };
+    }
+    
+    protected static Expression<Func<Guid, bool>> GenerateGuidLogicPredicate(string logicOperator, Guid value)
+    {
+        return logicOperator switch
+        {
+            "is" => property => property.Equals(value),
+            "is not" => property => !property.Equals(value),
+            "is after" => property => property.CompareTo(value) > 0,
+            "is before" => property => property.CompareTo(value) < 0,
+            _ => throw new NotImplementedException(
+                $"'{logicOperator}' is not implemented in Guid logic predicate building.")
+        };
+
+    }
     
 }

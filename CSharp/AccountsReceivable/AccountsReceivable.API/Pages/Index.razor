@@ -2,28 +2,14 @@
 
 <Breadcrumb Items="_breadcrumb"/>
 
-<MudButton Variant="Variant.Filled" Color="@(_table!.Equals("documents") ? Color.Primary : Color.Inherit)" OnClick="@(() => SwitchTable("documents"))">
-    <MudText Color="Color.Inherit">Buyer Created Invoices (@_invoicesDataGrid.TotalItems)</MudText>
-</MudButton>
-<MudButton Variant="Variant.Filled" Color="@(_table!.Equals("schedules") ? Color.Primary : Color.Inherit)" OnClick="@(() => SwitchTable("schedules"))" Class="ml-2">
-    <MudText Color="Color.Inherit">Pricing Schedules (@_pricingDataGrid.TotalItems)</MudText>
+<MudButton Variant="Variant.Filled" Color="@(Color.Primary)" OnClick="@(() => Console.WriteLine("Table button clicked!"))">
+    <MudText Color="Color.Inherit">Buyer Created Invoices (@_customersDataGrid.TotalItems)</MudText>
 </MudButton>
 
-<div class="@(_table.Equals("documents") ? "d-block" : "d-none")">
-    <Invoices 
-        @ref="_invoicesDataGrid" 
-        StaticFilter="@InvoicesStaticFilter"
-        OnGridServerReload="@InvoicesServerReloaded" 
+<div class="d-block">
+    <Customers
+        @ref="_customersDataGrid"
+        OnGridServerReload="@CustomersServerReloaded"
         ShowBreadcrumb="false"
-        StatusEditable="false"
-        />
-</div>
-<div class="@(_table.Equals("schedules") ? "d-block" : "d-none")">
-    <Pricing
-        @ref="_pricingDataGrid"
-        StaticFilter="@PricingStaticFilter"
-        OnGridServerReload="@PricingServerReloaded" 
-        ShowBreadcrumb="false"
-        StatusEditable="false"
         />
 </div>

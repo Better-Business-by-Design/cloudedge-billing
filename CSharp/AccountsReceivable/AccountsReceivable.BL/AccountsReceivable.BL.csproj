@@ -10,5 +10,9 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.*"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Models\Account\" />
+    </ItemGroup>
+
 
 </Project>
