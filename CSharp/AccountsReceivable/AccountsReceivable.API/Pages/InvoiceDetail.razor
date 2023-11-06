@@ -25,6 +25,7 @@
             CommentTask="@(() => OpenComments())"
             RecalculateTask="@(() => RecalculatePricing())"
             TransitTask="@(() => OpenTransit())"
+            TransitRequired="@(_document?.StockQuantity != 0 && _document?.TransitQuantity == 0)"
             SetApprovedTask="@(() => SetStatusApproved())"
             SetDeclinedTask="@(() => SetStatusDeclined())"
             DetailObjectType="Buyer Created Invoice"/>
@@ -92,8 +93,10 @@
         <PropertyColumn Property="@(x => x.CalcPremiumCost)" Title="Calculated Premiums"/>
         <PropertyColumn Property="@(x => x.DeductionCost)" Title="Deductions"/>
         <PropertyColumn Property="@(x => x.CalcDeductionCost)" Title="Calculated Deductions"/>
-        <PropertyColumn Property="@(x => x.Cost)" Title="SFF Price"/>
-        <PropertyColumn Property="@(x => x.CalcCost)" Title="Calculated Price"/>
+        <PropertyColumn Property="@(x => x.Cost)" Title="SFF Rate"/>
+        <PropertyColumn Property="@(x => x.CalcCost)" Title="Calculated Rate"/>
+        <PropertyColumn Property="@(x => x.NetCost)" Title="SFF Price"/>
+        <PropertyColumn Property="@(x => x.CalcNetCost)" Title="Calculated Price"/>
     </Columns>
     <NoRecordsContent>
         <MudText>No Animals Found</MudText>

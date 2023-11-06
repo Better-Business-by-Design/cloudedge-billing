@@ -20,6 +20,9 @@ partial class ApproveDeclineButtons : ComponentBase
     public Func<Task>? TransitTask { get; set; }
 
     [Parameter]
+    public bool TransitRequired { get; set; } = false;
+
+    [Parameter]
     public Func<Task>? RecalculateTask { get; set; }
 
     [Parameter]

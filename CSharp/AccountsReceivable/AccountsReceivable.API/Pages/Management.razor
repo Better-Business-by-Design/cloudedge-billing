@@ -38,17 +38,77 @@ else
         </MudTabPanel>
         <MudTabPanel Text="Uplifts">
             <ChildContent>
+                <MudGrid Spacing="0" Class="ma-2 gap-2">
+                    <MudDatePicker Label="Start Date"/>
+                    <MudDatePicker Label="End Date"/>
+                    <MudSelect T="string" Label="Type">
+                        <MudSelectItem Value="@("Flexi")"/>
+                        <MudSelectItem Value="@("BPP")"/>
+                    </MudSelect>
+                    <MudNumericField Label="Min Weight" Min="0" Max="999" Step=".1"></MudNumericField>
+                    <MudNumericField Label="Max Weight" Min="0" Max="999" Step=".1"></MudNumericField>
 
+                    <MudSelect T="string" Label="Unit of Measure">
+                        <MudSelectItem Value="@("KG")"/>
+                        <MudSelectItem Value="@("HEAD")"/>
+                    </MudSelect>
+
+                    <MudNumericField Label="Rate" Step=".1"></MudNumericField>
+                </MudGrid>
             </ChildContent>
         </MudTabPanel>
         <MudTabPanel Text="Premiums">
             <ChildContent>
+                <MudGrid Spacing="0" Class="ma-2 gap-2">
+                    <MudDatePicker Label="Start Date"/>
+                    <MudDatePicker Label="End Date"/>
+                    <MudSelect T="string" Label="Type">
+                        <MudSelectItem Value="@("PREMIUM SHORN LAMB")"/>
+                        <MudSelectItem Value="@("NAT POS PREM")"/>
+                        <MudSelectItem Value="@("LCORP SPRING COMMIT")"/>
+                        <MudSelectItem Value="@("EQ PREMIUM - ANGUS")"/>
+                        <MudSelectItem Value="@("WINT LAMB 100")"/>
+                        <MudSelectItem Value="@("EQ PREMIUM - RESERVE")"/>
+                    </MudSelect>
+                    <MudNumericField Label="Min Weight" Min="0" Max="999" Step=".1"></MudNumericField>
+                    <MudNumericField Label="Max Weight" Min="0" Max="999" Step=".1"></MudNumericField>
 
+                    <MudSelect T="string" Label="Unit of Measure">
+                        <MudSelectItem Value="@("KG")"/>
+                        <MudSelectItem Value="@("HEAD")"/>
+                    </MudSelect>
+
+                    <MudNumericField Label="Rate" Step=".1"></MudNumericField>
+                </MudGrid>
             </ChildContent>
         </MudTabPanel>
         <MudTabPanel Text="Deductions">
             <ChildContent>
+                <MudGrid Spacing="0" Class="ma-2 gap-2">
+                    <MudDatePicker Label="Start Date"/>
+                    <MudDatePicker Label="End Date"/>
+                    <MudSelect T="string" Label="Type">
+                        <MudSelectItem Value="@("INSPECTION DEER")"/>
+                        <MudSelectItem Value="@("B+L BEEF")"/>
+                        <MudSelectItem Value="@("INSPECTION NI CATTLE")"/>
+                        <MudSelectItem Value="@("INSPECTION SI CATTLE")"/>
+                        <MudSelectItem Value="@("DINZ")"/>
+                        <MudSelectItem Value="@("NO NAIT TAG")"/>
+                        <MudSelectItem Value="@("DISEASE LEVY BEEF")"/>
+                        <MudSelectItem Value="@("INSPECTION SI LAMB")"/>
+                        <MudSelectItem Value="@("TBFREE NZ LEVY")"/>
+                        <MudSelectItem Value="@("INSPECTION NI LAMB")"/>
+                    </MudSelect>
+                    <MudNumericField Label="Min Weight" Min="0" Max="999" Step=".1"></MudNumericField>
+                    <MudNumericField Label="Max Weight" Min="0" Max="999" Step=".1"></MudNumericField>
 
+                    <MudSelect T="string" Label="Unit of Measure">
+                        <MudSelectItem Value="@("KG")"/>
+                        <MudSelectItem Value="@("HEAD")"/>
+                    </MudSelect>
+
+                    <MudNumericField Label="Rate" Step=".1"></MudNumericField>
+                </MudGrid>
             </ChildContent>
         </MudTabPanel>
         <MudButton Color="Color.Primary" Variant="Variant.Filled" Class="ma-2" OnClick="SaveChanges">

@@ -3,7 +3,7 @@
   "description": "",
   "main": "Main.xaml",
   "dependencies": {
-    "AccountsReceivable.BAL": "[2023.11.5.941]",
+    "AccountsReceivable.BAL": "[2023.11.6.1234]",
     "FreeSpire.PDF": "[8.6.0]",
     "UiPath.Database.Activities": "[1.7.1]",
     "UiPath.Excel.Activities": "[2.22.2]",

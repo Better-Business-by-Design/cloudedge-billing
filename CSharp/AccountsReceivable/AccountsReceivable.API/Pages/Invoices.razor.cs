@@ -133,7 +133,7 @@ partial class Invoices : DataGridPage<Document>
                 "DateProcessed" => document => document.DateProcessed,
                 "KillSheet" => document => document.KillSheet,
                 "Farm.Name" => document => document.Farm.Name,
-                "SpeciesType.DisplayName" => document => document.SpeciesType.DisplayName,
+                "SpeciesTypeId" => document => document.SpeciesType.DisplayName,
                 "StockQuantity" => document => document.StockQuantity,
                 "WeightTotal" => document => document.WeightTotal,
                 "Plant.Name" => document => document.Plant.Name,

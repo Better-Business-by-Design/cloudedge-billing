@@ -97,7 +97,9 @@ partial class InvoiceDetail
             result.ValidAnimals.Sum(animal => animal.DeductionCost),
             result.ValidAnimals.Sum(animal => animal.CalcDeductionCost),
             result.ValidAnimals.First().Price,
-            result.ValidAnimals.First().CalcPrice
+            result.ValidAnimals.First().CalcPrice,
+            result.ValidAnimals.Sum(animal => animal.NetCost),
+            result.ValidAnimals.Sum(animal => animal.CalcNetCost)
         )).ToList();
 
         return new GridData<AnimalPriceGroup>
@@ -142,7 +144,7 @@ partial class InvoiceDetail
         {
             CloseButton = true,
 
-            MaxWidth = MaxWidth.ExtraLarge,
+            MaxWidth = MaxWidth.Large,
             FullWidth = true
         };
 
@@ -158,9 +160,12 @@ partial class InvoiceDetail
 
         var transits = await DbContext.Set<Transit>()
             .Include(transit => transit.SpeciesType)
+            .Include(transit => transit.Plant)
+            .Include(transit => transit.Farm)
             .Where(transit =>
                 (transit.DocumentId == null || transit.DocumentId.Equals(_document.Id)) &&
                 _document.DateProcessed.AddDays(-7) <= transit.Date &&
+                transit.SpeciesTypeId == _document.SpeciesTypeId &&
                 transit.Date <= _document.DateProcessed.AddDays(7))
             .ToListAsync();
 

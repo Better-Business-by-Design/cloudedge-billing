@@ -32,8 +32,12 @@ public class AnimalPriceGroup
     public decimal Cost { get; set; }
     
     public decimal CalcCost { get; set; }
+    
+    public decimal NetCost { get; set; }
+    
+    public decimal CalcNetCost { get; set; }
 
-    public AnimalPriceGroup(AnimalTypeId animalTypeId, GradeId gradeId, ValidationId validationId, decimal minWeight, decimal maxWeight, ushort stockCount, decimal stockWeight, decimal premiumCost, decimal calcPremiumCost, decimal deductionCost, decimal calcDeductionCost, decimal cost, decimal calcCost)
+    public AnimalPriceGroup(AnimalTypeId animalTypeId, GradeId gradeId, ValidationId validationId, decimal minWeight, decimal maxWeight, ushort stockCount, decimal stockWeight, decimal premiumCost, decimal calcPremiumCost, decimal deductionCost, decimal calcDeductionCost, decimal cost, decimal calcCost, decimal netCost, decimal calcNetCost)
     {
         AnimalTypeId = animalTypeId;
         GradeId = gradeId;
@@ -48,5 +52,7 @@ public class AnimalPriceGroup
         CalcDeductionCost = calcDeductionCost;
         Cost = cost;
         CalcCost = calcCost;
+        NetCost = netCost;
+        CalcNetCost = calcNetCost;
     }
 }

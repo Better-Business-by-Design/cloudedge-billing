@@ -43,13 +43,13 @@ public static class DocumentExtensions
         animalMap.ForMember(animal => animal.Defects, opt => opt.MapFrom(src => src.Defects.Select(d => d.DefectDescription)));
         animalMap.ForMember(animal => animal.PremiumDetails, opt => opt.MapFrom(src => src.AnimalAdditionalPremiumsDeductionsDetail));
 
-        animalMap.ForMember(animal => animal.WeightCost, opt => opt.MapFrom(src => src.PaymentAdvicePricePaid));
-        animalMap.ForMember(animal => animal.PremiumCost, opt => opt.MapFrom(src => src.AnimalAdditionalPremiumsDeductionsDetail.Sum(d => d.PaymentSummaryAmount)));
-        animalMap.ForMember(animal => animal.DeductionCost, opt => opt.MapFrom(src => src.AnimalPaymentSummaryDetail.Sum(d => d.PaymentSummaryAmount)));
+        animalMap.ForMember(animal => animal.WeightCost, opt => opt.MapFrom(src => Math.Round(src.PaymentAdvicePricePaid, 2)));
+        animalMap.ForMember(animal => animal.PremiumCost, opt => opt.MapFrom(src => Math.Round(src.AnimalAdditionalPremiumsDeductionsDetail.Sum(d => d.PaymentSummaryAmount), 2)));
+        animalMap.ForMember(animal => animal.DeductionCost, opt => opt.MapFrom(src => Math.Round(src.AnimalPaymentSummaryDetail.Sum(d => d.PaymentSummaryAmount), 2)));
         animalMap.ForMember(animal => animal.NetCost, opt => opt.MapFrom(src =>
-            src.PaymentAdvicePricePaid +
-            src.AnimalAdditionalPremiumsDeductionsDetail.Sum(d => d.PaymentSummaryAmount) +
-            src.AnimalPaymentSummaryDetail.Sum(d => d.PaymentSummaryAmount)));
+            Math.Round(src.PaymentAdvicePricePaid, 2) +
+            Math.Round(src.AnimalAdditionalPremiumsDeductionsDetail.Sum(d => d.PaymentSummaryAmount), 2) +
+            Math.Round(src.AnimalPaymentSummaryDetail.Sum(d => d.PaymentSummaryAmount), 2)));
 
         cfg.CreateMap<AnimalPaymentSummaryDetailDto, DeductionDetail>();
         cfg.CreateMap<AnimalAdditionalPremiumsDeductionsDetailDto, PremiumDetail>();
@@ -63,13 +63,14 @@ public static class DocumentExtensions
     {
         Task.Run(() => CalculatePricesAsync(baseDocument, dbContext)).GetAwaiter().GetResult();
     }
-    
+
     public static async Task CalculatePricesAsync(this Document baseDocument, ApplicationDbContext dbContext, Schedule? schedule = null)
     {
         var document = await dbContext.Documents
             .Include(entity => entity.Plant)
-            .Include(entity => entity.Animals!)
-            .ThenInclude(entity => entity.Grade)
+            .Include(entity => entity.Animals!).ThenInclude(animal => animal.Grade)
+            .Include(entity => entity.Animals!).ThenInclude(animal => animal.PremiumDetails)
+            .Include(entity => entity.Animals!).ThenInclude(animal => animal.DeductionDetails)
             .SingleAsync(entity => entity.Id.Equals(baseDocument.Id));
 
         schedule ??= await dbContext.Schedules
@@ -92,7 +93,7 @@ public static class DocumentExtensions
             foreach (var animal in document.Animals!)
             {
                 var schedulePrice = schedule.Prices.Single(price => price.GradeId == animal.GradeId && price.MaxWeight >= animal.Weight && animal.Weight >= price.MinWeight);
-                
+
                 var upliftArray = schedule.Uplifts.Where(uplift =>
                     uplift.AnimalTypeId == animal.Grade.AnimalTypeId &&
                     uplift.MinWeight <= animal.Weight &&
@@ -101,8 +102,9 @@ public static class DocumentExtensions
 
                 animal.CalcPrice = Math.Round(schedulePrice.Cost + (schedulePrice.Cost != 0 ? upliftArray.Sum(uplift => uplift.Rate) : 0), 2);
                 animal.CalcWeightCost = Math.Round(animal.Weight * animal.CalcPrice, 2);
-                animal.CalcDeductionCost = Math.Round(animal.DeductionCost, 2); // TODO
-                animal.CalcPremiumCost = Math.Round(animal.PremiumCost, 2); // TODO
+                animal.CalcDeductionCost = Math.Round(animal.DeductionDetails?.Sum(deduction => deduction.Uom.Equals("KG", StringComparison.OrdinalIgnoreCase) ? (deduction.Rate * animal.Weight) : deduction.Rate) ?? 0,
+                    2); // TODO
+                animal.CalcPremiumCost = Math.Round(animal.PremiumDetails?.Sum(premium => premium.Uom.Equals("KG", StringComparison.OrdinalIgnoreCase) ? (premium.Rate * animal.Weight) : premium.Rate) ?? 0, 2); // TODO
                 animal.CalcNetCost = Math.Round(animal.CalcWeightCost + animal.CalcDeductionCost + animal.CalcPremiumCost, 2);
 
                 document.CalcWeightCostTotal += animal.CalcWeightCost;
@@ -110,7 +112,7 @@ public static class DocumentExtensions
                 document.CalcPremiumCostTotal += animal.CalcPremiumCost;
                 document.CalcNetCostTotal += animal.CalcNetCost;
             }
-            
+
             document.ScheduleId = schedule.Id;
             document.CalcTimestamp = DateTime.Now;
             document.CalcValidationId = decimal.Compare(document.CalcNetCostTotal, document.NetCostTotal) switch

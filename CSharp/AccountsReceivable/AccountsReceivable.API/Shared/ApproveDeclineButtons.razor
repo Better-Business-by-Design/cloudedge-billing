@@ -13,6 +13,14 @@
         </MudTooltip>
     }
     
+    <MudTooltip Text="BCI PDF">
+        <MudIconButton
+            Color="Color.Inherit"
+            Variant="Variant.Filled"
+            Class="ml-2"
+            Icon="@Icons.Material.Filled.PictureAsPdf"/>
+    </MudTooltip>
+    
     @if (CommentTask is not null)
     {
         <MudTooltip Text="Comments">
@@ -20,7 +28,7 @@
                 Color="Color.Default"
                 Variant="Variant.Filled"
                 Class="ml-2"
-                Icon="@Icons.Material.Rounded.Email"
+                Icon="@Icons.Material.Rounded.Comment"
                 OnClick="@InvokeCommentTask" />
         </MudTooltip>
     }
@@ -45,7 +53,7 @@
             Variant="Variant.Filled"
             Class="ml-2"
             OnClick="@OpenApproveDialog"
-            Disabled="@IsStatusNotPendingOrDeclined()">
+            Disabled="@(IsStatusNotPendingOrDeclined() || TransitRequired)">
             Approve
         </MudButton>
     }
