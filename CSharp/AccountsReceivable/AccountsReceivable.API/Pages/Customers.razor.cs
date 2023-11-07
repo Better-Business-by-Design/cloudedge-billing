@@ -10,6 +10,10 @@ namespace AccountsReceivable.API.Pages;
 
 partial class Customers : DataGridPage<Customer>
 {
+
+    private HashSet<Customer> _selectedCustomers = new();
+    private List<PayMonthlyPlan> _payMonthlyPlans = new();
+    private bool _readOnly = true;
     
     private readonly List<BreadcrumbItem> _breadcrumb = new()
     {
@@ -19,6 +23,7 @@ partial class Customers : DataGridPage<Customer>
 
     protected override IQueryable<Customer> BuildFullQuery()
     {
+        _payMonthlyPlans = DbContext.PayMonthlyPlans.ToList();
         return DbContext.Customers
             .AsNoTracking()
             .Include(customer => customer.PayMonthlyPlan);
@@ -152,6 +157,34 @@ partial class Customers : DataGridPage<Customer>
     
     protected override void RowClicked(DataGridRowClickEventArgs<Customer> args)
     {
-        Navigation.NavigateTo($"customers/{args.Item.Id}");
+        if(_readOnly) { Navigation.NavigateTo($"customers/{args.Item.Id}"); }
     }
+
+    private async Task AddCustomer()
+    {
+        await DbContext.Customers.AddAsync(new Customer() { ParentName = "New Customer" });
+        await DbContext.SaveChangesAsync();
+        await DataGrid.ReloadServerData();
+    }
+
+    private async Task RemoveCustomers()
+    {
+        DbContext.Customers.RemoveRange(_selectedCustomers);
+        _selectedCustomers = new HashSet<Customer>();
+
+        await DbContext.SaveChangesAsync();
+        await DataGrid.ReloadServerData();
+    }
+    
+    private void SelectedItemsChanged(HashSet<Customer> customers)
+    {
+        _selectedCustomers = customers;
+    }
+    
+    protected async Task CommittedRowChanges(Customer customer)
+    {
+        await DbContext.SaveChangesAsync();
+    }
+    
+    
 }

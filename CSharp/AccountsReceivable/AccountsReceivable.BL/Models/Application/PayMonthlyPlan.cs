@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace AccountsReceivable.BL.Models.Application;
 
@@ -23,5 +24,11 @@ public class PayMonthlyPlan
     [Column("price")]
     public decimal? Price { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<Customer> Customers { get; set; } = new List<Customer>();
+
+    public override string ToString()
+    {
+        return PlanName;
+    }
 }

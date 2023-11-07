@@ -8,7 +8,8 @@ partial class App
     {
         Palette = new PaletteLight
         {
-            Dark = "#00263E"
+            Dark = "#00263E",
+            AppbarBackground = Colors.Blue.Lighten2
         }
     };
 }

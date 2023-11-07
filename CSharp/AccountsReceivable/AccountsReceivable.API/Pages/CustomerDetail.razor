@@ -6,19 +6,28 @@
 
 <Breadcrumb Items="_breadcrumb"/>
 
-<MudButton OnClick="@AddItem">Add Item</MudButton>
-<MudButton OnClick="@RemoveItems">Remove Items</MudButton>
+<div class="d-flex flex-wrap mt-4">
+    <div class="d-flex justify-start align-center">
+        <MudButton OnClick="@AddItem" Color="Color.Primary">Add Item</MudButton>
+    </div>
+    <div class="d-flex justify-start align-center">
+        <MudButton OnClick="@RemoveItems" Color="Color.Secondary">@($"Remove Items ({_selectedItems.Count})")</MudButton>
+    </div>
+    <div class="d-flex justify-start align-center">
+        <MudSwitch @bind-Checked="@_readOnly" Color="Color.Primary">@(_readOnly ? "Read Only Mode" : "Edit Mode")</MudSwitch>
+    </div>
+</div>
 
 <MudDataGrid
     @ref="DataGrid" T="LineItem" ServerData="@(new Func<GridState<LineItem>, Task<GridData<LineItem>>>(GridServerReload))"
     SortMode="SortMode.Multiple" Filterable="true" FilterMode="DataGridFilterMode.ColumnFilterMenu"
     RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc"
     Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 9.8rem)"
-    ReadOnly="false" EditMode="DataGridEditMode.Cell" CommittedItemChanges="@CommittedRowChanges" 
+    ReadOnly="@_readOnly" EditMode="DataGridEditMode.Cell" CommittedItemChanges="@CommittedRowChanges" 
     MultiSelection="true" SelectedItemsChanged="@SelectedItemsChanged"
     >
     <Columns>
-        <SelectColumn T="LineItem"/>
+        <SelectColumn T="LineItem" ShowInFooter="false"/>
         <PropertyColumn Property="@(x => x.Id)" Title="ID" IsEditable="false"/>
         <PropertyColumn Property="@(x => x.CustomerName)" Title="Customer Name"/>
         <PropertyColumn Property="@(x => x.Description)" Title="Description"/>
@@ -42,6 +51,8 @@
 
 @code {
 
+    private bool _readOnly = true;
+    
     private Customer? _customer;
 
     private HashSet<LineItem> _selectedItems = new();
@@ -191,24 +202,19 @@
     private async Task RemoveItems()
     {
         DbContext.LineItems.RemoveRange(_selectedItems);
+        _selectedItems = new HashSet<LineItem>();
+        
         await DbContext.SaveChangesAsync();
         await DataGrid.ReloadServerData();
     }
 
     private void SelectedItemsChanged(HashSet<LineItem> items)
     {
-        Console.WriteLine($"Selected items ({items.Count}) : " + string.Join(", ", items.Select(item => item.Id)));
         _selectedItems = items;
     }
 
     protected async Task CommittedRowChanges(LineItem item)
     {
-        await DbContext.SaveChangesAsync();
-    }
-
-    private async Task SetLineItemQuantity(LineItem item, int quantity)
-    {
-        item.Quantity = quantity;
         await DbContext.SaveChangesAsync();
     }
 

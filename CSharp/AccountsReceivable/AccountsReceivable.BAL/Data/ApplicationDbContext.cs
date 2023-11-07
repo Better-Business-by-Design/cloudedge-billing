@@ -62,6 +62,9 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<PayMonthlyPlan>(entity =>
         {
             entity.HasKey(plan => plan.PlanId);
+            entity.HasMany<Customer>(plan => plan.Customers)
+                .WithOne(customer => customer.PayMonthlyPlan)
+                .OnDelete(DeleteBehavior.SetNull);
             entity.ToTable("pay_monthly_plans", "cloudedge");
         });
 
@@ -73,7 +76,7 @@ public class ApplicationDbContext : DbContext
             entity.HasOne<Customer>(item => item.Customer)
                 .WithMany(customer => customer.LineItems)
                 .HasForeignKey(item => item.CustomerId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.SetNull);
             
             entity.ToTable("line_items", "cloudedge");
         });
