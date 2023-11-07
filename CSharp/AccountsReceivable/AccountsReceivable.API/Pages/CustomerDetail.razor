@@ -6,20 +6,27 @@
 
 <Breadcrumb Items="_breadcrumb"/>
 
+<MudButton OnClick="@AddItem">Add Item</MudButton>
+<MudButton OnClick="@RemoveItems">Remove Items</MudButton>
+
 <MudDataGrid
     @ref="DataGrid" T="LineItem" ServerData="@(new Func<GridState<LineItem>, Task<GridData<LineItem>>>(GridServerReload))"
     SortMode="SortMode.Multiple" Filterable="true" FilterMode="DataGridFilterMode.ColumnFilterMenu"
     RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc"
-    Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 9.8rem)">
+    Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 9.8rem)"
+    ReadOnly="false" EditMode="DataGridEditMode.Cell" CommittedItemChanges="@CommittedRowChanges" 
+    MultiSelection="true" SelectedItemsChanged="@SelectedItemsChanged"
+    >
     <Columns>
-        <PropertyColumn Property="@(x => x.Id)" Title="ID"/>
+        <SelectColumn T="LineItem"/>
+        <PropertyColumn Property="@(x => x.Id)" Title="ID" IsEditable="false"/>
         <PropertyColumn Property="@(x => x.CustomerName)" Title="Customer Name"/>
         <PropertyColumn Property="@(x => x.Description)" Title="Description"/>
-        <PropertyColumn Property="@(x => x.Quantity)" Title="Quantity"/>
-        <PropertyColumn Property="@(x => x.UnitPrice)" Title="UnitPrice"/>
-        <PropertyColumn Property="@(x => x.Discount)" Title="Discount"/>
-        <PropertyColumn Property="@(x => x.Account)" Title="Account"/>
-        <PropertyColumn Property="@(x => x.Business)" Title="Business"/>
+        <PropertyColumn Property="@(x => x.Quantity)" Title="Quantity" Required="false"/>
+        <PropertyColumn Property="@(x => x.UnitPrice)" Title="UnitPrice" Required="false"/>
+        <PropertyColumn Property="@(x => x.Discount)" Title="Discount" Required="false"/>
+        <PropertyColumn Property="@(x => x.Account)" Title="Account" Required="false"/>
+        <PropertyColumn Property="@(x => x.Business)" Title="Business" Required="false"/>
     </Columns>
      <NoRecordsContent>
          <MudText>No matching line items found</MudText>
@@ -33,10 +40,11 @@
 </MudDataGrid>
 
 
-
 @code {
 
-    private Customer? _item;
+    private Customer? _customer;
+
+    private HashSet<LineItem> _selectedItems = new();
 
     private readonly List<BreadcrumbItem> _breadcrumb = new()
     {
@@ -49,18 +57,14 @@
     public string? Id { get; set; }
 
     [Inject]
-    protected virtual ApplicationDbContext DbContext { get; set; } = default!;
-
-    [Inject]
-    protected virtual NavigationManager Navigation { get; set; } = default!;
-
-    [Inject]
     protected virtual IDialogService DialogService { get; set; } = default!;
 
     protected override IQueryable<LineItem> BuildFullQuery()
     {
+        _customer ??= DbContext.Customers.FirstOrDefault(customer => customer.Id == Convert.ToInt32(Id ?? "0"));
+        if (_customer is null) { Navigation.NavigateTo("customers"); }
+        
         return DbContext.LineItems
-            .AsNoTracking()
             .Where(item => item.CustomerId == Convert.ToInt32(Id));
     }
 
@@ -174,9 +178,38 @@
         return orderedQuery;
     }
 
-    protected override void RowClicked(DataGridRowClickEventArgs<LineItem> args)
+    private async Task AddItem()
     {
-        Console.WriteLine("Line Item row clicked!");
+        await DbContext.LineItems.AddAsync(new LineItem()
+        {
+            CustomerId = _customer?.Id ?? throw new NullReferenceException("Trying to add a line item to a null customer!")
+        });
+        await DbContext.SaveChangesAsync();
+        await DataGrid.ReloadServerData();
+    }
+
+    private async Task RemoveItems()
+    {
+        DbContext.LineItems.RemoveRange(_selectedItems);
+        await DbContext.SaveChangesAsync();
+        await DataGrid.ReloadServerData();
+    }
+
+    private void SelectedItemsChanged(HashSet<LineItem> items)
+    {
+        Console.WriteLine($"Selected items ({items.Count}) : " + string.Join(", ", items.Select(item => item.Id)));
+        _selectedItems = items;
+    }
+
+    protected async Task CommittedRowChanges(LineItem item)
+    {
+        await DbContext.SaveChangesAsync();
+    }
+
+    private async Task SetLineItemQuantity(LineItem item, int quantity)
+    {
+        item.Quantity = quantity;
+        await DbContext.SaveChangesAsync();
     }
 
 }
