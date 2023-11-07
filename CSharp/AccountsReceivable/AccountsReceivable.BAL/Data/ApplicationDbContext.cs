@@ -10,7 +10,7 @@ public class ApplicationDbContext : DbContext
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
     }
-
+    
     public DbSet<Customer> Customers { get; set; } = null!;
     public DbSet<LineItem> LineItems { get; set; } = null!;
     
@@ -88,6 +88,77 @@ public class ApplicationDbContext : DbContext
         #endregion
 
         base.OnModelCreating(modelBuilder);
+    }
+    public async Task AddValues(IEnumerable<object> values)
+    {
+        object newValues = values.ToList();
+        
+        switch (newValues)
+        {
+            case List<Customer> customers:
+                await Customers.AddRangeAsync(customers);
+                break;
+            case List<LineItem> lineItems:
+                await LineItems.AddRangeAsync(lineItems);
+                break;
+            case List<PayMonthlyPlan> payMonthlyPlans:
+                await PayMonthlyPlans.AddRangeAsync(payMonthlyPlans);
+                break;
+            case null:
+                throw new ArgumentNullException(nameof(newValues), "Tried to add null value(s) to dataset");
+            default:
+                throw new NotImplementedException($"{newValues.GetType()} Not implemented in Add Values");
+        }
+        
+        await SaveChangesAsync();
+    }
+
+    public async Task RemoveValues(IEnumerable<object> values)
+    {
+        object oldValues = values.ToList();
+
+        switch (oldValues)
+        {
+            case List<Customer> customers:
+                Customers.RemoveRange(customers);
+                break;
+            case List<LineItem> lineItems:
+                LineItems.RemoveRange(lineItems);
+                break;
+            case List<PayMonthlyPlan> payMonthlyPlans:
+                PayMonthlyPlans.RemoveRange(payMonthlyPlans);
+                break;
+            case null:
+                throw new ArgumentNullException(nameof(oldValues), "Tried to remove null values from dataset");
+            default:
+                throw new NotImplementedException($"{oldValues.GetType()} Not implemented in Remove Values");
+        }
+
+        await SaveChangesAsync();
+    }
+
+    public async Task EditValues(IEnumerable<object> values)
+    {
+        object newValues = values.ToList();
+        switch (newValues)
+        {
+            case List<Customer> customers:
+                Customers.UpdateRange(customers);
+                break;
+            case List<LineItem> lineItems:
+                LineItems.UpdateRange(lineItems);
+                break;
+            case List<PayMonthlyPlan> payMonthlyPlans :
+                PayMonthlyPlans.UpdateRange(payMonthlyPlans);
+                break;
+            case null:
+                throw new ArgumentNullException(nameof(newValues), "Tried to update null values in dataset");
+            default:
+                throw new NotImplementedException($"{newValues.GetType()} not implemented in EditValue");
+        }
+
+        await SaveChangesAsync();
+        
     }
 
     private static ValueComparer<ICollection<string>> GetStringValueComparer()

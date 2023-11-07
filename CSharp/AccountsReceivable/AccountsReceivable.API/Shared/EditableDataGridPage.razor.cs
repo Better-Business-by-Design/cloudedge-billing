@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using AccountsReceivable.API.Shared;
-using AccountsReceivable.BAL.Data;
 using AccountsReceivable.BL.Models.Application;
 using AccountsReceivable.BL.Models.Enum;
 using Microsoft.AspNetCore.Components;
@@ -10,23 +8,10 @@ using MudBlazor;
 
 namespace AccountsReceivable.API.Pages;
 
- abstract partial class EditableDataGridPage<T> : DataGridPage<T>
+partial class Customers : DataGridPage<Customer>
 {
 
-    private class StoredDbChange<TStored>
-    {
-        private ICollection<TStored> Removed { get; set; } = new List<TStored>();
-        private ICollection<TStored> Added { get; set; } = new List<TStored>();
-        private ICollection<TStored> Edited { get; set; } = new List<TStored>();
-
-        public async Task Revert(ApplicationDbContext dbContext)
-        {
-            
-        }
-    }
-    
-    private HashSet<T> _selectedItems = new();
-    private Stack<Tuple<T, T>>
+    private HashSet<Customer> _selectedCustomers = new();
     private List<PayMonthlyPlan> _payMonthlyPlans = new();
     private bool _readOnly = true;
     
