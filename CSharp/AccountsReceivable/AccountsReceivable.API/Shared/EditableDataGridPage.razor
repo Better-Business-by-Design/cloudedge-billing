@@ -1,65 +1,18 @@
-﻿@page "/customers"
+﻿@typeparam T 
 @inherits DataGridPage<T>
 
 <div class="@(ShowBreadcrumb ? "d-block" : "d-none")">
-    <Breadcrumb Items="_breadcrumb"/>
-</div>
-<div class="d-flex flex-wrap mt-4">
-    <div class="d-flex justify-start align-center">
-        <MudButton OnClick="@AddCustomer" Color="Color.Primary">Add Item</MudButton>
-    </div>
-    <div class="d-flex justify-start align-center">
-        <MudButton OnClick="@RemoveCustomers" Color="Color.Secondary">@($"Remove Items ({_selectedCustomers.Count})")</MudButton>
-    </div>
-    <div class="d-flex justify-start align-center">
-        <MudSwitch @bind-Checked="@_readOnly" Color="Color.Primary">@(_readOnly ? "Read Only Mode" : "Edit Mode")</MudSwitch>
-        </div>
+    <Breadcrumb Items="Breadcrumb"/>
 </div>
 
-<MudDataGrid
-    @ref="DataGrid" T="Customer" ServerData="@(new Func<GridState<Customer>, Task<GridData<Customer>>>(GridServerReload))"
-    SortMode="SortMode.Multiple" Filterable="true" FilterMode="DataGridFilterMode.ColumnFilterMenu"
-    RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc" SelectOnRowClick="false"
-    ReadOnly="@_readOnly"
-    EditMode="DataGridEditMode.Cell" CommittedItemChanges="@CommittedRowChanges"
-    MultiSelection="true" SelectedItemsChanged="@SelectedItemsChanged"
-    Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 9.8rem)">
-    <Columns>
-        <SelectColumn T="Customer" ShowInFooter="false"/>
-        <PropertyColumn Property="@(x => x.Id)" Title="ID" IsEditable="false"/>
-        <PropertyColumn Property="@(x => x.ParentName)" Title="Parent Name" Required="false"/>
-        <PropertyColumn Property="@(x => x.CustomerName)" Title="Customer Name" Required="false"/>
-        <PropertyColumn Property="@(x => x.DomainUuid)" Title="Domain UUID" Required="false" IsEditable="true">
-            <EditTemplate>
-                <MudTextField @bind-Value="@context.Item.DomainUuid" Variant="Variant.Text"></MudTextField>
-            </EditTemplate>
-        </PropertyColumn>
-        <PropertyColumn Property="@(x => x.InvoiceName)" Title="Invoice Name" Required="false"/>
-        <PropertyColumn Property="@(x => x.PayMonthlyPlan != null ? x.PayMonthlyPlan.PlanName : string.Empty)" Title="Plan Name" Required="false">
-            <EditTemplate>
-                <MudSelect T="@(PayMonthlyPlan?)" @bind-Value="@(context.Item.PayMonthlyPlan)"
-                           Clearable="true" Dense="true">
-                    @foreach (var plan in _payMonthlyPlans)
-                    {
-                        <MudSelectItem Value="@plan">@plan.PlanName</MudSelectItem>
-                    }
-                </MudSelect>
-            </EditTemplate>
-        </PropertyColumn>
-        <PropertyColumn Property="@(x => x.IsActive)" Title="Is Active" Required="false">
-            <EditTemplate>
-                <MudSwitch @bind-Checked="@context.Item.IsActive" Color="Color.Primary">@(context.Item.IsActive ? "True" : "False")</MudSwitch>
-            </EditTemplate>
-        </PropertyColumn>
-        <PropertyColumn Property="@(x => x.Location)" Title="Location" Required="false"/>
-    </Columns>
-    <NoRecordsContent>
-        <MudText>No matching Customers found</MudText>
-    </NoRecordsContent>
-    <LoadingContent>
-        <MudText>Loading Customers...</MudText>
-    </LoadingContent>
-    <PagerContent>
-        <MudDataGridPager T="Customer" PageSizeOptions="new[] { 25, 50, 100 }"/>
-    </PagerContent>
-</MudDataGrid>
+<div class="d-flex flex-wrap mt-4">
+    <div class="d-flex justify-start align-center">
+        <MudButton OnClick="@AddRow" Color="Color.Primary">Add Item</MudButton>
+    </div>
+    <div class="d-flex justify-start align-center">
+        <MudButton OnClick="@RemoveRows" Color="Color.Secondary">@($"Remove Items ({SelectedRows.Count})")</MudButton>
+    </div>
+    <div class="d-flex justify-start align-center">
+        <MudSwitch @bind-Checked="@ReadOnly" Color="Color.Primary">@(ReadOnly ? "Read Only Mode" : "Edit Mode")</MudSwitch>
+        </div>
+</div>

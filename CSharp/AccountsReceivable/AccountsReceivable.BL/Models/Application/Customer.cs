@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace AccountsReceivable.BL.Models.Application;
 
-public class Customer
+public class Customer : IDataRow
 {
     [Column("tenant_code")]
     public int Id { get; set; }

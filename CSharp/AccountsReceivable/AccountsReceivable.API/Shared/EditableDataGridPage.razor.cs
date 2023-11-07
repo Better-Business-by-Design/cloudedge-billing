@@ -6,184 +6,50 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 
-namespace AccountsReceivable.API.Pages;
+namespace AccountsReceivable.API.Shared;
 
-partial class Customers : DataGridPage<Customer>
+public abstract partial class EditableDataGridPage<T> : DataGridPage<T>
 {
 
-    private HashSet<Customer> _selectedCustomers = new();
-    private List<PayMonthlyPlan> _payMonthlyPlans = new();
-    private bool _readOnly = true;
+    protected HashSet<object> SelectedRows = new();
+    protected bool ReadOnly = true;
+
+    protected abstract List<BreadcrumbItem> Breadcrumb { get; set; }
     
-    private readonly List<BreadcrumbItem> _breadcrumb = new()
+    protected override void RowClicked(DataGridRowClickEventArgs<T> args)
     {
-        new BreadcrumbItem("Home", ""),
-        new BreadcrumbItem("Customers", null, true)
-    };
-
-    protected override IQueryable<Customer> BuildFullQuery()
-    {
-        _payMonthlyPlans = DbContext.PayMonthlyPlans.ToList();
-        return DbContext.Customers
-            .AsNoTracking()
-            .Include(customer => customer.PayMonthlyPlan);
-    }
-    
-    protected override IQueryable<Customer> FilterFullQuery(
-        IQueryable<Customer> fullQuery, 
-        IEnumerable<IFilterDefinition<Customer>> filterDefinitions)
-    {
-        var filteredQuery = fullQuery;
-        foreach (var filterDefinition in filterDefinitions)
-        {
-            if (filterDefinition.Operator is null) { continue; }
-            var logicOperator = filterDefinition.Operator!;
-            
-            if (filterDefinition.Value is null && filterDefinition.Operator is not ("is empty" or "is not empty")) 
-            {
-                continue;
-            }
-            
-            Expression<Func<Customer, bool>> fullPredicate;
-            
-            // Annoying that this can't be a switch
-            if (filterDefinition.FieldType.IsString)
-            {
-                var value = filterDefinition.Value?.ToString() ?? string.Empty;
-                
-                Expression<Func<Customer, string>> selectPredicate = filterDefinition.Title switch
-                {
-                    "Parent Name" => customer => customer.ParentName,
-                    "Customer Name" => customer => customer.CustomerName ?? string.Empty,
-                    "Invoice Name" => customer => customer.InvoiceName ?? string.Empty,
-                    "Plan Name" => customer => customer.PayMonthlyPlan != null ? customer.PayMonthlyPlan.PlanName : string.Empty, 
-                    "Location" => customer => customer.Location ?? string.Empty,
-                    _ => throw new NotImplementedException()
-                };
-
-                var logicPredicate = GenerateStringLogicPredicate(logicOperator, value);
-
-                fullPredicate = selectPredicate.Compose(logicPredicate);
-            } 
-            else if (filterDefinition.FieldType.IsBoolean)
-            {
-                var value = Convert.ToBoolean(filterDefinition.Value ?? true);
-                Expression<Func<Customer, bool>> selectPredicate = filterDefinition.Title switch
-                {
-                    "Is Active" => customer => customer.IsActive,
-                    _ => throw new NotImplementedException($"{filterDefinition.Title} not implemented in Boolean filters.")
-                };
-
-                var logicPredicate = GenerateBooleanLogicPredicate(logicOperator, value);
-
-                fullPredicate = selectPredicate.Compose(logicPredicate);
-            } 
-            else if (filterDefinition.FieldType.IsEnum)
-            {
-                throw new NotImplementedException(
-                    $"No enum filtering implemented for Customers table, including not for {filterDefinition.Title}");
-            } 
-            else if (filterDefinition.FieldType.IsGuid)
-            {
-                var value = Guid.Parse(filterDefinition.Value?.ToString() ?? string.Empty);
-                Expression<Func<Customer, Guid>> selectPredicate = filterDefinition.Title switch
-                {
-                    "Domain UUID" => customer => customer.DomainUuid ?? Guid.Empty,
-                    _ => throw new NotImplementedException($"{filterDefinition.Title} not implemented in Guid filters.")
-                };
-
-                var logicPredicate = GenerateGuidLogicPredicate(logicOperator, value);
-
-                fullPredicate = selectPredicate.Compose(logicPredicate);
-            } 
-            else if (filterDefinition.FieldType.IsNumber)
-            {
-                var value = Convert.ToDecimal(filterDefinition.Value ?? 0);
-                Expression<Func<Customer, decimal>> selectPredicate = filterDefinition.Title switch
-                {
-                    "ID" => customer => customer.Id,
-                    _ => throw new NotImplementedException()
-                };
-
-                var logicPredicate = GenerateDecimalLogicPredicate(logicOperator, value);
-
-                fullPredicate = selectPredicate.Compose(logicPredicate);
-            } 
-            else if (filterDefinition.FieldType.IsDateTime)
-            {
-                throw new NotImplementedException(
-                    $"No datetime filtering implemented for Customers table, including not for {filterDefinition.Title}");
-            }
-            else
-            {
-                throw new NotImplementedException(
-                    $"No {filterDefinition.FieldType} filtering implemented for Customers table.");
-            }
-            filteredQuery = filteredQuery.Where(fullPredicate);
-        }
-
-        return filteredQuery;
+        if (ReadOnly) { ReadOnlyRowClicked(args); }
     }
 
-    protected override IOrderedQueryable<Customer> OrderFilteredQuery(
-        IQueryable<Customer> filteredQuery, 
-        IEnumerable<SortDefinition<Customer>> sortDefinitions)
-    {
-        var orderedQuery = filteredQuery.OrderBy(customer => true);
-        // ReSharper disable once LoopCanBeConvertedToQuery
-        foreach (var sortDefinition in sortDefinitions)
-        {
-            Expression<Func<Customer, object>> keySelector = sortDefinition.SortBy switch
-            {
-                "Id" => customer => customer.Id,
-                "ParentName" => customer => customer.ParentName,
-                "CustomerName" => customer => customer.CustomerName ?? string.Empty,
-                "DomainUuid" => customer => customer.DomainUuid ?? Guid.Empty,
-                "InvoiceName" => customer => customer.InvoiceName ?? string.Empty,
-                "PayMonthlyPlan.PlanName" => customer => customer.PayMonthlyPlan != null ? customer.PayMonthlyPlan.PlanName : string.Empty, 
-                "IsActive" => customer => customer.IsActive,
-                "Location" => customer => customer.Location ?? string.Empty,
-                _ => throw new NotImplementedException(
-                    $"Sorting not implemented for {sortDefinition.SortBy} column in Customers table.")
-            };
+    protected abstract void ReadOnlyRowClicked(DataGridRowClickEventArgs<T> args);
 
-            orderedQuery = sortDefinition.Descending
-                ? orderedQuery.ThenByDescending(keySelector)
-                : orderedQuery.ThenBy(keySelector);
-        }
-
-        return orderedQuery;
-    }
-    
-    protected override void RowClicked(DataGridRowClickEventArgs<Customer> args)
+    protected virtual async Task AddRow()
     {
-        if(_readOnly) { Navigation.NavigateTo($"customers/{args.Item.Id}"); }
-    }
-
-    private async Task AddCustomer()
-    {
-        await DbContext.Customers.AddAsync(new Customer() { ParentName = "New Customer" });
-        await DbContext.SaveChangesAsync();
+        var newDefaultRow = BuildNewDefaultRow();
+        await DbContext.AddValues(new List<object> {newDefaultRow ?? throw new ArgumentNullException(nameof(newDefaultRow))});
         await DataGrid.ReloadServerData();
     }
 
-    private async Task RemoveCustomers()
-    {
-        DbContext.Customers.RemoveRange(_selectedCustomers);
-        _selectedCustomers = new HashSet<Customer>();
+    protected abstract T BuildNewDefaultRow();
 
-        await DbContext.SaveChangesAsync();
+    protected virtual async Task RemoveRows()
+    {
+        await DbContext.RemoveValues(SelectedRows);
+        
+        // Clear selection
+        SelectedRows = new HashSet<object>();
         await DataGrid.ReloadServerData();
     }
     
-    private void SelectedItemsChanged(HashSet<Customer> customers)
+    protected void SelectedRowsChanged(HashSet<T> rows)
     {
-        _selectedCustomers = customers;
+        SelectedRows = new HashSet<object>(rows.Cast<object>());
     }
     
-    protected async Task CommittedRowChanges(Customer customer)
+    protected async Task CommittedRowChanges(T row)
     {
-        await DbContext.SaveChangesAsync();
+        await DbContext.EditValues(new List<object>() { row ?? throw new ArgumentNullException(nameof(row)) });
+        await DataGrid.ReloadServerData();
     }
     
     

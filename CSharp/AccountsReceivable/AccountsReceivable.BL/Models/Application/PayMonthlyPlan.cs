@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace AccountsReceivable.BL.Models.Application;
 
-public class PayMonthlyPlan
+public class PayMonthlyPlan : IDataRow
 {
     [Column("plan_id")]
     public int PlanId { get; set; }

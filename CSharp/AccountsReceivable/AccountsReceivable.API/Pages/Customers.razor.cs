@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using AccountsReceivable.API.Shared;
-using AccountsReceivable.BAL.Data;
 using AccountsReceivable.BL.Models.Application;
 using AccountsReceivable.BL.Models.Enum;
 using Microsoft.AspNetCore.Components;
@@ -10,27 +8,14 @@ using MudBlazor;
 
 namespace AccountsReceivable.API.Pages;
 
- abstract partial class EditableDataGridPage<T> : DataGridPage<T>
+partial class Customers : EditableDataGridPage<Customer>
 {
 
-    private class StoredDbChange<TStored>
-    {
-        private ICollection<TStored> Removed { get; set; } = new List<TStored>();
-        private ICollection<TStored> Added { get; set; } = new List<TStored>();
-        private ICollection<TStored> Edited { get; set; } = new List<TStored>();
-
-        public async Task Revert(ApplicationDbContext dbContext)
-        {
-            
-        }
-    }
-    
-    private HashSet<T> _selectedItems = new();
-    private Stack<Tuple<T, T>>
+    private HashSet<Customer> _selectedCustomers = new();
     private List<PayMonthlyPlan> _payMonthlyPlans = new();
     private bool _readOnly = true;
     
-    private readonly List<BreadcrumbItem> _breadcrumb = new()
+    protected override List<BreadcrumbItem> Breadcrumb { get; set; } = new()
     {
         new BreadcrumbItem("Home", ""),
         new BreadcrumbItem("Customers", null, true)
@@ -169,36 +154,18 @@ namespace AccountsReceivable.API.Pages;
 
         return orderedQuery;
     }
-    
-    protected override void RowClicked(DataGridRowClickEventArgs<Customer> args)
+
+    protected override void ReadOnlyRowClicked(DataGridRowClickEventArgs<Customer> args)
     {
-        if(_readOnly) { Navigation.NavigateTo($"customers/{args.Item.Id}"); }
+        Navigation.NavigateTo($"customers/{args.Item.Id}"); 
     }
 
-    private async Task AddCustomer()
+    protected override Customer BuildNewDefaultRow()
     {
-        await DbContext.Customers.AddAsync(new Customer() { ParentName = "New Customer" });
-        await DbContext.SaveChangesAsync();
-        await DataGrid.ReloadServerData();
-    }
-
-    private async Task RemoveCustomers()
-    {
-        DbContext.Customers.RemoveRange(_selectedCustomers);
-        _selectedCustomers = new HashSet<Customer>();
-
-        await DbContext.SaveChangesAsync();
-        await DataGrid.ReloadServerData();
-    }
-    
-    private void SelectedItemsChanged(HashSet<Customer> customers)
-    {
-        _selectedCustomers = customers;
-    }
-    
-    protected async Task CommittedRowChanges(Customer customer)
-    {
-        await DbContext.SaveChangesAsync();
+        return new Customer
+        {
+            CustomerName = "New Customer"
+        };
     }
     
     

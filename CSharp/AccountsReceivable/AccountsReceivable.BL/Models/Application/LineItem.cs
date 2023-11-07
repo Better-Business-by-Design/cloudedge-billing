@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccountsReceivable.BL.Models.Application;
 
-public class LineItem
+public class LineItem : IDataRow
 {
     [Column("ID")]
     public int Id { get; set; }

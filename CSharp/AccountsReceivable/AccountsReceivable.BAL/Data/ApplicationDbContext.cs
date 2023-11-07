@@ -10,7 +10,7 @@ public class ApplicationDbContext : DbContext
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
     }
-    
+
     public DbSet<Customer> Customers { get; set; } = null!;
     public DbSet<LineItem> LineItems { get; set; } = null!;
     
@@ -89,7 +89,8 @@ public class ApplicationDbContext : DbContext
 
         base.OnModelCreating(modelBuilder);
     }
-    public async Task AddValues(IEnumerable<object> values)
+    
+        public async Task AddValues(IEnumerable<object> values)
     {
         object newValues = values.ToList();
         
@@ -160,6 +161,7 @@ public class ApplicationDbContext : DbContext
         await SaveChangesAsync();
         
     }
+
 
     private static ValueComparer<ICollection<string>> GetStringValueComparer()
     {

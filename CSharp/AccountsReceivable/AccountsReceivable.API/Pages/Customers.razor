@@ -1,18 +1,18 @@
 ﻿@page "/customers"
-@inherits DataGridPage<Customer>
+@inherits EditableDataGridPage<Customer>
 
 <div class="@(ShowBreadcrumb ? "d-block" : "d-none")">
-    <Breadcrumb Items="_breadcrumb"/>
+    <Breadcrumb Items="Breadcrumb"/>
 </div>
 <div class="d-flex flex-wrap mt-4">
     <div class="d-flex justify-start align-center">
-        <MudButton OnClick="@AddCustomer" Color="Color.Primary">Add Item</MudButton>
+        <MudButton OnClick="@AddRow" Color="Color.Primary">Add Item</MudButton>
     </div>
     <div class="d-flex justify-start align-center">
-        <MudButton OnClick="@RemoveCustomers" Color="Color.Secondary">@($"Remove Items ({_selectedCustomers.Count})")</MudButton>
+        <MudButton OnClick="@RemoveRows" Color="Color.Secondary">@($"Remove Items ({SelectedRows.Count})")</MudButton>
     </div>
     <div class="d-flex justify-start align-center">
-        <MudSwitch @bind-Checked="@_readOnly" Color="Color.Primary">@(_readOnly ? "Read Only Mode" : "Edit Mode")</MudSwitch>
+        <MudSwitch @bind-Checked="@ReadOnly" Color="Color.Primary">@(ReadOnly ? "Read Only Mode" : "Edit Mode")</MudSwitch>
         </div>
 </div>
 
@@ -20,9 +20,9 @@
     @ref="DataGrid" T="Customer" ServerData="@(new Func<GridState<Customer>, Task<GridData<Customer>>>(GridServerReload))"
     SortMode="SortMode.Multiple" Filterable="true" FilterMode="DataGridFilterMode.ColumnFilterMenu"
     RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc" SelectOnRowClick="false"
-    ReadOnly="@_readOnly"
+    ReadOnly="@ReadOnly"
     EditMode="DataGridEditMode.Cell" CommittedItemChanges="@CommittedRowChanges"
-    MultiSelection="true" SelectedItemsChanged="@SelectedItemsChanged"
+    MultiSelection="true" SelectedItemsChanged="@SelectedRowsChanged"
     Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 9.8rem)">
     <Columns>
         <SelectColumn T="Customer" ShowInFooter="false"/>
