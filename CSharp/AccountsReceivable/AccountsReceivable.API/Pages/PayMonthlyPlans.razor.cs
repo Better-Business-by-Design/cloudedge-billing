@@ -8,10 +8,10 @@ using MudBlazor;
 
 namespace AccountsReceivable.API.Pages;
 
-partial class PayMonthlyPlans : DataGridPage<PayMonthlyPlan>
+partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
 {
     
-    private readonly List<BreadcrumbItem> _breadcrumb = new()
+    protected override List<BreadcrumbItem> Breadcrumb { get; set; } = new()
     {
         new BreadcrumbItem("Home", ""),
         new BreadcrumbItem("Pay Monthly Plans", null, true)
@@ -130,9 +130,16 @@ partial class PayMonthlyPlans : DataGridPage<PayMonthlyPlan>
 
         return orderedQuery;
     }
-    
-    protected override void RowClicked(DataGridRowClickEventArgs<PayMonthlyPlan> args)
+    protected override void ReadOnlyRowClicked(DataGridRowClickEventArgs<PayMonthlyPlan> args)
     {
         Console.WriteLine("Pay Monthly Plan row clicked!");
+    }
+
+    protected override PayMonthlyPlan BuildNewDefaultRow()
+    {
+        return new PayMonthlyPlan()
+        {
+            PlanName = "New Plan"
+        };
     }
 }

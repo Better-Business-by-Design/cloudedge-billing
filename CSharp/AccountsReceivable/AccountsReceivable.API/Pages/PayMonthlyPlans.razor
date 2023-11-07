@@ -1,8 +1,8 @@
 ﻿@page "/plans"
-@inherits DataGridPage<PayMonthlyPlan>
+@inherits EditableDataGridPage<PayMonthlyPlan>
 
 <div class="@(ShowBreadcrumb ? "d-block" : "d-none")">
-    <Breadcrumb Items="_breadcrumb"/>
+    <Breadcrumb Items="Breadcrumb"/>
 </div>
 
 

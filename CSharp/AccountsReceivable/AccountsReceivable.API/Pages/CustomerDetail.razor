@@ -2,20 +2,10 @@
 @using AccountsReceivable.BAL.Data
 @using Microsoft.EntityFrameworkCore
 @using System.Linq.Expressions
-@inherits DataGridPage<LineItem>
+@inherits EditableDataGridPage<LineItem>
 
-<Breadcrumb Items="_breadcrumb"/>
-
-<div class="d-flex flex-wrap mt-4">
-    <div class="d-flex justify-start align-center">
-        <MudButton OnClick="@AddItem" Color="Color.Primary">Add Item</MudButton>
-    </div>
-    <div class="d-flex justify-start align-center">
-        <MudButton OnClick="@RemoveItems" Color="Color.Secondary">@($"Remove Items ({_selectedItems.Count})")</MudButton>
-    </div>
-    <div class="d-flex justify-start align-center">
-        <MudSwitch @bind-Checked="@_readOnly" Color="Color.Primary">@(_readOnly ? "Read Only Mode" : "Edit Mode")</MudSwitch>
-    </div>
+<div class="@(ShowBreadcrumb ? "d-block" : "d-none")">
+    <Breadcrumb Items="Breadcrumb"/>
 </div>
 
 <MudDataGrid
@@ -23,8 +13,8 @@
     SortMode="SortMode.Multiple" Filterable="true" FilterMode="DataGridFilterMode.ColumnFilterMenu"
     RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc"
     Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 9.8rem)"
-    ReadOnly="@_readOnly" EditMode="DataGridEditMode.Cell" CommittedItemChanges="@CommittedRowChanges" 
-    MultiSelection="true" SelectedItemsChanged="@SelectedItemsChanged"
+    ReadOnly="@ReadOnly" EditMode="DataGridEditMode.Cell" CommittedItemChanges="@CommittedRowChanges" 
+    MultiSelection="true" SelectedItemsChanged="@SelectedRowsChanged"
     >
     <Columns>
         <SelectColumn T="LineItem" ShowInFooter="false"/>
@@ -50,14 +40,10 @@
 
 
 @code {
-
-    private bool _readOnly = true;
     
     private Customer? _customer;
 
-    private HashSet<LineItem> _selectedItems = new();
-
-    private readonly List<BreadcrumbItem> _breadcrumb = new()
+    protected override List<BreadcrumbItem> Breadcrumb  { get; set; } = new()
     {
         new BreadcrumbItem("Home", ""),
         new BreadcrumbItem("Customers", "customers"),
@@ -66,9 +52,6 @@
     
     [Parameter]
     public string? Id { get; set; }
-
-    [Inject]
-    protected virtual IDialogService DialogService { get; set; } = default!;
 
     protected override IQueryable<LineItem> BuildFullQuery()
     {
@@ -189,33 +172,21 @@
         return orderedQuery;
     }
 
-    private async Task AddItem()
+
+    protected override void ReadOnlyRowClicked(DataGridRowClickEventArgs<LineItem> args)
     {
-        await DbContext.LineItems.AddAsync(new LineItem()
+        Console.WriteLine("Customer Detail Row Clicked");
+    }
+
+    protected override LineItem BuildNewDefaultRow()
+    {
+        return new LineItem()
         {
-            CustomerId = _customer?.Id ?? throw new NullReferenceException("Trying to add a line item to a null customer!")
-        });
-        await DbContext.SaveChangesAsync();
-        await DataGrid.ReloadServerData();
-    }
-
-    private async Task RemoveItems()
-    {
-        DbContext.LineItems.RemoveRange(_selectedItems);
-        _selectedItems = new HashSet<LineItem>();
-        
-        await DbContext.SaveChangesAsync();
-        await DataGrid.ReloadServerData();
-    }
-
-    private void SelectedItemsChanged(HashSet<LineItem> items)
-    {
-        _selectedItems = items;
-    }
-
-    protected async Task CommittedRowChanges(LineItem item)
-    {
-        await DbContext.SaveChangesAsync();
+            Customer = _customer,
+            CustomerName = _customer?.CustomerName ?? string.Empty,
+            CustomerId = _customer?.Id ?? 0,
+            Description = "New Line Item"
+        };
     }
 
 }

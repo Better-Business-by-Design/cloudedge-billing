@@ -62,7 +62,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<PayMonthlyPlan>(entity =>
         {
             entity.HasKey(plan => plan.PlanId);
-            entity.HasMany<Customer>(plan => plan.Customers)
+            entity.HasMany(plan => plan.Customers)
                 .WithOne(customer => customer.PayMonthlyPlan)
                 .OnDelete(DeleteBehavior.SetNull);
             entity.ToTable("pay_monthly_plans", "cloudedge");
