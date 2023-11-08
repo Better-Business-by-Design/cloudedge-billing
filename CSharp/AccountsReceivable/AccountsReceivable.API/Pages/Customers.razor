@@ -9,7 +9,7 @@
     @ref="DataGrid" T="Customer" ServerData="@(new Func<GridState<Customer>, Task<GridData<Customer>>>(GridServerReload))"
     SortMode="SortMode.Multiple" Filterable="true" FilterMode="DataGridFilterMode.ColumnFilterMenu"
     RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc" SelectOnRowClick="false"
-    ReadOnly="@ReadOnly" EditMode="DataGridEditMode.Cell" 
+    ReadOnly="@ReadOnly" EditMode="DataGridEditMode.Form" EditTrigger="DataGridEditTrigger.OnRowClick"
     StartedEditingItem="@StartedEditingRow" CanceledEditingItem="@CanceledEditingRow" CommittedItemChanges="@CommittedRowChanges"
     MultiSelection="true" SelectedItemsChanged="@SelectedRowsChanged" SelectedItems="@SelectedRows"
     Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 9.8rem)">

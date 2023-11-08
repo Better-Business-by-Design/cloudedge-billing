@@ -34,6 +34,11 @@ public class PayMonthlyPlan : IDataRow
     // ReSharper disable once CollectionNeverUpdated.Global
     public ICollection<Customer> Customers { get; set; } = new List<Customer>();
 
+    public object GetPrimaryKey()
+    {
+        return PlanId;
+    }
+    
     public override string ToString()
     {
         return PlanName;

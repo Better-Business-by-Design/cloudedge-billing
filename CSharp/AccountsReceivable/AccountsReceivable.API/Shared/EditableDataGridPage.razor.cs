@@ -1,16 +1,17 @@
 ﻿using AccountsReceivable.BL.Models.Application;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MudBlazor;
+using Newtonsoft.Json;
 
 namespace AccountsReceivable.API.Shared;
 
-public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T : IDataRow
+public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T : class, IDataRow
 {
 
     protected HashSet<T> SelectedRows = new();
     protected bool ReadOnly = true;
     protected Stack<IDataRowChange> CompletedChanges = new();
-    protected T? OriginalDataRow { get; set; }
-    
+    private IDataRow originalDataRow = null!;
 
     protected abstract List<BreadcrumbItem> Breadcrumb { get; set; }
     
@@ -23,7 +24,9 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
 
     protected virtual async Task AddRow()
     {
-        var change = new AddDataRowChange(BuildNewDefaultRow());
+        var row = BuildNewDefaultRow();
+        Console.WriteLine($"Row added: {System.Text.Json.JsonSerializer.Serialize(row)}");
+        var change = new AddDataRowChange(row);
         await change.ApplyChange(DbContext);
         CompletedChanges.Push(change);
         await DataGrid.ReloadServerData();
@@ -33,6 +36,7 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
 
     protected virtual async Task RemoveRows()
     {
+        Console.WriteLine($"Rows removed:\n {string.Join("\n",SelectedRows.Select(row => System.Text.Json.JsonSerializer.Serialize(row)))}");
         var change = new RemoveDataRowsChange(SelectedRows.Cast<IDataRow>());
         await change.ApplyChange(DbContext);
         
@@ -43,15 +47,18 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
     
     protected async Task CommittedRowChanges(T row)
     {
+        if (row is null) throw new ArgumentNullException(nameof(row), "Applying changes to row when it is null");
+        Console.WriteLine($"Row edit committed: {System.Text.Json.JsonSerializer.Serialize(row)}");
+        var entry = GetEntityEntry(row);
+        
         var change = new EditDataRowChange()
         {
-            OriginalDataRow = OriginalDataRow ?? throw new ArgumentNullException(nameof(OriginalDataRow),"Applying changes to row when original is null"),
-            CurrentDataRow = row
+            OriginalDataRow = (IDataRow) entry.OriginalValues.Clone().ToObject(),
+            DataRow = row,
         };
 
         await change.ApplyChange(DbContext);
         CompletedChanges.Push(change);
-        OriginalDataRow = default;
         await DataGrid.ReloadServerData();
     }
 
@@ -59,6 +66,7 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
     {
         if (CompletedChanges.TryPop(out var result))
         {
+            Console.WriteLine($"Reverting last change: {result}");
             await result.RevertChange(DbContext);
             await DataGrid.ReloadServerData();
         }
@@ -68,11 +76,50 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
     {
         Console.WriteLine($"Selected Rows Changed, Now: {string.Join(",", rows)}");
     }
-    
-    protected void StartedEditingRow(T row) { OriginalDataRow = row; }
 
-    protected void CanceledEditingRow(T row) { OriginalDataRow = default; } 
-    
+    protected void StartedEditingRow(T row)
+    {
+        Console.WriteLine($"Started editing row: {System.Text.Json.JsonSerializer.Serialize(row)}");
+        originalDataRow = (IDataRow) GetEntityEntry(row).GetDatabaseValues().ToObject();
+    }
+
+    protected void CanceledEditingRow(T row)
+    {
+        Console.WriteLine($"Canceled editing row: {System.Text.Json.JsonSerializer.Serialize(row)}");
+    }
+
+    private EntityEntry<T> GetEntityEntry(T row)
+    {
+        EntityEntry<T>? entityEntry = null;
+        InvalidOperationException? invalidOperationException = null;
+        for (var i = 0; i < 2; i++)
+        {
+            try
+            {
+                entityEntry = DbContext.Entry(row);
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine($"Received InvalidOperationException ({e.Message}), trying again.");
+                invalidOperationException = e;
+            }
+        }
+
+        if (entityEntry is null)
+        {
+            if (invalidOperationException is not null)
+            {
+                throw invalidOperationException;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(invalidOperationException),
+                    "Attempting to access entity entry failed without throwing an InvalidOperationException??");
+            }
+        }
+
+        return entityEntry;
+    }
     
     
 }

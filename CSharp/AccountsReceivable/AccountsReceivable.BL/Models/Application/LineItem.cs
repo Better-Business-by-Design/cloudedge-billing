@@ -34,6 +34,11 @@ public class LineItem : IDataRow
         return Description;
     }
 
+    public object GetPrimaryKey()
+    {
+        return Id;
+    }
+
     public override bool Equals(object? obj)
     {
         if (obj is null) return false;

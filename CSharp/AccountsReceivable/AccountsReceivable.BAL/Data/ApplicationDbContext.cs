@@ -1,5 +1,6 @@
 ﻿using AccountsReceivable.BL.Models.Application;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace AccountsReceivable.BAL.Data;
 
@@ -172,27 +173,37 @@ public class ApplicationDbContext : DbContext
         await SaveChangesAsync();
     }
 
-    public async Task EditValue(IDataRow value)
+    public async Task EditValue(IDataRow value,IDataRow newValue)
     {
-        switch (value)
+        var results = 0;
+        switch (newValue)
         {
-            case Customer c:
-                Customers.Update(c);
+            case Customer customer:
+                Entry(value).CurrentValues.SetValues(customer);
+                results = await Customers.Where(c => c.Id == ((Customer)value).Id).ExecuteUpdateAsync(
+                    setters => setters
+                        .SetProperty(c => c.ParentName, customer.ParentName)
+                        .SetProperty(c => c.CustomerName, customer.CustomerName)
+                        .SetProperty(c => c.DomainUuid, customer.DomainUuid)
+                        .SetProperty(c => c.InvoiceName, customer.InvoiceName)
+                        .SetProperty(c => c.PayMonthlyPlanId, customer.PayMonthlyPlanId)
+                        .SetProperty(c => c.IsActive, customer.IsActive)
+                        .SetProperty(c => c.Location, customer.Location)
+                    );
                 break;
             case LineItem l:
-                LineItems.Update(l);
+                //LineItems.Update(l).CurrentValues.SetValues(newValues);
                 break;
             case PayMonthlyPlan p :
-                PayMonthlyPlans.Update(p);
+                //PayMonthlyPlans.Update(p).CurrentValues.SetValues(newValues);
                 break;
             case null:
                 throw new ArgumentNullException(nameof(value), "Tried to update null value in dataset");
             default:
-                throw new NotImplementedException($"{value.GetType()} not implemented in EditValue");
+                throw new NotImplementedException($"{newValue.GetType()} not implemented in EditValue");
         }
-
-        await SaveChangesAsync();
         
+        Console.WriteLine($"{results} changes saved to database.");
     }
 
 

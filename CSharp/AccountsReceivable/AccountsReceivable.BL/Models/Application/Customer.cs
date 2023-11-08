@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable PropertyCanBeMadeInitOnly.Global
 
@@ -37,7 +39,7 @@ public class Customer : IDataRow
 
     // ReSharper disable once CollectionNeverUpdated.Global
     public ICollection<LineItem> LineItems { get; set; } = new List<LineItem>();
-
+    
     public override string ToString()
     {
         return Id.ToString();
