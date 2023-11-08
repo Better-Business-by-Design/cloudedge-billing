@@ -191,11 +191,29 @@ public class ApplicationDbContext : DbContext
                         .SetProperty(c => c.Location, customer.Location)
                     );
                 break;
-            case LineItem l:
-                //LineItems.Update(l).CurrentValues.SetValues(newValues);
+            case LineItem lineItem:
+                Entry(value).CurrentValues.SetValues(lineItem);
+                results = await LineItems.Where(l => l.Id == ((LineItem)value).Id).ExecuteUpdateAsync(
+                    setters => setters
+                        .SetProperty(l => l.CustomerId, lineItem.CustomerId)
+                        .SetProperty(l => l.Description, lineItem.Description)
+                        .SetProperty(l => l.Quantity, lineItem.Quantity)
+                        .SetProperty(l => l.UnitPrice, lineItem.UnitPrice)
+                        .SetProperty(l => l.Discount, lineItem.Discount)
+                );
                 break;
-            case PayMonthlyPlan p :
-                //PayMonthlyPlans.Update(p).CurrentValues.SetValues(newValues);
+            case PayMonthlyPlan payMonthlyPlan :
+                Entry(value).CurrentValues.SetValues(payMonthlyPlan);
+                results = await PayMonthlyPlans.Where(p => p.PlanId == ((PayMonthlyPlan)value).PlanId)
+                    .ExecuteUpdateAsync(
+                        setters => setters
+                            .SetProperty(p => p.PlanName, payMonthlyPlan.PlanName)
+                            .SetProperty(p => p.LocalSize, payMonthlyPlan.LocalSize)
+                            .SetProperty(p => p.NationalSize, payMonthlyPlan.NationalSize)
+                            .SetProperty(p => p.MobileSize, payMonthlyPlan.MobileSize)
+                            .SetProperty(p => p.Price, payMonthlyPlan.Price)
+                            .SetProperty(p => p.MinPrice, payMonthlyPlan.MinPrice)
+                        );
                 break;
             case null:
                 throw new ArgumentNullException(nameof(value), "Tried to update null value in dataset");
