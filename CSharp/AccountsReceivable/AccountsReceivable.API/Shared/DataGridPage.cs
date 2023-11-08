@@ -1,6 +1,5 @@
 using System.Linq.Expressions;
 using AccountsReceivable.BAL.Data;
-using AccountsReceivable.BL.Models.Enum;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
@@ -10,7 +9,7 @@ namespace AccountsReceivable.API.Shared;
 public abstract class DataGridPage<T> : ComponentBase
 {
     protected MudDataGrid<T> DataGrid = null!;
-    public int TotalItems;
+    protected int TotalItems;
     
     [Inject]
     protected virtual ApplicationDbContext DbContext { get; set; } = default!;

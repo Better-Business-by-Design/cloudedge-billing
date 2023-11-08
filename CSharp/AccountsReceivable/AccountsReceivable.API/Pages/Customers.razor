@@ -1,28 +1,17 @@
 ﻿@page "/customers"
 @inherits EditableDataGridPage<Customer>
 
-<div class="@(ShowBreadcrumb ? "d-block" : "d-none")">
-    <Breadcrumb Items="Breadcrumb"/>
-</div>
-<div class="d-flex flex-wrap mt-4">
-    <div class="d-flex justify-start align-center">
-        <MudButton OnClick="@AddRow" Color="Color.Primary">Add Item</MudButton>
-    </div>
-    <div class="d-flex justify-start align-center">
-        <MudButton OnClick="@RemoveRows" Color="Color.Secondary">@($"Remove Items ({SelectedRows.Count})")</MudButton>
-    </div>
-    <div class="d-flex justify-start align-center">
-        <MudSwitch @bind-Checked="@ReadOnly" Color="Color.Primary">@(ReadOnly ? "Read Only Mode" : "Edit Mode")</MudSwitch>
-        </div>
-</div>
+@{
+    base.BuildRenderTree(__builder);
+}
 
 <MudDataGrid
     @ref="DataGrid" T="Customer" ServerData="@(new Func<GridState<Customer>, Task<GridData<Customer>>>(GridServerReload))"
     SortMode="SortMode.Multiple" Filterable="true" FilterMode="DataGridFilterMode.ColumnFilterMenu"
     RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc" SelectOnRowClick="false"
-    ReadOnly="@ReadOnly"
-    EditMode="DataGridEditMode.Cell" CommittedItemChanges="@CommittedRowChanges"
-    MultiSelection="true" SelectedItemsChanged="@SelectedRowsChanged"
+    ReadOnly="@ReadOnly" EditMode="DataGridEditMode.Cell" 
+    StartedEditingItem="@StartedEditingRow" CanceledEditingItem="@CanceledEditingRow" CommittedItemChanges="@CommittedRowChanges"
+    MultiSelection="true" SelectedItemsChanged="@SelectedRowsChanged" SelectedItems="@SelectedRows"
     Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 9.8rem)">
     <Columns>
         <SelectColumn T="Customer" ShowInFooter="false"/>

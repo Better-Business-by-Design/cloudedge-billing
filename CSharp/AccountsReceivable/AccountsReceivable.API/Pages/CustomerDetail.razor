@@ -1,6 +1,4 @@
 @page "/customers/{Id}"
-@using AccountsReceivable.BAL.Data
-@using Microsoft.EntityFrameworkCore
 @using System.Linq.Expressions
 @inherits EditableDataGridPage<LineItem>
 
@@ -19,13 +17,10 @@
     <Columns>
         <SelectColumn T="LineItem" ShowInFooter="false"/>
         <PropertyColumn Property="@(x => x.Id)" Title="ID" IsEditable="false"/>
-        <PropertyColumn Property="@(x => x.CustomerName)" Title="Customer Name"/>
         <PropertyColumn Property="@(x => x.Description)" Title="Description"/>
         <PropertyColumn Property="@(x => x.Quantity)" Title="Quantity" Required="false"/>
         <PropertyColumn Property="@(x => x.UnitPrice)" Title="UnitPrice" Required="false"/>
         <PropertyColumn Property="@(x => x.Discount)" Title="Discount" Required="false"/>
-        <PropertyColumn Property="@(x => x.Account)" Title="Account" Required="false"/>
-        <PropertyColumn Property="@(x => x.Business)" Title="Business" Required="false"/>
     </Columns>
      <NoRecordsContent>
          <MudText>No matching line items found</MudText>
@@ -86,10 +81,7 @@
                 
                 Expression<Func<LineItem, string>> selectPredicate = filterDefinition.Title switch
                 {
-                    "Customer Name" => item => item.CustomerName ?? string.Empty,
-                    "Description" => item => item.Description ?? string.Empty,
-                    "Account" => item => item.Account ?? string.Empty,
-                    "Business" => item => item.Business ?? string.Empty,
+                    "Description" => item => item.Description,
                     _ => throw new NotImplementedException($"{filterDefinition.Title} not implemented in string filters.")
                 };
 
@@ -118,9 +110,9 @@
                 Expression<Func<LineItem, decimal>> selectPredicate = filterDefinition.Title switch
                 {
                     "ID" => item => item.Id,
-                    "Quantity" => item => Convert.ToDecimal(item.Quantity ?? 0),
-                    "Unit Price" => item => item.UnitPrice ?? 0,
-                    "Discount" => item => item.Discount ?? 0,
+                    "Quantity" => item => Convert.ToDecimal(item.Quantity),
+                    "Unit Price" => item => item.UnitPrice,
+                    "Discount" => item => item.Discount,
                     _ => throw new NotImplementedException($"{filterDefinition.Title} not implemented in decimal filters.")
                 };
 
@@ -153,13 +145,10 @@
             Expression<Func<LineItem, object>> keySelector = sortDefinition.SortBy switch
             {
                 "Id" => item => item.Id,
-                "CustomerName" => item => item.CustomerName ?? string.Empty,
-                "Description" => item => item.Description ?? string.Empty,
-                "Quantity" => item => item.Quantity ?? 0,
-                "UnitPrice" => item => item.UnitPrice ?? 0, 
-                "Discount" => item => item.Discount ?? 0,
-                "Account" => item => item.Account ?? string.Empty,
-                "Business" => item => item.Business ?? string.Empty,
+                "Description" => item => item.Description,
+                "Quantity" => item => item.Quantity,
+                "UnitPrice" => item => item.UnitPrice, 
+                "Discount" => item => item.Discount,
                 _ => throw new NotImplementedException(
                     $"Sorting not implemented for {sortDefinition.SortBy} column in Line Items table.")
                 };
@@ -180,12 +169,16 @@
 
     protected override LineItem BuildNewDefaultRow()
     {
+        var customer = _customer ?? throw new ArgumentNullException(nameof(_customer), "Unable to add new line item to null customer.");
+        
         return new LineItem()
         {
-            Customer = _customer,
-            CustomerName = _customer?.CustomerName ?? string.Empty,
-            CustomerId = _customer?.Id ?? 0,
-            Description = "New Line Item"
+            CustomerId = customer.Id,
+            Customer = customer,
+            Description = "New Line Item",
+            Quantity = 0,
+            UnitPrice = 0,
+            Discount = 0
         };
     }
 

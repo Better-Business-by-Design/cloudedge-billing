@@ -10,10 +10,8 @@ namespace AccountsReceivable.API.Pages;
 
 partial class Customers : EditableDataGridPage<Customer>
 {
-
-    private HashSet<Customer> _selectedCustomers = new();
+    
     private List<PayMonthlyPlan> _payMonthlyPlans = new();
-    private bool _readOnly = true;
     
     protected override List<BreadcrumbItem> Breadcrumb { get; set; } = new()
     {
@@ -25,7 +23,6 @@ partial class Customers : EditableDataGridPage<Customer>
     {
         _payMonthlyPlans = DbContext.PayMonthlyPlans.ToList();
         return DbContext.Customers
-            .AsNoTracking()
             .Include(customer => customer.PayMonthlyPlan);
     }
     
@@ -55,7 +52,7 @@ partial class Customers : EditableDataGridPage<Customer>
                 {
                     "Parent Name" => customer => customer.ParentName,
                     "Customer Name" => customer => customer.CustomerName ?? string.Empty,
-                    "Invoice Name" => customer => customer.InvoiceName ?? string.Empty,
+                    "Invoice Name" => customer => customer.InvoiceName,
                     "Plan Name" => customer => customer.PayMonthlyPlan != null ? customer.PayMonthlyPlan.PlanName : string.Empty, 
                     "Location" => customer => customer.Location ?? string.Empty,
                     _ => throw new NotImplementedException()
@@ -139,7 +136,7 @@ partial class Customers : EditableDataGridPage<Customer>
                 "ParentName" => customer => customer.ParentName,
                 "CustomerName" => customer => customer.CustomerName ?? string.Empty,
                 "DomainUuid" => customer => customer.DomainUuid ?? Guid.Empty,
-                "InvoiceName" => customer => customer.InvoiceName ?? string.Empty,
+                "InvoiceName" => customer => customer.InvoiceName,
                 "PayMonthlyPlan.PlanName" => customer => customer.PayMonthlyPlan != null ? customer.PayMonthlyPlan.PlanName : string.Empty, 
                 "IsActive" => customer => customer.IsActive,
                 "Location" => customer => customer.Location ?? string.Empty,
@@ -164,7 +161,15 @@ partial class Customers : EditableDataGridPage<Customer>
     {
         return new Customer
         {
-            CustomerName = "New Customer"
+            ParentName = "New Parent Name",
+            CustomerName = "New Customer Name",
+            LineItems = new List<LineItem>(),
+            IsActive = true,
+            InvoiceName = "New Invoice Name",
+            Location = "New Location",
+            DomainUuid = null,
+            PayMonthlyPlan = null,
+            PayMonthlyPlanId = null
         };
     }
     

@@ -1,7 +1,5 @@
 ﻿using AccountsReceivable.BL.Models.Application;
-using AccountsReceivable.BL.Models.Enum;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace AccountsReceivable.BAL.Data;
 
@@ -30,132 +28,167 @@ public class ApplicationDbContext : DbContext
             property.SetScale(3);
         }
 
-        #region Account
-
-        #endregion
+        // #region Account
+        //
+        // #endregion
 
         #region Application
 
         modelBuilder.Entity<Customer>(entity =>
             {
-                entity.HasKey(customer => customer.Id);
-                entity.Property(customer => customer.Id).ValueGeneratedOnAdd();
-                
-                entity.Property(customer => customer.HasCustomRates)
-                    .HasConversion(
-                        v => v == true ? "Y" : "N",
-                        v => v.ToUpper().Equals("Y"));
-                entity.Property(customer => customer.HasCustomPackage)
-                    .HasConversion(
-                        v => v == true ? "Y" : "N", 
-                        v => v.ToUpper().Equals("Y"));
-                
+                entity.HasKey(customer => customer.Id).HasName("PK_Customer");
                 
                 entity.HasOne<PayMonthlyPlan>(customer => customer.PayMonthlyPlan)
                     .WithMany(plan => plan.Customers)
-                    .HasForeignKey(customer => customer.PayMonthlyPlanId)
-                    .OnDelete(DeleteBehavior.SetNull);
+                    .HasForeignKey(customer => customer.PayMonthlyPlanId).HasConstraintName("FK_Customer")
+                    .OnDelete(DeleteBehavior.SetNull)
+                    .IsRequired(false);
                 
                 entity.ToTable("customers", "cloudedge");
             });
 
         modelBuilder.Entity<PayMonthlyPlan>(entity =>
         {
-            entity.HasKey(plan => plan.PlanId);
+            entity.HasKey(plan => plan.PlanId).HasName("pay_monthly_plans_PK");
+            
             entity.HasMany(plan => plan.Customers)
                 .WithOne(customer => customer.PayMonthlyPlan)
-                .OnDelete(DeleteBehavior.SetNull);
+                .HasForeignKey(customer => customer.PayMonthlyPlanId).HasConstraintName("FK_Customer")
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
+            
             entity.ToTable("pay_monthly_plans", "cloudedge");
         });
 
         modelBuilder.Entity<LineItem>(entity =>
         {
-            entity.HasKey(item => item.Id);
-            entity.Property(item => item.Id).ValueGeneratedOnAdd();
-            
+            entity.HasKey(item => item.Id).HasName("PK_line_items");
+
             entity.HasOne<Customer>(item => item.Customer)
                 .WithMany(customer => customer.LineItems)
-                .HasForeignKey(item => item.CustomerId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .HasForeignKey(item => item.CustomerId).HasConstraintName("line_items_FK")
+                .OnDelete(DeleteBehavior.Cascade);
             
             entity.ToTable("line_items", "cloudedge");
         });
 
         #endregion
 
-        #region Enum
-
-        #endregion
+        // #region Enum
+        //
+        // #endregion
 
         base.OnModelCreating(modelBuilder);
     }
+
+    public async Task AddValue(IDataRow value)
+    {
+        switch (value)
+        {
+            case Customer c:
+                await Customers.AddAsync(c);
+                break;
+            case LineItem l:
+                await LineItems.AddAsync(l);
+                break;
+            case PayMonthlyPlan p:
+                await PayMonthlyPlans.AddAsync(p);
+                break;
+            case null:
+                throw new ArgumentNullException(nameof(value), "Tried to add null value to dataset");
+            default:
+                throw new NotImplementedException($"{value.GetType()} Not implemented in Add Values");
+        }
+        await SaveChangesAsync();
+    }
+
+    public async Task AddValues(IEnumerable<IDataRow> values)
+    {
+        var addValues = new List<IDataRow>(values);
+        if (!addValues.Any()) return;
+        
+        switch (addValues.First())
+        {
+            case Customer _:
+                await Customers.AddRangeAsync(addValues.Cast<Customer>());
+                break;
+            case LineItem _:
+                await LineItems.AddRangeAsync(addValues.Cast<LineItem>());
+                break;
+            case PayMonthlyPlan _:
+                await PayMonthlyPlans.AddRangeAsync(addValues.Cast<PayMonthlyPlan>());
+                break;
+            case null:
+                throw new ArgumentNullException(nameof(addValues), "Tried to add null values to dataset");
+            default:
+                throw new NotImplementedException($"{addValues.First().GetType()} Not implemented in Add Values");
+        }
+        await SaveChangesAsync();
+    }
+
+    public async Task RemoveValue(IDataRow value)
+    {
+        switch (value)
+        {
+            case Customer c:
+                Customers.Remove(c);
+                break;
+            case LineItem l:
+                LineItems.Remove(l);
+                break;
+            case PayMonthlyPlan p:
+                PayMonthlyPlans.Remove(p);
+                break;
+            case null:
+                throw new ArgumentNullException(nameof(value), "Tried to remove null value from dataset");
+            default:
+                throw new NotImplementedException($"{value.GetType()} Not implemented in Remove Value");
+        }
+        await SaveChangesAsync();
+    }
     
-        public async Task AddValues(IEnumerable<object> values)
+    public async Task RemoveValues(IEnumerable<IDataRow> values)
     {
-        object newValues = values.ToList();
+
+        var removeValues = new List<IDataRow>(values);
+        if (!removeValues.Any()) return;
         
-        switch (newValues)
-        {
-            case List<Customer> customers:
-                await Customers.AddRangeAsync(customers);
-                break;
-            case List<LineItem> lineItems:
-                await LineItems.AddRangeAsync(lineItems);
-                break;
-            case List<PayMonthlyPlan> payMonthlyPlans:
-                await PayMonthlyPlans.AddRangeAsync(payMonthlyPlans);
-                break;
-            case null:
-                throw new ArgumentNullException(nameof(newValues), "Tried to add null value(s) to dataset");
-            default:
-                throw new NotImplementedException($"{newValues.GetType()} Not implemented in Add Values");
-        }
-        
+        switch (removeValues.First())
+            {
+                case Customer _:
+                    Customers.RemoveRange(removeValues.Cast<Customer>());
+                    break;
+                case LineItem _:
+                    LineItems.RemoveRange(removeValues.Cast<LineItem>());
+                    break;
+                case PayMonthlyPlan _:
+                    PayMonthlyPlans.RemoveRange(removeValues.Cast<PayMonthlyPlan>());
+                    break;
+                case null:
+                    throw new ArgumentNullException(nameof(removeValues), "Tried to remove null value from dataset");
+                default:
+                    throw new NotImplementedException($"{removeValues.First().GetType()} Not implemented in Remove Values");
+            }
         await SaveChangesAsync();
     }
 
-    public async Task RemoveValues(IEnumerable<object> values)
+    public async Task EditValue(IDataRow value)
     {
-        object oldValues = values.ToList();
-
-        switch (oldValues)
+        switch (value)
         {
-            case List<Customer> customers:
-                Customers.RemoveRange(customers);
+            case Customer c:
+                Customers.Update(c);
                 break;
-            case List<LineItem> lineItems:
-                LineItems.RemoveRange(lineItems);
+            case LineItem l:
+                LineItems.Update(l);
                 break;
-            case List<PayMonthlyPlan> payMonthlyPlans:
-                PayMonthlyPlans.RemoveRange(payMonthlyPlans);
+            case PayMonthlyPlan p :
+                PayMonthlyPlans.Update(p);
                 break;
             case null:
-                throw new ArgumentNullException(nameof(oldValues), "Tried to remove null values from dataset");
+                throw new ArgumentNullException(nameof(value), "Tried to update null value in dataset");
             default:
-                throw new NotImplementedException($"{oldValues.GetType()} Not implemented in Remove Values");
-        }
-
-        await SaveChangesAsync();
-    }
-
-    public async Task EditValues(IEnumerable<object> values)
-    {
-        object newValues = values.ToList();
-        switch (newValues)
-        {
-            case List<Customer> customers:
-                Customers.UpdateRange(customers);
-                break;
-            case List<LineItem> lineItems:
-                LineItems.UpdateRange(lineItems);
-                break;
-            case List<PayMonthlyPlan> payMonthlyPlans :
-                PayMonthlyPlans.UpdateRange(payMonthlyPlans);
-                break;
-            case null:
-                throw new ArgumentNullException(nameof(newValues), "Tried to update null values in dataset");
-            default:
-                throw new NotImplementedException($"{newValues.GetType()} not implemented in EditValue");
+                throw new NotImplementedException($"{value.GetType()} not implemented in EditValue");
         }
 
         await SaveChangesAsync();
@@ -163,11 +196,11 @@ public class ApplicationDbContext : DbContext
     }
 
 
-    private static ValueComparer<ICollection<string>> GetStringValueComparer()
-    {
-        return new ValueComparer<ICollection<string>>(
-            (collection1, collection2) => collection1!.SequenceEqual(collection2!),
-            collection => collection.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-            collection => collection.ToList());
-    }
+    // private static ValueComparer<ICollection<string>> GetStringValueComparer()
+    // {
+    //     return new ValueComparer<ICollection<string>>(
+    //         (collection1, collection2) => collection1!.SequenceEqual(collection2!),
+    //         collection => collection.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+    //         collection => collection.ToList());
+    // }
 }

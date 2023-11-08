@@ -1,8 +1,6 @@
 ﻿using System.Linq.Expressions;
 using AccountsReceivable.API.Shared;
 using AccountsReceivable.BL.Models.Application;
-using AccountsReceivable.BL.Models.Enum;
-using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 
@@ -19,8 +17,7 @@ partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
 
     protected override IQueryable<PayMonthlyPlan> BuildFullQuery()
     {
-        return DbContext.PayMonthlyPlans
-            .AsNoTracking();
+        return DbContext.PayMonthlyPlans;
     }
     
     protected override IQueryable<PayMonthlyPlan> FilterFullQuery(
@@ -73,13 +70,15 @@ partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
             else if (filterDefinition.FieldType.IsNumber)
             {
                 var value = Convert.ToDecimal(filterDefinition.Value ?? 0);
+                
                 Expression<Func<PayMonthlyPlan, decimal>> selectPredicate = filterDefinition.Title switch
                 {
                     "ID" => plan => plan.PlanId,
                     "Local Size" => plan => Convert.ToDecimal(plan.LocalSize ?? 0),
                     "National Size" => plan => Convert.ToDecimal(plan.NationalSize ?? 0),
                     "Mobile Size" => plan => Convert.ToDecimal(plan.MobileSize ?? 0),
-                    "Price" => plan => Convert.ToDecimal(plan.Price ?? 0),
+                    "Price" => plan => plan.Price,
+                    "Min Price" => plan => plan.MinPrice ?? 0m,
                     _ => throw new NotImplementedException()
                 };
 
@@ -118,7 +117,8 @@ partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
                 "LocalSize" => plan => plan.LocalSize ?? 0,
                 "NationalSize" => plan => plan.NationalSize ?? 0,
                 "MobileSize" => plan => plan.MobileSize ?? 0,
-                "Price" => plan => plan.Price ?? 0,
+                "Price" => plan => plan.Price,
+                "Min Price" => plan => plan.MinPrice ?? 0,
                 _ => throw new NotImplementedException(
                     $"Sorting not implemented for {sortDefinition.SortBy} column in PayMonthlyPlans table.")
             };
@@ -139,7 +139,14 @@ partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
     {
         return new PayMonthlyPlan()
         {
-            PlanName = "New Plan"
+            // PlanId auto-generates (hopefully)
+            PlanName = "New Plan",
+            // Local Size is nullable
+            // National Size is nullable
+            // MobileSize is nullable
+            Price = 0m,
+            // MinPrice is Nullable
+            Customers = new List<Customer>()
         };
     }
 }
