@@ -1,17 +1,20 @@
 ﻿@page "/plans"
 @inherits EditableDataGridPage<PayMonthlyPlan>
 
-<div class="@(ShowBreadcrumb ? "d-block" : "d-none")">
-    <Breadcrumb Items="Breadcrumb"/>
-</div>
-
+@{
+    base.BuildRenderTree(__builder);
+}
 
 <MudDataGrid
     @ref="DataGrid" T="PayMonthlyPlan" ServerData="@(new Func<GridState<PayMonthlyPlan>, Task<GridData<PayMonthlyPlan>>>(GridServerReload))"
     SortMode="SortMode.Multiple" Filterable="true" FilterMode="DataGridFilterMode.ColumnFilterMenu"
-    RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc"
+    RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc" SelectOnRowClick="false"
+    ReadOnly="@ReadOnly" EditMode="DataGridEditMode.Cell"
+    CommittedItemChanges="@CommittedRowChanges"
+    MultiSelection="true" SelectedItemsChanged="@SelectedRowsChanged" SelectedItems="@SelectedRows"
     Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 9.8rem)">
     <Columns>
+        <SelectColumn T="PayMonthlyPlan" ShowInFooter="false"/>
         <PropertyColumn Property="@(x => x.PlanId)" Title="ID"/>
         <PropertyColumn Property="@(x => x.PlanName)" Title="Name"/>
         <PropertyColumn Property="@(x => x.LocalSize)" Title="Local Size"/>

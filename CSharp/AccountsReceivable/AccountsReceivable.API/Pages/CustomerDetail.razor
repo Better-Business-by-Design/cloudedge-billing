@@ -2,17 +2,18 @@
 @using System.Linq.Expressions
 @inherits EditableDataGridPage<LineItem>
 
-<div class="@(ShowBreadcrumb ? "d-block" : "d-none")">
-    <Breadcrumb Items="Breadcrumb"/>
-</div>
+@{
+    base.BuildRenderTree(__builder);
+}
 
 <MudDataGrid
     @ref="DataGrid" T="LineItem" ServerData="@(new Func<GridState<LineItem>, Task<GridData<LineItem>>>(GridServerReload))"
     SortMode="SortMode.Multiple" Filterable="true" FilterMode="DataGridFilterMode.ColumnFilterMenu"
     RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc"
+    ReadOnly="@ReadOnly" EditMode="DataGridEditMode.Cell"
+    CommittedItemChanges="@CommittedRowChanges"
+    MultiSelection="true" SelectedItemsChanged="@SelectedRowsChanged" SelectedItems="@SelectedRows"
     Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 9.8rem)"
-    ReadOnly="@ReadOnly" EditMode="DataGridEditMode.Cell" CommittedItemChanges="@CommittedRowChanges" 
-    MultiSelection="true" SelectedItemsChanged="@SelectedRowsChanged"
     >
     <Columns>
         <SelectColumn T="LineItem" ShowInFooter="false"/>

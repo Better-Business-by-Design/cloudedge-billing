@@ -11,7 +11,6 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
     protected HashSet<T> SelectedRows = new();
     protected bool ReadOnly = true;
     protected Stack<IDataRowChange> CompletedChanges = new();
-    private IDataRow originalDataRow = null!;
 
     protected abstract List<BreadcrumbItem> Breadcrumb { get; set; }
     
@@ -75,17 +74,6 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
     protected void SelectedRowsChanged(HashSet<T> rows)
     {
         Console.WriteLine($"Selected Rows Changed, Now: {string.Join(",", rows)}");
-    }
-
-    protected void StartedEditingRow(T row)
-    {
-        Console.WriteLine($"Started editing row: {System.Text.Json.JsonSerializer.Serialize(row)}");
-        originalDataRow = (IDataRow) GetEntityEntry(row).GetDatabaseValues().ToObject();
-    }
-
-    protected void CanceledEditingRow(T row)
-    {
-        Console.WriteLine($"Canceled editing row: {System.Text.Json.JsonSerializer.Serialize(row)}");
     }
 
     private EntityEntry<T> GetEntityEntry(T row)
