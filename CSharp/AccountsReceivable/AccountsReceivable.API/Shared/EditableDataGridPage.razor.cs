@@ -1,4 +1,5 @@
 ﻿using AccountsReceivable.BL.Models.Application;
+using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MudBlazor;
 using Newtonsoft.Json;
@@ -8,6 +9,8 @@ namespace AccountsReceivable.API.Shared;
 public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T : class, IDataRow
 {
 
+    [Parameter] public bool Editable { get; set; } = true;
+    
     protected HashSet<T> SelectedRows = new();
     protected bool ReadOnly = true;
     protected Stack<IDataRowChange> CompletedChanges = new();
