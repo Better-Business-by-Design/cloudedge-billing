@@ -14,8 +14,6 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
     protected HashSet<T> SelectedRows = new();
     protected bool ReadOnly = true;
     protected Stack<IDataRowChange> CompletedChanges = new();
-
-    protected abstract List<BreadcrumbItem> Breadcrumb { get; set; }
     
     protected override void RowClicked(DataGridRowClickEventArgs<T> args)
     {

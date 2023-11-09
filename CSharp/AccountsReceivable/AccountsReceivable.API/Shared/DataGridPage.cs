@@ -10,6 +10,7 @@ public abstract class DataGridPage<T> : ComponentBase
 {
     protected MudDataGrid<T> DataGrid = null!;
     protected int TotalItems;
+    protected abstract List<BreadcrumbItem> Breadcrumb { get; set; }
     
     [Inject]
     protected virtual ApplicationDbContext DbContext { get; set; } = default!;
