@@ -24,20 +24,20 @@ public class PayMonthlyPlan : IDataRow
     [Column("mobile_size")]
     public int? MobileSize { get; set; }
     
+    [Column("international_size")]
+    public int? InternationalSize { get; set; }
+    
+    [Column("toll_free_landline_size")]
+    public int? TollFreeLandlineSize { get; set; }
+    
+    [Column("toll_free_mobile_size")]
+    public int? TollFreeMobileSize { get; set; }
+    
     [Column("price")]
     public decimal Price { get; set; }
     
     [Column("min_price")]
     public decimal? MinPrice { get; set; }
-
-    [JsonIgnore]
-    // ReSharper disable once CollectionNeverUpdated.Global
-    public ICollection<Customer> Customers { get; set; } = new List<Customer>();
-
-    public object GetPrimaryKey()
-    {
-        return PlanId;
-    }
     
     public override string ToString()
     {

@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
 using AccountsReceivable.API.Shared;
 using AccountsReceivable.BL.Models.Application;
-using AccountsReceivable.BL.Models.Enum;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
@@ -50,9 +49,9 @@ partial class Customers : EditableDataGridPage<Customer>
                 
                 Expression<Func<Customer, string>> selectPredicate = filterDefinition.Title switch
                 {
-                    "Parent Name" => customer => customer.ParentName,
-                    "Customer Name" => customer => customer.CustomerName ?? string.Empty,
-                    "Invoice Name" => customer => customer.InvoiceName,
+                    "Customer Name" => customer => customer.CustomerName,
+                    "Domain Name" => customer => customer.DomainName ?? string.Empty,
+                    "Xero Contact Name" => customer => customer.XeroContactName,
                     "Plan Name" => customer => customer.PayMonthlyPlan != null ? customer.PayMonthlyPlan.PlanName : string.Empty, 
                     "Location" => customer => customer.Location ?? string.Empty,
                     _ => throw new NotImplementedException()
@@ -133,10 +132,10 @@ partial class Customers : EditableDataGridPage<Customer>
             Expression<Func<Customer, object>> keySelector = sortDefinition.SortBy switch
             {
                 "Id" => customer => customer.Id,
-                "ParentName" => customer => customer.ParentName,
-                "CustomerName" => customer => customer.CustomerName ?? string.Empty,
+                "CustomerName" => customer => customer.CustomerName,
+                "DomainName" => customer => customer.DomainName ?? string.Empty,
                 "DomainUuid" => customer => customer.DomainUuid ?? Guid.Empty,
-                "InvoiceName" => customer => customer.InvoiceName,
+                "XeroContactName" => customer => customer.XeroContactName,
                 "PayMonthlyPlan.PlanName" => customer => customer.PayMonthlyPlan != null ? customer.PayMonthlyPlan.PlanName : string.Empty, 
                 "IsActive" => customer => customer.IsActive,
                 "Location" => customer => customer.Location ?? string.Empty,

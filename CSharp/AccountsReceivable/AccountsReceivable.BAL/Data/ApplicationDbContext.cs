@@ -39,38 +39,21 @@ public class ApplicationDbContext : DbContext
             {
                 entity.HasKey(customer => customer.Id).HasName("PK_Customer");
                 
-                entity.HasOne<PayMonthlyPlan>(customer => customer.PayMonthlyPlan)
-                    .WithMany(plan => plan.Customers)
-                    .HasForeignKey(customer => customer.PayMonthlyPlanId).HasConstraintName("FK_Customer")
-                    .OnDelete(DeleteBehavior.SetNull)
-                    .IsRequired(false);
-                
-                entity.ToTable("customers", "cloudedge");
+                entity.ToTable("customers", "dbo");
             });
 
         modelBuilder.Entity<PayMonthlyPlan>(entity =>
         {
             entity.HasKey(plan => plan.PlanId).HasName("pay_monthly_plans_PK");
             
-            entity.HasMany(plan => plan.Customers)
-                .WithOne(customer => customer.PayMonthlyPlan)
-                .HasForeignKey(customer => customer.PayMonthlyPlanId).HasConstraintName("FK_Customer")
-                .OnDelete(DeleteBehavior.SetNull)
-                .IsRequired(false);
-            
-            entity.ToTable("pay_monthly_plans", "cloudedge");
+            entity.ToTable("pay_monthly_plans", "dbo");
         });
 
         modelBuilder.Entity<LineItem>(entity =>
         {
             entity.HasKey(item => item.Id).HasName("PK_line_items");
-
-            entity.HasOne<Customer>(item => item.Customer)
-                .WithMany(customer => customer.LineItems)
-                .HasForeignKey(item => item.CustomerId).HasConstraintName("line_items_FK")
-                .OnDelete(DeleteBehavior.Cascade);
             
-            entity.ToTable("line_items", "cloudedge");
+            entity.ToTable("line_items", "dbo");
         });
 
         #endregion
@@ -182,10 +165,10 @@ public class ApplicationDbContext : DbContext
                 Entry(value).CurrentValues.SetValues(customer);
                 results = await Customers.Where(c => c.Id == ((Customer)value).Id).ExecuteUpdateAsync(
                     setters => setters
-                        .SetProperty(c => c.ParentName, customer.ParentName)
                         .SetProperty(c => c.CustomerName, customer.CustomerName)
+                        .SetProperty(c => c.DomainName, customer.DomainName)
                         .SetProperty(c => c.DomainUuid, customer.DomainUuid)
-                        .SetProperty(c => c.InvoiceName, customer.InvoiceName)
+                        .SetProperty(c => c.XeroContactName, customer.XeroContactName)
                         .SetProperty(c => c.PayMonthlyPlanId, customer.PayMonthlyPlanId)
                         .SetProperty(c => c.IsActive, customer.IsActive)
                         .SetProperty(c => c.Location, customer.Location)
@@ -200,6 +183,8 @@ public class ApplicationDbContext : DbContext
                         .SetProperty(l => l.Quantity, lineItem.Quantity)
                         .SetProperty(l => l.UnitPrice, lineItem.UnitPrice)
                         .SetProperty(l => l.Discount, lineItem.Discount)
+                        .SetProperty(l => l.Account, lineItem.Account)
+                        .SetProperty(l => l.Business, lineItem.Business)
                 );
                 break;
             case PayMonthlyPlan payMonthlyPlan :
@@ -211,6 +196,9 @@ public class ApplicationDbContext : DbContext
                             .SetProperty(p => p.LocalSize, payMonthlyPlan.LocalSize)
                             .SetProperty(p => p.NationalSize, payMonthlyPlan.NationalSize)
                             .SetProperty(p => p.MobileSize, payMonthlyPlan.MobileSize)
+                            .SetProperty(p => p.InternationalSize, payMonthlyPlan.InternationalSize)
+                            .SetProperty(p => p.TollFreeLandlineSize, payMonthlyPlan.InternationalSize)
+                            .SetProperty(p => p.TollFreeMobileSize, payMonthlyPlan.TollFreeMobileSize)
                             .SetProperty(p => p.Price, payMonthlyPlan.Price)
                             .SetProperty(p => p.MinPrice, payMonthlyPlan.MinPrice)
                         );
@@ -223,13 +211,4 @@ public class ApplicationDbContext : DbContext
         
         Console.WriteLine($"{results} changes saved to database.");
     }
-
-
-    // private static ValueComparer<ICollection<string>> GetStringValueComparer()
-    // {
-    //     return new ValueComparer<ICollection<string>>(
-    //         (collection1, collection2) => collection1!.SequenceEqual(collection2!),
-    //         collection => collection.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-    //         collection => collection.ToList());
-    // }
 }

@@ -29,6 +29,15 @@ public class LineItem : IDataRow
     [Column("discount")]
     public decimal Discount { get; set; }
 
+    // TODO... Change this to an Enum
+    [Column("account")] 
+    public int Account { get; set; }
+
+    // TODO... Change this to an Enum
+    [Column("business")] 
+    public string Business { get; set; } = null!;
+    
+
     public override string ToString()
     {
         return Description;

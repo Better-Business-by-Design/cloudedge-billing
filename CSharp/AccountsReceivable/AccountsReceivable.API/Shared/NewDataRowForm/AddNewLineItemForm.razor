@@ -1,0 +1,51 @@
+@inherits AddNewDataRowForm<LineItem>
+
+<MudOverlay Visible="@IsVisible" Absolute="true" DarkBackground="true" AutoClose="false" >
+    <MudCard>
+        <MudPaper Class="pa-4">
+            <MudForm Model="@NewDataRow" @ref="Form" Validation="@(Validator.ValidateValue)" ValidationDelay="0">
+                <MudText Typo="Typo.h5" Align="Align.Center">
+                    Add new user
+                    </MudText>
+                <MudCardContent>
+                    <MudTextField
+                        @bind-Value="NewDataRow.Description" For="@(() => NewDataRow.Description)"
+                        Validation="@Validator.ValidateValue" Immediate="true"
+                        Class="mt-3"/>
+                    <MudNumericField Step="Convert.ToInt16(1)"
+                                     @bind-Value="NewDataRow.Quantity" For="@(() => NewDataRow.Quantity)"
+                                     Validation="@Validator.ValidateValue" Immediate="true"/>
+                    <MudNumericField Step="0.1M"
+                                     @bind-Value="NewDataRow.UnitPrice" For="@(() => NewDataRow.UnitPrice)"
+                                     Validation="@Validator.ValidateValue" Immediate="true"/>
+                    <MudNumericField Step="1M"
+                                     @bind-Value="NewDataRow.Discount" For="@(() => NewDataRow.Discount)"
+                                     Validation="@Validator.ValidateValue" Immediate="true"/>
+                    <MudNumericField Step="1"
+                                     @bind-Value="NewDataRow.Account" For="@(() => NewDataRow.Account)"
+                                     Validation="@Validator.ValidateValue" Immediate="true"/>
+                    <MudTextField
+                        @bind-Value="NewDataRow.Business" For="@(() => NewDataRow.Business)"
+                        Validation="@Validator.ValidateValue" Immediate="true"
+                        Class="mt-3"/>
+                </MudCardContent>
+            </MudForm>
+            <MudCardActions>
+                <div class="d-flex align-center justify-space-between">
+                    <MudButton
+                        Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true"
+                        Class="ml-2"
+                        OnClick="@(async () => await OnSubmit())">
+                        Confirm
+                    </MudButton>
+                    <MudButton
+                        Variant="Variant.Filled" Color="Color.Error" DisableElevation="true"
+                        Class="ml-2"
+                        OnClick="@(async () => await OnCancel())">
+                        Cancel
+                    </MudButton>
+                </div>
+            </MudCardActions>
+        </MudPaper>
+    </MudCard>
+</MudOverlay>

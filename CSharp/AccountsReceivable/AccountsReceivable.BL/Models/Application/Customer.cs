@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Newtonsoft.Json;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable PropertyCanBeMadeInitOnly.Global
@@ -10,20 +9,20 @@ namespace AccountsReceivable.BL.Models.Application;
 public class Customer : IDataRow
 {
     [Key]
-    [Column("tenant_code")]
+    [Column("customer_id")]
     public int Id { get; set; }
 
-    [Column("parent_name")]
-    public string ParentName { get; set; } = null!;
-    
     [Column("customer_name")]
-    public string? CustomerName { get; set; }
+    public string CustomerName { get; set; } = null!;
+    
+    [Column("domain_name")]
+    public string? DomainName { get; set; }
     
     [Column("domain_uuid")]
     public Guid? DomainUuid { get; set; }
 
-    [Column("invoice_name")] 
-    public string InvoiceName { get; set; } = null!;
+    [Column("xero_contact_name")] 
+    public string XeroContactName { get; set; } = null!;
     
     [ForeignKey(nameof(PayMonthlyPlan))]
     [Column("pay_monthly_plan_id")]
@@ -36,9 +35,6 @@ public class Customer : IDataRow
     
     [Column("location")]
     public string? Location { get; set; }
-
-    // ReSharper disable once CollectionNeverUpdated.Global
-    public ICollection<LineItem> LineItems { get; set; } = new List<LineItem>();
     
     public override string ToString()
     {

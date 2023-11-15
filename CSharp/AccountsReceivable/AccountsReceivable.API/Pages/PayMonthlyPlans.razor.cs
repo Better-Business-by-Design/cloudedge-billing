@@ -77,6 +77,9 @@ partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
                     "Local Size" => plan => Convert.ToDecimal(plan.LocalSize ?? 0),
                     "National Size" => plan => Convert.ToDecimal(plan.NationalSize ?? 0),
                     "Mobile Size" => plan => Convert.ToDecimal(plan.MobileSize ?? 0),
+                    "International Size" => plan => Convert.ToDecimal(plan.InternationalSize ?? 0),
+                    "Toll Free Landline Size" => plan => Convert.ToDecimal(plan.TollFreeLandlineSize ?? 0),
+                    "Toll Free Mobile Size" => plan => Convert.ToDecimal(plan.TollFreeMobileSize ?? 0),
                     "Price" => plan => plan.Price,
                     "Min Price" => plan => plan.MinPrice ?? 0m,
                     _ => throw new NotImplementedException()
@@ -117,6 +120,9 @@ partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
                 "LocalSize" => plan => plan.LocalSize ?? 0,
                 "NationalSize" => plan => plan.NationalSize ?? 0,
                 "MobileSize" => plan => plan.MobileSize ?? 0,
+                "InternationalSize" => plan => plan.InternationalSize ?? 0,
+                "TollFreeLandlineSize" => plan => plan.TollFreeLandlineSize ?? 0,
+                "TollFreeMobileSize" => plan => plan.TollFreeMobileSize ?? 0,
                 "Price" => plan => plan.Price,
                 "Min Price" => plan => plan.MinPrice ?? 0,
                 _ => throw new NotImplementedException(

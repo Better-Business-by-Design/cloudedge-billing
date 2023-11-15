@@ -1,10 +1,16 @@
 @page "/customers/{Id}"
 @using System.Linq.Expressions
+@using AccountsReceivable.API.Shared.FluidValidation
+@using AccountsReceivable.API.Shared.NewDataRowForm
 @inherits EditableDataGridPage<LineItem>
 
 @{
     base.BuildRenderTree(__builder);
 }
+
+<CascadingValue Value="Validator">
+    <AddNewLineItemForm @ref="_form" OnNewDataRowSubmitted="AddRow" BuildNewDefaultRow="BuildNewDefaultRow" />
+</CascadingValue>
 
 <MudDataGrid
     @ref="DataGrid" T="LineItem" ServerData="@(new Func<GridState<LineItem>, Task<GridData<LineItem>>>(GridServerReload))"
@@ -20,8 +26,10 @@
         <PropertyColumn Property="@(x => x.Id)" Title="ID" IsEditable="false"/>
         <PropertyColumn Property="@(x => x.Description)" Title="Description"/>
         <PropertyColumn Property="@(x => x.Quantity)" Title="Quantity" Required="false"/>
-        <PropertyColumn Property="@(x => x.UnitPrice)" Title="UnitPrice" Required="false"/>
+        <PropertyColumn Property="@(x => x.UnitPrice)" Title="Unit Price" Required="false"/>
         <PropertyColumn Property="@(x => x.Discount)" Title="Discount" Required="false"/>
+        <PropertyColumn Property="@(x => x.Account)" Title="Account" Required="false"/>
+        <PropertyColumn Property="@(x => x.Business)" Title="Business" Required="false"/>
     </Columns>
      <NoRecordsContent>
          <MudText>No matching line items found</MudText>
@@ -36,8 +44,21 @@
 
 
 @code {
+
+    [Parameter]
+    public string? Id { get; set; }
+    
+    private AddNewLineItemForm _form = null!;
     
     private Customer? _customer;
+
+    protected override Task OnInitializedAsync()
+    {
+        Validator = new LineItemFluentValidator(DbContext);
+        _customer ??= DbContext.Customers.FirstOrDefault(customer => customer.Id == Convert.ToInt32(Id ?? "0"));
+        return base.OnInitializedAsync();
+    }
+    
 
     protected override List<BreadcrumbItem> Breadcrumb  { get; set; } = new()
     {
@@ -45,13 +66,9 @@
         new BreadcrumbItem("Customers", "customers"),
         new BreadcrumbItem("Line Items", null, true)
     };
-    
-    [Parameter]
-    public string? Id { get; set; }
 
     protected override IQueryable<LineItem> BuildFullQuery()
     {
-        _customer ??= DbContext.Customers.FirstOrDefault(customer => customer.Id == Convert.ToInt32(Id ?? "0"));
         if (_customer is null) { Navigation.NavigateTo("customers"); }
         
         return DbContext.LineItems
@@ -83,6 +100,7 @@
                 Expression<Func<LineItem, string>> selectPredicate = filterDefinition.Title switch
                 {
                     "Description" => item => item.Description,
+                    "Business" => item => item.Business,
                     _ => throw new NotImplementedException($"{filterDefinition.Title} not implemented in string filters.")
                 };
 
@@ -114,6 +132,7 @@
                     "Quantity" => item => Convert.ToDecimal(item.Quantity),
                     "Unit Price" => item => item.UnitPrice,
                     "Discount" => item => item.Discount,
+                    "Account" => item => item.Account,
                     _ => throw new NotImplementedException($"{filterDefinition.Title} not implemented in decimal filters.")
                 };
 
@@ -150,6 +169,8 @@
                 "Quantity" => item => item.Quantity,
                 "UnitPrice" => item => item.UnitPrice, 
                 "Discount" => item => item.Discount,
+                "Account" => item => item.Account,
+                "Business" => item => item.Business,
                 _ => throw new NotImplementedException(
                     $"Sorting not implemented for {sortDefinition.SortBy} column in Line Items table.")
                 };
@@ -178,9 +199,9 @@
         };
     }
 
-    protected override Task OnAddButtonClicked()
+    protected override async Task OnAddButtonClicked()
     {
-        throw new NotImplementedException();
+        await _form.OpenForm();
     }
 
 }
