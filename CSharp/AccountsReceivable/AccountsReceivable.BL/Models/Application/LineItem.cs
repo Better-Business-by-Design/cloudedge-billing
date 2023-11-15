@@ -1,5 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Reflection.Emit;
+using MudBlazor;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable PropertyCanBeMadeInitOnly.Global
 
@@ -18,23 +21,29 @@ public class LineItem : IDataRow
     public Customer Customer { get; set; } = null!;
 
     [Column("description")] 
+    [Label(nameof(Description))]
     public string Description { get; set; } = null!;
     
     [Column("quantity")]
+    [Label(nameof(Quantity))]
     public short Quantity { get; set; }
     
     [Column("unit_price")]
+    [Label("Unit Price")]
     public decimal UnitPrice { get; set; }
     
     [Column("discount")]
+    [Label(nameof(Discount))]
     public decimal Discount { get; set; }
 
     // TODO... Change this to an Enum
     [Column("account")] 
+    [Label(nameof(Account))]
     public int Account { get; set; }
 
     // TODO... Change this to an Enum
     [Column("business")] 
+    [Label(nameof(Business))]
     public string Business { get; set; } = null!;
     
 
