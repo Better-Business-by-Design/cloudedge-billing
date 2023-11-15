@@ -22,10 +22,9 @@ public class LineItemFluentValidator : DataRowFluentValidator<LineItem>
             .GreaterThanOrEqualTo(0M);
 
         RuleFor(l => l.Discount)
-            .NotEmpty()
             .InclusiveBetween(0M, 100M);
 
-        RuleFor(l => l.Account)
+        RuleFor(l => l.AccountId)
             .NotEmpty();
 
         RuleFor(l => l.BusinessId)

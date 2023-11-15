@@ -206,8 +206,8 @@ public class ApplicationDbContext : DbContext
                         .SetProperty(l => l.Quantity, lineItem.Quantity)
                         .SetProperty(l => l.UnitPrice, lineItem.UnitPrice)
                         .SetProperty(l => l.Discount, lineItem.Discount)
-                        .SetProperty(l => l.Account, lineItem.Account)
-                        .SetProperty(l => l.Business, lineItem.Business)
+                        .SetProperty(l => l.AccountId, lineItem.AccountId)
+                        .SetProperty(l => l.BusinessId, lineItem.BusinessId)
                 );
                 break;
             case PayMonthlyPlan payMonthlyPlan :

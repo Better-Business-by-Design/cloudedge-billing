@@ -4,6 +4,7 @@
 @using AccountsReceivable.API.Shared.NewDataRowForm
 @using AccountsReceivable.BL.Models.Enum
 @using Microsoft.EntityFrameworkCore
+@using System.Collections.Immutable
 @inherits EditableDataGridPage<LineItem>
 
 @{
@@ -11,13 +12,15 @@
 }
 
 <CascadingValue Value="Validator">
-    <AddNewLineItemForm @ref="_form" OnNewDataRowSubmitted="AddRow" BuildNewDefaultRow="BuildNewDefaultRow" />
+    <CascadingValue Value="Accounts">
+        <AddNewLineItemForm @ref="_form" OnNewDataRowSubmitted="AddRow" BuildNewDefaultRow="BuildNewDefaultRow"/>
+    </CascadingValue>
 </CascadingValue>
 
 <MudDataGrid
     @ref="DataGrid" T="LineItem" ServerData="@(new Func<GridState<LineItem>, Task<GridData<LineItem>>>(GridServerReload))"
     SortMode="SortMode.Multiple" Filterable="true" FilterMode="DataGridFilterMode.ColumnFilterMenu"
-    RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc"
+    RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc" SelectOnRowClick="false"
     ReadOnly="@ReadOnly" EditMode="DataGridEditMode.Cell"
     CommittedItemChanges="@CommittedRowChanges"
     MultiSelection="true" SelectedItemsChanged="@SelectedRowsChanged" SelectedItems="@SelectedRows"
@@ -30,8 +33,17 @@
         <PropertyColumn Property="@(x => x.Quantity)" Title="Quantity" Required="false"/>
         <PropertyColumn Property="@(x => x.UnitPrice)" Title="Unit Price" Required="false"/>
         <PropertyColumn Property="@(x => x.Discount)" Title="Discount" Required="false"/>
-        <PropertyColumn Property="@(x => x.AccountId)" Title="Account" Required="false"/>
-        <PropertyColumn Property="@(x => x.BusinessId)" Title="Business" Required="false">
+        <PropertyColumn Property="@(x => x.Account.Name)" Title="Account" Required="false">
+            <EditTemplate>
+                <MudSelect T="Guid" @bind-Value="@context.Item.AccountId">
+                    @foreach (var account in Accounts)
+                    {
+                        <MudSelectItem Value="@account.AccountId">@account.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </EditTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="@(x => x.Business.Name)" Title="Business" Required="false">
             <EditTemplate>
                 <MudSelect T="BusinessId" @bind-Value="@context.Item.BusinessId">
                     @foreach (var business in BusinessHelper.GetAll())
@@ -63,10 +75,13 @@
     
     private Customer? _customer;
 
+    protected ImmutableList<Account> Accounts;
+
     protected override Task OnInitializedAsync()
     {
         Validator = new LineItemFluentValidator(DbContext);
         _customer ??= DbContext.Customers.FirstOrDefault(customer => customer.Id == Convert.ToInt32(Id ?? "0"));
+        Accounts = DbContext.Accounts.ToImmutableList();
         return base.OnInitializedAsync();
     }
     
@@ -84,7 +99,8 @@
         
         return DbContext.LineItems
             .Where(item => item.CustomerId == Convert.ToInt32(Id))
-            .Include(item => item.Business);
+            .Include(item => item.Business)
+            .Include(item => item.Account);
     }
 
     protected override IQueryable<LineItem> FilterFullQuery(
@@ -112,6 +128,8 @@
                 Expression<Func<LineItem, string>> selectPredicate = filterDefinition.Title switch
                 {
                     "Description" => item => item.Description,
+                    "Account" => item => item.Account.Name,
+                    "Business" => item => item.Business.Name,
                     _ => throw new NotImplementedException($"{filterDefinition.Title} not implemented in string filters.")
                 };
 
@@ -140,16 +158,8 @@
             } 
             else if (filterDefinition.FieldType.IsGuid)
             {
-                var value = Guid.Parse(filterDefinition.Value?.ToString() ?? string.Empty);
-                Expression<Func<LineItem, Guid>> selectPredicate = filterDefinition.Title switch
-                {
-                    "Account" => customer => customer.AccountId,
-                    _ => throw new NotImplementedException($"{filterDefinition.Title} not implemented in Guid filters.")
-                    };
-
-                var logicPredicate = GenerateGuidLogicPredicate(logicOperator, value);
-
-                fullPredicate = selectPredicate.Compose(logicPredicate);
+                throw new NotImplementedException(
+                    $"No Guid filtering implemented for Line Items table, including not for {filterDefinition.Title}");
             } 
             else if (filterDefinition.FieldType.IsNumber)
             {
@@ -196,8 +206,8 @@
                 "Quantity" => item => item.Quantity,
                 "UnitPrice" => item => item.UnitPrice, 
                 "Discount" => item => item.Discount,
-                "AccountId" => item => item.AccountId,
-                "BusinessId" => item => item.BusinessId,
+                "Account.Name" => item => item.Account.Name,
+                "Business.Name" => item => item.Business.Name,
                 _ => throw new NotImplementedException(
                     $"Sorting not implemented for {sortDefinition.SortBy} column in Line Items table.")
                 };
@@ -223,6 +233,7 @@
         return new LineItem()
         {
             CustomerId = customer.Id,
+            AccountId = Guid.Parse("29592A50-15B1-4F5C-A0FC-87AB8FAA11FF"),
             BusinessId = BusinessId.None
         };
     }

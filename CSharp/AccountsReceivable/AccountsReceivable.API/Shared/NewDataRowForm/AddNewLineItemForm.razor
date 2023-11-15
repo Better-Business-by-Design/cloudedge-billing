@@ -26,7 +26,7 @@
                         @bind-Value="NewDataRow.AccountId" For="@(() => NewDataRow.AccountId)"
                         Validation="Validator.ValidateValue" Immediate="true"
                         Class="mt-3">
-                        @foreach (var account in _accounts)
+                        @foreach (var account in Accounts)
                         {
                             <MudSelectItem Value="@account.AccountId">@account.Name</MudSelectItem>
                         }

@@ -40,6 +40,7 @@ public class LineItem : IDataRow
     [ForeignKey(nameof(Account))]
     [Column("account_id")] 
     [Label(nameof(Account))]
+    [Required]
     public Guid AccountId { get; set; }
 
     public virtual Account Account { get; set; } = null!;
