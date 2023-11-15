@@ -1,5 +1,6 @@
 using AccountsReceivable.BAL.Data;
 using AccountsReceivable.BL.Models.Application;
+using AccountsReceivable.BL.Models.Enum;
 using FluentValidation;
 
 namespace AccountsReceivable.API.Shared.FluidValidation;
@@ -27,8 +28,8 @@ public class LineItemFluentValidator : DataRowFluentValidator<LineItem>
         RuleFor(l => l.Account)
             .NotEmpty();
 
-        RuleFor(l => l.Business)
+        RuleFor(l => l.BusinessId)
             .NotEmpty()
-            .Length(0, 100);
+            .IsInEnum();
     }
 }

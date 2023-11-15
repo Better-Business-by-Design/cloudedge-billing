@@ -1,3 +1,4 @@
+@using AccountsReceivable.BL.Models.Enum
 @inherits AddNewDataRowForm<LineItem>
 
 <MudOverlay Visible="@IsVisible" Absolute="true" DarkBackground="true" AutoClose="false" >
@@ -5,7 +6,7 @@
         <MudPaper Class="pa-4">
             <MudForm Model="@NewDataRow" @ref="Form" Validation="@(Validator.ValidateValue)" ValidationDelay="0">
                 <MudText Typo="Typo.h5" Align="Align.Center">
-                    Add new user
+                    Add new line item
                     </MudText>
                 <MudCardContent>
                     <MudTextField
@@ -24,10 +25,15 @@
                     <MudNumericField Step="1"
                                      @bind-Value="NewDataRow.Account" For="@(() => NewDataRow.Account)"
                                      Validation="@Validator.ValidateValue" Immediate="true"/>
-                    <MudTextField
-                        @bind-Value="NewDataRow.Business" For="@(() => NewDataRow.Business)"
+                    <MudSelect
+                        @bind-Value="NewDataRow.BusinessId" For="@(() => NewDataRow.BusinessId)"
                         Validation="@Validator.ValidateValue" Immediate="true"
-                        Class="mt-3"/>
+                        Class="mt-3">
+                        @foreach (var business in BusinessHelper.GetAll())
+                        {
+                            <MudSelectItem Value="@business.Id">@business.Name</MudSelectItem>
+                        }
+                    </MudSelect>
                 </MudCardContent>
             </MudForm>
             <MudCardActions>

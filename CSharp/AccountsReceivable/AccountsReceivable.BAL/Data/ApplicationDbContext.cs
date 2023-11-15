@@ -1,4 +1,5 @@
 ﻿using AccountsReceivable.BL.Models.Application;
+using AccountsReceivable.BL.Models.Enum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -58,9 +59,21 @@ public class ApplicationDbContext : DbContext
 
         #endregion
 
-        // #region Enum
-        //
-        // #endregion
+        #region Enum
+
+        modelBuilder.Entity<Business>(entity =>
+        {
+            entity.HasKey(business => business.Id).HasName("Business_PK");
+            entity.HasData(
+                Enum.GetValues(typeof(BusinessId))
+                    .Cast<BusinessId>()
+                    .Select(BusinessHelper.GetInfo)
+            );
+
+            entity.ToTable(nameof(Business), "enum");
+        });
+        
+        #endregion
 
         base.OnModelCreating(modelBuilder);
     }

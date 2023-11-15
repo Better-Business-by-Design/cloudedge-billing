@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection.Emit;
+using AccountsReceivable.BL.Models.Enum;
 using MudBlazor;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -18,7 +19,7 @@ public class LineItem : IDataRow
     [Column("customer_id")]
     public int CustomerId { get; set; }
 
-    public Customer Customer { get; set; } = null!;
+    public virtual Customer Customer { get; set; } = null!;
 
     [Column("description")] 
     [Label(nameof(Description))]
@@ -40,11 +41,13 @@ public class LineItem : IDataRow
     [Column("account")] 
     [Label(nameof(Account))]
     public int Account { get; set; }
-
-    // TODO... Change this to an Enum
-    [Column("business")] 
+    
+    [ForeignKey(nameof(Business))]
+    [Column("business_id")]
     [Label(nameof(Business))]
-    public string Business { get; set; } = null!;
+    public BusinessId BusinessId { get; set; }
+
+    public virtual Business Business { get; set; } = null!;
     
 
     public override string ToString()

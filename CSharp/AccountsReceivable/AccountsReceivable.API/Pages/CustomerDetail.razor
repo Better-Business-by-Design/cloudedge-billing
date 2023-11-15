@@ -2,6 +2,8 @@
 @using System.Linq.Expressions
 @using AccountsReceivable.API.Shared.FluidValidation
 @using AccountsReceivable.API.Shared.NewDataRowForm
+@using AccountsReceivable.BL.Models.Enum
+@using Microsoft.EntityFrameworkCore
 @inherits EditableDataGridPage<LineItem>
 
 @{
@@ -29,7 +31,16 @@
         <PropertyColumn Property="@(x => x.UnitPrice)" Title="Unit Price" Required="false"/>
         <PropertyColumn Property="@(x => x.Discount)" Title="Discount" Required="false"/>
         <PropertyColumn Property="@(x => x.Account)" Title="Account" Required="false"/>
-        <PropertyColumn Property="@(x => x.Business)" Title="Business" Required="false"/>
+        <PropertyColumn Property="@(x => x.BusinessId)" Title="Business" Required="false">
+            <EditTemplate>
+                <MudSelect T="BusinessId" @bind-Value="@context.Item.BusinessId">
+                    @foreach (var business in BusinessHelper.GetAll())
+                    {
+                        <MudSelectItem Value="@business.Id">@business.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </EditTemplate>
+        </PropertyColumn>
     </Columns>
      <NoRecordsContent>
          <MudText>No matching line items found</MudText>
@@ -72,7 +83,8 @@
         if (_customer is null) { Navigation.NavigateTo("customers"); }
         
         return DbContext.LineItems
-            .Where(item => item.CustomerId == Convert.ToInt32(Id));
+            .Where(item => item.CustomerId == Convert.ToInt32(Id))
+            .Include(item => item.Business);
     }
 
     protected override IQueryable<LineItem> FilterFullQuery(
@@ -100,7 +112,6 @@
                 Expression<Func<LineItem, string>> selectPredicate = filterDefinition.Title switch
                 {
                     "Description" => item => item.Description,
-                    "Business" => item => item.Business,
                     _ => throw new NotImplementedException($"{filterDefinition.Title} not implemented in string filters.")
                 };
 
@@ -115,8 +126,17 @@
             } 
             else if (filterDefinition.FieldType.IsEnum)
             {
-                throw new NotImplementedException(
-                    $"No enum filtering implemented for Line Items table, including not for {filterDefinition.Title}");
+                var value = filterDefinition.Value!;
+                Expression<Func<LineItem, Enum>> selectPredicate = filterDefinition.Title switch
+                {
+                    "Business" => user => user.BusinessId,
+                    _ => throw new NotImplementedException($"{filterDefinition.Title} not implemented in boolean filters.")
+                    };
+
+                var logicPredicate =
+                    GenerateEnumLogicPredicate(logicOperator, value);
+
+                fullPredicate = selectPredicate.Compose(logicPredicate);
             } 
             else if (filterDefinition.FieldType.IsGuid)
             {
@@ -159,7 +179,7 @@
     protected override IOrderedQueryable<LineItem> OrderFilteredQuery(IQueryable<LineItem> filteredQuery, IEnumerable<SortDefinition<LineItem>> sortDefinitions)
     {
         var orderedQuery = filteredQuery.OrderBy(item => true);
-    // ReSharper disable once LoopCanBeConvertedToQuery
+        // ReSharper disable once LoopCanBeConvertedToQuery
         foreach (var sortDefinition in sortDefinitions)
         {
             Expression<Func<LineItem, object>> keySelector = sortDefinition.SortBy switch
@@ -170,7 +190,7 @@
                 "UnitPrice" => item => item.UnitPrice, 
                 "Discount" => item => item.Discount,
                 "Account" => item => item.Account,
-                "Business" => item => item.Business,
+                "BusinessId" => item => item.BusinessId,
                 _ => throw new NotImplementedException(
                     $"Sorting not implemented for {sortDefinition.SortBy} column in Line Items table.")
                 };
@@ -196,6 +216,7 @@
         return new LineItem()
         {
             CustomerId = customer.Id,
+            BusinessId = BusinessId.None
         };
     }
 
