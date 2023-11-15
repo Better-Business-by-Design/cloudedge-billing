@@ -152,25 +152,19 @@ partial class Customers : EditableDataGridPage<Customer>
         return orderedQuery;
     }
 
+    protected override Task OnAddButtonClicked()
+    {
+        throw new NotImplementedException();
+    }
+
     protected override void ReadOnlyRowClicked(DataGridRowClickEventArgs<Customer> args)
     {
         Navigation.NavigateTo($"customers/{args.Item.Id}"); 
     }
 
-    protected override Customer BuildNewDefaultRow()
+    protected override async Task<Customer> BuildNewDefaultRow()
     {
-        return new Customer
-        {
-            ParentName = "New Parent Name",
-            CustomerName = "New Customer Name",
-            LineItems = new List<LineItem>(),
-            IsActive = true,
-            InvoiceName = "New Invoice Name",
-            Location = "New Location",
-            DomainUuid = null,
-            PayMonthlyPlan = null,
-            PayMonthlyPlanId = null
-        };
+        return new Customer();
     }
     
     

@@ -168,19 +168,19 @@
         Console.WriteLine("Customer Detail Row Clicked");
     }
 
-    protected override LineItem BuildNewDefaultRow()
+    protected override async Task<LineItem> BuildNewDefaultRow()
     {
         var customer = _customer ?? throw new ArgumentNullException(nameof(_customer), "Unable to add new line item to null customer.");
         
         return new LineItem()
         {
             CustomerId = customer.Id,
-            Customer = customer,
-            Description = "New Line Item",
-            Quantity = 0,
-            UnitPrice = 0,
-            Discount = 0
         };
+    }
+
+    protected override Task OnAddButtonClicked()
+    {
+        throw new NotImplementedException();
     }
 
 }

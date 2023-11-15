@@ -130,23 +130,19 @@ partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
 
         return orderedQuery;
     }
+
+    protected override Task OnAddButtonClicked()
+    {
+        throw new NotImplementedException();
+    }
+
     protected override void ReadOnlyRowClicked(DataGridRowClickEventArgs<PayMonthlyPlan> args)
     {
         Console.WriteLine("Pay Monthly Plan row clicked!");
     }
 
-    protected override PayMonthlyPlan BuildNewDefaultRow()
+    protected override async Task<PayMonthlyPlan> BuildNewDefaultRow()
     {
-        return new PayMonthlyPlan()
-        {
-            // PlanId auto-generates (hopefully)
-            PlanName = "New Plan",
-            // Local Size is nullable
-            // National Size is nullable
-            // MobileSize is nullable
-            Price = 0m,
-            // MinPrice is Nullable
-            Customers = new List<Customer>()
-        };
+        return new PayMonthlyPlan();
     }
 }

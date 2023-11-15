@@ -1,21 +1,26 @@
 ﻿@typeparam T 
 @inherits DataGridPage<T>
 
-<div class="@(ShowBreadcrumb ? "d-block" : "d-none")">
-    <Breadcrumb Items="Breadcrumb"/>
-</div>
+@{
+    base.BuildRenderTree(__builder);
+}
 
-<div class="@((Editable ? "d-flex" : "d-none") + " flex-wrap mt-4")">
+<div class="@((Editable ? "d-flex" : "d-none") + " flex-wrap")">
     <div class="d-flex justify-start align-center">
-        <MudButton OnClick="@AddRow" Color="Color.Primary">Add Item</MudButton>
+        <MudButton OnClick="@OnAddButtonClicked" Color="Color.Primary">@($"Add {typeof(T).Name}")</MudButton>
     </div>
     <div class="d-flex justify-start align-center">
-        <MudButton OnClick="@RemoveRows" Color="Color.Secondary">@($"Remove Items ({SelectedRows.Count})")</MudButton>
+        <MudButton OnClick="@RemoveRows" Color="Color.Secondary">@($"Remove {typeof(T).Name} ({SelectedRows.Count})")</MudButton>
     </div>
     <div class="d-flex justify-start align-center">
         <MudSwitch @bind-Checked="@ReadOnly" Color="Color.Primary">@(ReadOnly ? "Read Only Mode" : "Edit Mode")</MudSwitch>
     </div>
-    <div class="d-flex justify-end align-center">
+    <div class="@((Revertable ? "d-flex" : "d-none") + " justify-end align-center")">
         <MudButton OnClick="@UndoLastRowChange" Color="Color.Tertiary" Disabled="@(!CompletedChanges.Any())">Undo Last Change</MudButton>
+    </div>
+    <div class="d-flex flex-grow-1 justify-end align-center">
+        <MudAlert Severity="Severity.Error" Dense="true" Class="@((_errorMessage.Equals(string.Empty) ? "d-none" : "d-block"))" >
+            @(_errorMessage)
+        </MudAlert>
     </div>
 </div>
