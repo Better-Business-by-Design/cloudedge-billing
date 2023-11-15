@@ -16,6 +16,8 @@ public class ApplicationDbContext : DbContext
     
     public DbSet<PayMonthlyPlan> PayMonthlyPlans { get; set; } = null!;
 
+    public DbSet<Account> Accounts { get; set; } = null!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Latin1_General_100_CI_AS");
@@ -57,20 +59,28 @@ public class ApplicationDbContext : DbContext
             entity.ToTable("line_items", "dbo");
         });
 
+        modelBuilder.Entity<Account>(entity =>
+        {
+            entity.HasKey(account => account.AccountId).HasName("Account_PK");
+            entity.HasAlternateKey(account => account.Code).HasName("Account_UN");
+
+            entity.ToTable("Account", "dbo");
+        });
+
         #endregion
 
         #region Enum
 
         modelBuilder.Entity<Business>(entity =>
         {
-            entity.HasKey(business => business.Id).HasName("Business_PK");
+            entity.HasKey(business => business.BusinessId).HasName("Business_PK");
             entity.HasData(
                 Enum.GetValues(typeof(BusinessId))
                     .Cast<BusinessId>()
                     .Select(BusinessHelper.GetInfo)
             );
 
-            entity.ToTable(nameof(Business), "enum");
+            entity.ToTable(nameof(Business), "dbo");
         });
         
         #endregion

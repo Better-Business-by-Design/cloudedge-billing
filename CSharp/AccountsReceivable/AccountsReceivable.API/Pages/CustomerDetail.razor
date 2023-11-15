@@ -30,13 +30,13 @@
         <PropertyColumn Property="@(x => x.Quantity)" Title="Quantity" Required="false"/>
         <PropertyColumn Property="@(x => x.UnitPrice)" Title="Unit Price" Required="false"/>
         <PropertyColumn Property="@(x => x.Discount)" Title="Discount" Required="false"/>
-        <PropertyColumn Property="@(x => x.Account)" Title="Account" Required="false"/>
+        <PropertyColumn Property="@(x => x.AccountId)" Title="Account" Required="false"/>
         <PropertyColumn Property="@(x => x.BusinessId)" Title="Business" Required="false">
             <EditTemplate>
                 <MudSelect T="BusinessId" @bind-Value="@context.Item.BusinessId">
                     @foreach (var business in BusinessHelper.GetAll())
                     {
-                        <MudSelectItem Value="@business.Id">@business.Name</MudSelectItem>
+                        <MudSelectItem Value="@business.BusinessId">@business.Name</MudSelectItem>
                     }
                 </MudSelect>
             </EditTemplate>
@@ -140,8 +140,16 @@
             } 
             else if (filterDefinition.FieldType.IsGuid)
             {
-                throw new NotImplementedException(
-                    $"No boolean filtering implemented for Line Items table, including not for {filterDefinition.Title}");
+                var value = Guid.Parse(filterDefinition.Value?.ToString() ?? string.Empty);
+                Expression<Func<LineItem, Guid>> selectPredicate = filterDefinition.Title switch
+                {
+                    "Account" => customer => customer.AccountId,
+                    _ => throw new NotImplementedException($"{filterDefinition.Title} not implemented in Guid filters.")
+                    };
+
+                var logicPredicate = GenerateGuidLogicPredicate(logicOperator, value);
+
+                fullPredicate = selectPredicate.Compose(logicPredicate);
             } 
             else if (filterDefinition.FieldType.IsNumber)
             {
@@ -152,7 +160,6 @@
                     "Quantity" => item => Convert.ToDecimal(item.Quantity),
                     "Unit Price" => item => item.UnitPrice,
                     "Discount" => item => item.Discount,
-                    "Account" => item => item.Account,
                     _ => throw new NotImplementedException($"{filterDefinition.Title} not implemented in decimal filters.")
                 };
 
@@ -189,7 +196,7 @@
                 "Quantity" => item => item.Quantity,
                 "UnitPrice" => item => item.UnitPrice, 
                 "Discount" => item => item.Discount,
-                "Account" => item => item.Account,
+                "AccountId" => item => item.AccountId,
                 "BusinessId" => item => item.BusinessId,
                 _ => throw new NotImplementedException(
                     $"Sorting not implemented for {sortDefinition.SortBy} column in Line Items table.")

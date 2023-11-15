@@ -22,16 +22,22 @@
                     <MudNumericField Step="1M"
                                      @bind-Value="NewDataRow.Discount" For="@(() => NewDataRow.Discount)"
                                      Validation="@Validator.ValidateValue" Immediate="true"/>
-                    <MudNumericField Step="1"
-                                     @bind-Value="NewDataRow.Account" For="@(() => NewDataRow.Account)"
-                                     Validation="@Validator.ValidateValue" Immediate="true"/>
+                    <MudSelect
+                        @bind-Value="NewDataRow.AccountId" For="@(() => NewDataRow.AccountId)"
+                        Validation="Validator.ValidateValue" Immediate="true"
+                        Class="mt-3">
+                        @foreach (var account in _accounts)
+                        {
+                            <MudSelectItem Value="@account.AccountId">@account.Name</MudSelectItem>
+                        }
+                    </MudSelect>
                     <MudSelect
                         @bind-Value="NewDataRow.BusinessId" For="@(() => NewDataRow.BusinessId)"
                         Validation="@Validator.ValidateValue" Immediate="true"
                         Class="mt-3">
                         @foreach (var business in BusinessHelper.GetAll())
                         {
-                            <MudSelectItem Value="@business.Id">@business.Name</MudSelectItem>
+                            <MudSelectItem Value="@business.BusinessId">@business.Name</MudSelectItem>
                         }
                     </MudSelect>
                 </MudCardContent>

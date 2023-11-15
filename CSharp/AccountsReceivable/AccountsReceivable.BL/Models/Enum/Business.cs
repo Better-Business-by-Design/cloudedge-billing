@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace AccountsReceivable.BL.Models.Enum;
 
 public enum BusinessId : byte
@@ -9,7 +12,11 @@ public enum BusinessId : byte
 
 public class Business
 {
-    public BusinessId Id { get; set; }
+    [Key]
+    [Column("business_id")]
+    public BusinessId BusinessId { get; set; }
+    
+    [Column("name")]
     public string Name { get; set; } = null!;
 }
 
@@ -21,7 +28,7 @@ public static class BusinessHelper
             BusinessId.None,
             new Business
             {
-                Id = BusinessId.None,
+                BusinessId = BusinessId.None,
                 Name = "None"
             }
         },
@@ -29,7 +36,7 @@ public static class BusinessHelper
             BusinessId.CloudEdge,
             new Business
             {
-                Id = BusinessId.CloudEdge,
+                BusinessId = BusinessId.CloudEdge,
                 Name = "Cloud Edge"
             }
         },
@@ -37,7 +44,7 @@ public static class BusinessHelper
             BusinessId.MaxHub,
             new Business
             {
-                Id = BusinessId.MaxHub,
+                BusinessId = BusinessId.MaxHub,
                 Name = "MaxHub"
             }
         }

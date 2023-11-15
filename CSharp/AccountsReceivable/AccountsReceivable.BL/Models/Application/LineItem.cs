@@ -37,10 +37,12 @@ public class LineItem : IDataRow
     [Label(nameof(Discount))]
     public decimal Discount { get; set; }
 
-    // TODO... Change this to an Enum
-    [Column("account")] 
+    [ForeignKey(nameof(Account))]
+    [Column("account_id")] 
     [Label(nameof(Account))]
-    public int Account { get; set; }
+    public Guid AccountId { get; set; }
+
+    public virtual Account Account { get; set; } = null!;
     
     [ForeignKey(nameof(Business))]
     [Column("business_id")]
