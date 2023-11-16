@@ -12,19 +12,68 @@
     ReadOnly="@ReadOnly" EditMode="DataGridEditMode.Cell"
     CommittedItemChanges="@CommittedRowChanges"
     MultiSelection="true" SelectedItemsChanged="@SelectedRowsChanged" SelectedItems="@SelectedRows"
-    Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 9.8rem)">
+    Dense="false" Hover="true" Striped="true" Bordered="true" 
+    FixedHeader="true" Height="calc(100vh - 12.2rem)"
+    >
     <Columns>
         <SelectColumn T="PayMonthlyPlan" ShowInFooter="false"/>
-        <PropertyColumn Property="@(x => x.PlanId)" Title="ID"/>
         <PropertyColumn Property="@(x => x.PlanName)" Title="Name"/>
-        <PropertyColumn Property="@(x => x.LocalSize)" Title="Local Size"/>
-        <PropertyColumn Property="@(x => x.NationalSize)" Title="National Size"/>
-        <PropertyColumn Property="@(x => x.MobileSize)" Title="Mobile Size"/>
-        <PropertyColumn Property="@(x => x.InternationalSize)" Title="International Size"/>
-        <PropertyColumn Property="@(x => x.TollFreeLandlineSize)" Title="Toll Free Landline Size"/>
-        <PropertyColumn Property="@(x => x.TollFreeMobileSize)" Title="Toll Free Mobile Size"/>
-        <PropertyColumn Property="@(x => x.Price)" Title="Price"/>
-        <PropertyColumn Property="@(x => x.MinPrice)" Title="Min Price"/>
+        <PropertyColumn Property="@(x => x.LocalSize)" Title="Local Size">
+            <EditTemplate>
+                <MudNumericField Step="1"
+                                 @bind-Value="context.Item.LocalSize" Min="0"
+                                 HideSpinButtons="true" Clearable="true"/>
+            </EditTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="@(x => x.NationalSize)" Title="National Size">
+            <EditTemplate>
+                <MudNumericField Step="1"
+                                 @bind-Value="context.Item.NationalSize" Min="0"
+                                 HideSpinButtons="true" Clearable="true"/>
+            </EditTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="@(x => x.MobileSize)" Title="Mobile Size">
+            <EditTemplate>
+                <MudNumericField Step="1"
+                                 @bind-Value="context.Item.MobileSize" Min="0"
+                                 HideSpinButtons="true" Clearable="true"/>
+            </EditTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="@(x => x.InternationalSize)" Title="International Size">
+            <EditTemplate>
+                <MudNumericField Step="1"
+                                 @bind-Value="context.Item.InternationalSize" Min="0"
+                                 HideSpinButtons="true" Clearable="true"/>
+            </EditTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="@(x => x.TollFreeLandlineSize)" Title="Toll Free Landline Size">
+            <EditTemplate>
+                <MudNumericField Step="1"
+                                 @bind-Value="context.Item.TollFreeLandlineSize" Min="0"
+                                 HideSpinButtons="true" Clearable="true"/>
+            </EditTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="@(x => x.TollFreeMobileSize)" Title="Toll Free Mobile Size">
+            <EditTemplate>
+                <MudNumericField Step="1"
+                                 @bind-Value="context.Item.TollFreeMobileSize" Min="0"
+                                 HideSpinButtons="true" Clearable="true"/>
+            </EditTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="@(x => x.Price)" Title="Price" Format="C">
+            <EditTemplate>
+                <MudNumericField Step="0.1M"
+                                 @bind-Value="context.Item.Price" Min="0"
+                                 Format="C"/>
+            </EditTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="@(x => x.MinPrice)" Title="Min Price" Format="C">
+            <EditTemplate>
+                <MudNumericField Step="0.1M"
+                                 @bind-Value="context.Item.MinPrice" Min="0"
+                                 Clearable="true" Format="C"/>
+            </EditTemplate>
+        </PropertyColumn>
     </Columns>
      <NoRecordsContent>
          <MudText>No matching plans found</MudText>
