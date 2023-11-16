@@ -12,17 +12,11 @@
     ReadOnly="@ReadOnly" EditMode="DataGridEditMode.Cell"
     CommittedItemChanges="@CommittedRowChanges"
     MultiSelection="true" SelectedItemsChanged="@SelectedRowsChanged" SelectedItems="@SelectedRows"
-    Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 12.2rem)">
+    Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 12.2rem)">
     <Columns>
         <SelectColumn T="Customer" ShowInFooter="false"/>
-        <PropertyColumn Property="@(x => x.Id)" Title="ID" IsEditable="false"/>
         <PropertyColumn Property="@(x => x.CustomerName)" Title="Customer Name" Required="false"/>
         <PropertyColumn Property="@(x => x.DomainName)" Title="Domain Name" Required="false"/>
-        <PropertyColumn Property="@(x => x.DomainUuid)" Title="Domain UUID" Required="false" IsEditable="true">
-            <EditTemplate>
-                <MudTextField @bind-Value="@context.Item.DomainUuid" Variant="Variant.Text"></MudTextField>
-            </EditTemplate>
-        </PropertyColumn>
         <PropertyColumn Property="@(x => x.XeroContactName)" Title="Xero Contact Name" Required="false"/>
         <PropertyColumn Property="@(x => x.PayMonthlyPlan != null ? x.PayMonthlyPlan.PlanName : string.Empty)" Title="Plan Name" Required="false">
             <EditTemplate>
@@ -35,11 +29,14 @@
                 </MudSelect>
             </EditTemplate>
         </PropertyColumn>
-        <PropertyColumn Property="@(x => x.IsActive)" Title="Is Active" Required="false">
-            <EditTemplate>
-                <MudSwitch @bind-Checked="@context.Item.IsActive" Color="Color.Primary">@(context.Item.IsActive ? "True" : "False")</MudSwitch>
-            </EditTemplate>
-        </PropertyColumn>
+        @if (ShowIsActive)
+        {
+            <PropertyColumn Property="@(x => x.IsActive)" Title="Is Active" Required="false">
+                <EditTemplate>
+                    <MudSwitch @bind-Checked="@context.Item.IsActive" Color="Color.Primary">@(context.Item.IsActive ? "True" : "False")</MudSwitch>
+                </EditTemplate>
+            </PropertyColumn>
+        }
         <PropertyColumn Property="@(x => x.Location)" Title="Location" Required="false"/>
     </Columns>
     <NoRecordsContent>

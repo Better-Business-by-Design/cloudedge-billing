@@ -9,6 +9,8 @@ namespace AccountsReceivable.API.Pages;
 
 partial class Customers : EditableDataGridPage<Customer>
 {
+    [Parameter]
+    public bool ShowIsActive { get; set; } = true;
     
     private List<PayMonthlyPlan> _payMonthlyPlans = new();
     
