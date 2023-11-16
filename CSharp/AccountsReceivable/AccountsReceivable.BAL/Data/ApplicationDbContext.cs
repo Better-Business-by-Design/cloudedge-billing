@@ -56,7 +56,7 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<LineItem>(entity =>
         {
-            entity.HasKey(item => item.Id).HasName("PK_line_items");
+            entity.HasKey(item => item.Id).HasName("line_items_PK");
             
             entity.ToTable("line_items", "dbo");
         });
@@ -96,28 +96,51 @@ public class ApplicationDbContext : DbContext
         base.OnModelCreating(modelBuilder);
     }
 
-    public async Task AddValue(IDataRow value)
+    public async Task AddValue(IDataRow value, bool isNew = true)
     {
         switch (value)
         {
             case Customer c:
                 await Customers.AddAsync(c);
+                if (isNew)
+                {
+                    await SaveChangesAsync();
+                }
+                else
+                {
+                    await SaveChangesWithIdentityInsertAsync<Customer>();
+                }
                 break;
             case LineItem l:
                 await LineItems.AddAsync(l);
+                if (isNew)
+                {
+                    await SaveChangesAsync();
+                }
+                else
+                {
+                    await SaveChangesWithIdentityInsertAsync<LineItem>();
+                }
                 break;
             case PayMonthlyPlan p:
                 await PayMonthlyPlans.AddAsync(p);
+                if (isNew)
+                {
+                    await SaveChangesAsync();
+                }
+                else
+                {
+                    await SaveChangesWithIdentityInsertAsync<PayMonthlyPlan>();
+                }
                 break;
             case null:
                 throw new ArgumentNullException(nameof(value), "Tried to add null value to dataset");
             default:
                 throw new NotImplementedException($"{value.GetType()} Not implemented in Add Values");
         }
-        await SaveChangesAsync();
     }
 
-    public async Task AddValues(IEnumerable<IDataRow> values)
+    public async Task AddValues(IEnumerable<IDataRow> values, bool isNew = true)
     {
         var addValues = new List<IDataRow>(values);
         if (!addValues.Any()) return;
@@ -126,19 +149,42 @@ public class ApplicationDbContext : DbContext
         {
             case Customer _:
                 await Customers.AddRangeAsync(addValues.Cast<Customer>());
+                if (isNew)
+                {
+                    await SaveChangesAsync();
+                }
+                else
+                {
+                    await SaveChangesWithIdentityInsertAsync<Customer>();
+                }
                 break;
             case LineItem _:
                 await LineItems.AddRangeAsync(addValues.Cast<LineItem>());
+                if (isNew)
+                {
+                    await SaveChangesAsync();
+                }
+                else
+                {
+                    await SaveChangesWithIdentityInsertAsync<LineItem>();
+                }
                 break;
             case PayMonthlyPlan _:
                 await PayMonthlyPlans.AddRangeAsync(addValues.Cast<PayMonthlyPlan>());
+                if (isNew)
+                {
+                    await SaveChangesAsync();
+                }
+                else
+                {
+                    await SaveChangesWithIdentityInsertAsync<PayMonthlyPlan>();
+                }
                 break;
             case null:
                 throw new ArgumentNullException(nameof(addValues), "Tried to add null values to dataset");
             default:
                 throw new NotImplementedException($"{addValues.First().GetType()} Not implemented in Add Values");
         }
-        await SaveChangesAsync();
     }
 
     public async Task RemoveValue(IDataRow value)
@@ -242,4 +288,24 @@ public class ApplicationDbContext : DbContext
         
         Console.WriteLine($"{results} changes saved to database.");
     }
+    
+    public async Task<int> SaveChangesWithIdentityInsertAsync<TEnt>(CancellationToken token = default)
+    {
+        await using var transaction = await Database.BeginTransactionAsync(token);
+        await SetIdentityInsertAsync<TEnt>(true, token);
+        var ret = await SaveChangesAsync(token);
+        await SetIdentityInsertAsync<TEnt>(false, token);
+        await transaction.CommitAsync(token);
+
+        return ret;
+    }
+
+    private async Task SetIdentityInsertAsync<TEnt>(bool enable, CancellationToken token)
+    {
+        var entityType = Model.FindEntityType(typeof(TEnt)) ?? throw new ArgumentNullException(nameof(TEnt));
+        var value = enable ? "ON" : "OFF";
+        var query = $"SET IDENTITY_INSERT {entityType.GetSchema()}.{entityType.GetTableName()} {value}";
+        await Database.ExecuteSqlRawAsync(query, token);
+    }
+    
 }

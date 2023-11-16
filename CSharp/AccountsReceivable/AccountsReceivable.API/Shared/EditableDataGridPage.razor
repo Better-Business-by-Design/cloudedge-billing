@@ -12,11 +12,11 @@
     <div class="d-flex justify-start align-center">
         <MudButton OnClick="@RemoveRows" Color="Color.Secondary">@($"Remove {typeof(T).Name} ({SelectedRows.Count})")</MudButton>
     </div>
+    <div class="@((Revertable ? "d-flex" : "d-none") + " justify-start align-center")">
+        <MudButton OnClick="@UndoLastRowChange" Color="Color.Tertiary" Disabled="@(!CompletedChanges.Any())">Undo Last Change</MudButton>
+    </div>
     <div class="d-flex justify-start align-center">
         <MudSwitch @bind-Checked="@ReadOnly" Color="Color.Primary">@(ReadOnly ? "Read Only Mode" : "Edit Mode")</MudSwitch>
-    </div>
-    <div class="@((Revertable ? "d-flex" : "d-none") + " justify-end align-center")">
-        <MudButton OnClick="@UndoLastRowChange" Color="Color.Tertiary" Disabled="@(!CompletedChanges.Any())">Undo Last Change</MudButton>
     </div>
     <div class="d-flex flex-grow-1 justify-end align-center">
         <MudAlert Severity="Severity.Error" Dense="true" Class="@((_errorMessage.Equals(string.Empty) ? "d-none" : "d-block"))" >

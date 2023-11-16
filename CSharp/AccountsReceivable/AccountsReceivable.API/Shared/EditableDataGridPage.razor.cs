@@ -1,4 +1,6 @@
-﻿using AccountsReceivable.API.Shared.FluidValidation;
+﻿using System.Collections.Immutable;
+using AccountsReceivable.API.Shared.DataRowChange;
+using AccountsReceivable.API.Shared.FluidValidation;
 using AccountsReceivable.BL.Models.Application;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -125,7 +127,7 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
     protected virtual async Task RemoveRows()
     {
         Console.WriteLine($"Rows removed:\n {string.Join("\n", SelectedRows.Select(row => System.Text.Json.JsonSerializer.Serialize(row)))}");
-        var change = new RemoveDataRowsChange(SelectedRows);
+        var change = new RemoveDataRowsChange(SelectedRows.ToImmutableList());
         await change.ApplyChange(DbContext);
 
         CompletedChanges.Push(change);

@@ -1,8 +1,7 @@
 using AccountsReceivable.BAL.Data;
 using AccountsReceivable.BL.Models.Application;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace AccountsReceivable.API.Shared;
+namespace AccountsReceivable.API.Shared.DataRowChange;
 
 public class EditDataRowChange : IDataRowChange
 {

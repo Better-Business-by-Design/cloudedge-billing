@@ -165,7 +165,7 @@ partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
         var result = await dialog.Result;
         if (!result.Canceled)
         {
-            await AddRow((LineItem) result.Data);
+            await AddRow((PayMonthlyPlan) result.Data);
         }
     }
 

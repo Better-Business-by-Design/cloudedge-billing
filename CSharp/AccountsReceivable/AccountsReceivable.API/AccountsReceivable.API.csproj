@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>aspnet-AccountsReceivable-994f200b-25f4-4526-82e1-a20aa3f98cff</UserSecretsId>
@@ -9,8 +9,8 @@
 
     <ItemGroup>
         <PackageReference Include="FluentValidation" Version="11.8.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.*"/>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.*"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.*"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.*"/>
         <PackageReference Include="Microsoft.Identity.Web" Version="2.12.*"/>
         <PackageReference Include="Microsoft.Identity.Web.UI" Version="2.12.*"/>
         <PackageReference Include="Microsoft.Identity.Web.DownstreamApi" Version="2.12.*"/>

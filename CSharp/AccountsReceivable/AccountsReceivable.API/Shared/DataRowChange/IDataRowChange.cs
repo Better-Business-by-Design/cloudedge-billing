@@ -1,8 +1,6 @@
 using AccountsReceivable.BAL.Data;
-using AccountsReceivable.BL.Models.Application;
-using Microsoft.AspNetCore.Components;
 
-namespace AccountsReceivable.API.Shared;
+namespace AccountsReceivable.API.Shared.DataRowChange;
 
 public interface IDataRowChange
 { 

@@ -1,8 +1,7 @@
 using AccountsReceivable.BAL.Data;
 using AccountsReceivable.BL.Models.Application;
-using Microsoft.AspNetCore.Components;
 
-namespace AccountsReceivable.API.Shared;
+namespace AccountsReceivable.API.Shared.DataRowChange;
 
 public class RemoveDataRowsChange : IDataRowChange
 {
@@ -20,7 +19,7 @@ public class RemoveDataRowsChange : IDataRowChange
 
     public async Task RevertChange(ApplicationDbContext dbContext)
     {
-        await dbContext.AddValues(DataRowChanges);
+        await dbContext.AddValues(DataRowChanges, false);
     }
     
     
