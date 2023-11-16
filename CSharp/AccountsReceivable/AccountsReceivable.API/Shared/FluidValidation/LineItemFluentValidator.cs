@@ -14,11 +14,9 @@ public class LineItemFluentValidator : DataRowFluentValidator<LineItem>
             .Length(1, 255);
 
         RuleFor(l => l.Quantity)
-            .NotEmpty()
             .GreaterThan(Convert.ToInt16(0));
 
         RuleFor(l => l.UnitPrice)
-            .NotEmpty()
             .GreaterThanOrEqualTo(0M);
 
         RuleFor(l => l.Discount)
@@ -28,7 +26,6 @@ public class LineItemFluentValidator : DataRowFluentValidator<LineItem>
             .NotEmpty();
 
         RuleFor(l => l.BusinessId)
-            .NotEmpty()
             .IsInEnum();
     }
 }

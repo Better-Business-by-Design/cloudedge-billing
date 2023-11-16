@@ -11,12 +11,6 @@
     base.BuildRenderTree(__builder);
 }
 
-<CascadingValue Value="Validator">
-    <CascadingValue Value="Accounts">
-        <AddNewLineItemForm @ref="_form" OnNewDataRowSubmitted="AddRow" BuildNewDefaultRow="BuildNewDefaultRow"/>
-    </CascadingValue>
-</CascadingValue>
-
 <MudDataGrid
     @ref="DataGrid" T="LineItem" ServerData="@(new Func<GridState<LineItem>, Task<GridData<LineItem>>>(GridServerReload))"
     SortMode="SortMode.Multiple" Filterable="true" FilterMode="DataGridFilterMode.ColumnFilterMenu"
@@ -70,12 +64,15 @@
 
     [Parameter]
     public string? Id { get; set; }
-    
+
     private AddNewLineItemForm _form = null!;
-    
+
     private Customer? _customer;
 
     protected ImmutableList<Account> Accounts;
+
+    [Inject]
+    private IDialogService DialogService { get; set; } = default!;
 
     protected override Task OnInitializedAsync()
     {
@@ -84,9 +81,9 @@
         Accounts = DbContext.Accounts.ToImmutableList();
         return base.OnInitializedAsync();
     }
-    
 
-    protected override List<BreadcrumbItem> Breadcrumb  { get; set; } = new()
+
+    protected override List<BreadcrumbItem> Breadcrumb { get; set; } = new()
     {
         new BreadcrumbItem("Home", ""),
         new BreadcrumbItem("Customers", "customers"),
@@ -95,8 +92,11 @@
 
     protected override IQueryable<LineItem> BuildFullQuery()
     {
-        if (_customer is null) { Navigation.NavigateTo("customers"); }
-        
+        if (_customer is null)
+        {
+            Navigation.NavigateTo("customers");
+        }
+
         return DbContext.LineItems
             .Where(item => item.CustomerId == Convert.ToInt32(Id))
             .Include(item => item.Business)
@@ -104,44 +104,47 @@
     }
 
     protected override IQueryable<LineItem> FilterFullQuery(
-        IQueryable<LineItem> fullQuery, 
+        IQueryable<LineItem> fullQuery,
         IEnumerable<IFilterDefinition<LineItem>> filterDefinitions)
     {
         var filteredQuery = fullQuery;
         foreach (var filterDefinition in filterDefinitions)
         {
-            if (filterDefinition.Operator is null) { continue; }
-            var logicOperator = filterDefinition.Operator!;
-            
-            if (filterDefinition.Value is null && filterDefinition.Operator is not ("is empty" or "is not empty")) 
+            if (filterDefinition.Operator is null)
             {
                 continue;
             }
-            
+            var logicOperator = filterDefinition.Operator!;
+
+            if (filterDefinition.Value is null && filterDefinition.Operator is not ("is empty" or "is not empty"))
+            {
+                continue;
+            }
+
             Expression<Func<LineItem, bool>> fullPredicate;
-            
-            // Annoying that this can't be a switch
+
+    // Annoying that this can't be a switch
             if (filterDefinition.FieldType.IsString)
             {
                 var value = filterDefinition.Value?.ToString() ?? string.Empty;
-                
+
                 Expression<Func<LineItem, string>> selectPredicate = filterDefinition.Title switch
                 {
                     "Description" => item => item.Description,
                     "Account" => item => item.Account.Name,
                     "Business" => item => item.Business.Name,
                     _ => throw new NotImplementedException($"{filterDefinition.Title} not implemented in string filters.")
-                };
+                    };
 
                 var logicPredicate = GenerateStringLogicPredicate(logicOperator, value);
 
                 fullPredicate = selectPredicate.Compose(logicPredicate);
-            } 
+            }
             else if (filterDefinition.FieldType.IsBoolean)
             {
                 throw new NotImplementedException(
                     $"No boolean filtering implemented for Line Items table, including not for {filterDefinition.Title}");
-            } 
+            }
             else if (filterDefinition.FieldType.IsEnum)
             {
                 var value = filterDefinition.Value!;
@@ -155,12 +158,12 @@
                     GenerateEnumLogicPredicate(logicOperator, value);
 
                 fullPredicate = selectPredicate.Compose(logicPredicate);
-            } 
+            }
             else if (filterDefinition.FieldType.IsGuid)
             {
                 throw new NotImplementedException(
                     $"No Guid filtering implemented for Line Items table, including not for {filterDefinition.Title}");
-            } 
+            }
             else if (filterDefinition.FieldType.IsNumber)
             {
                 var value = Convert.ToDecimal(filterDefinition.Value ?? 0);
@@ -171,12 +174,12 @@
                     "Unit Price" => item => item.UnitPrice,
                     "Discount" => item => item.Discount,
                     _ => throw new NotImplementedException($"{filterDefinition.Title} not implemented in decimal filters.")
-                };
+                    };
 
                 var logicPredicate = GenerateDecimalLogicPredicate(logicOperator, value);
 
                 fullPredicate = selectPredicate.Compose(logicPredicate);
-            } 
+            }
             else if (filterDefinition.FieldType.IsDateTime)
             {
                 throw new NotImplementedException(
@@ -196,7 +199,7 @@
     protected override IOrderedQueryable<LineItem> OrderFilteredQuery(IQueryable<LineItem> filteredQuery, IEnumerable<SortDefinition<LineItem>> sortDefinitions)
     {
         var orderedQuery = filteredQuery.OrderBy(item => true);
-        // ReSharper disable once LoopCanBeConvertedToQuery
+    // ReSharper disable once LoopCanBeConvertedToQuery
         foreach (var sortDefinition in sortDefinitions)
         {
             Expression<Func<LineItem, object>> keySelector = sortDefinition.SortBy switch
@@ -229,10 +232,11 @@
     protected override async Task<LineItem> BuildNewDefaultRow()
     {
         var customer = _customer ?? throw new ArgumentNullException(nameof(_customer), "Unable to add new line item to null customer.");
-        
+
         return new LineItem()
         {
             CustomerId = customer.Id,
+            Quantity = 1,
             AccountId = Guid.Parse("29592A50-15B1-4F5C-A0FC-87AB8FAA11FF"),
             BusinessId = BusinessId.None
         };
@@ -240,7 +244,27 @@
 
     protected override async Task OnAddButtonClicked()
     {
-        await _form.OpenForm();
+        var newDefaultLineItem = await BuildNewDefaultRow();
+        var parameters = new DialogParameters<AddNewLineItemForm>()
+        {
+            { dialog => dialog.Validator, Validator },
+            { dialog => dialog.Accounts, Accounts },
+            { dialog => dialog.NewDataRow, newDefaultLineItem }
+        };
+
+        var options = new DialogOptions()
+        {
+            CloseButton = true,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true
+        };
+        
+        var dialog = await DialogService.ShowAsync<AddNewLineItemForm>("Add new line item", parameters, options);
+        var result = await dialog.Result;
+        if (!result.Canceled)
+        {
+            await AddRow((LineItem) result.Data);
+        }
     }
 
 }

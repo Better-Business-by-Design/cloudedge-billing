@@ -1,63 +1,54 @@
 @using AccountsReceivable.BL.Models.Enum
 @inherits AddNewDataRowForm<LineItem>
 
-<MudOverlay Visible="@IsVisible" Absolute="true" DarkBackground="true" AutoClose="false" >
-    <MudCard>
-        <MudPaper Class="pa-4">
-            <MudForm Model="@NewDataRow" @ref="Form" Validation="@(Validator.ValidateValue)" ValidationDelay="0">
-                <MudText Typo="Typo.h5" Align="Align.Center">
-                    Add new line item
-                    </MudText>
-                <MudCardContent>
-                    <MudTextField
-                        @bind-Value="NewDataRow.Description" For="@(() => NewDataRow.Description)"
-                        Validation="@Validator.ValidateValue" Immediate="true"
-                        Class="mt-3"/>
-                    <MudNumericField Step="Convert.ToInt16(1)"
-                                     @bind-Value="NewDataRow.Quantity" For="@(() => NewDataRow.Quantity)"
-                                     Validation="@Validator.ValidateValue" Immediate="true"/>
-                    <MudNumericField Step="0.1M"
-                                     @bind-Value="NewDataRow.UnitPrice" For="@(() => NewDataRow.UnitPrice)"
-                                     Validation="@Validator.ValidateValue" Immediate="true"/>
-                    <MudNumericField Step="1M"
-                                     @bind-Value="NewDataRow.Discount" For="@(() => NewDataRow.Discount)"
-                                     Validation="@Validator.ValidateValue" Immediate="true"/>
-                    <MudSelect
-                        @bind-Value="NewDataRow.AccountId" For="@(() => NewDataRow.AccountId)"
-                        Validation="Validator.ValidateValue" Immediate="true"
-                        Class="mt-3">
-                        @foreach (var account in Accounts)
-                        {
-                            <MudSelectItem Value="@account.AccountId">@account.Name</MudSelectItem>
-                        }
-                    </MudSelect>
-                    <MudSelect
-                        @bind-Value="NewDataRow.BusinessId" For="@(() => NewDataRow.BusinessId)"
-                        Validation="@Validator.ValidateValue" Immediate="true"
-                        Class="mt-3">
-                        @foreach (var business in BusinessHelper.GetAll())
-                        {
-                            <MudSelectItem Value="@business.BusinessId">@business.Name</MudSelectItem>
-                        }
-                    </MudSelect>
-                </MudCardContent>
-            </MudForm>
-            <MudCardActions>
-                <div class="d-flex align-center justify-space-between">
-                    <MudButton
-                        Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true"
-                        Class="ml-2"
-                        OnClick="@(async () => await OnSubmit())">
-                        Confirm
-                    </MudButton>
-                    <MudButton
-                        Variant="Variant.Filled" Color="Color.Error" DisableElevation="true"
-                        Class="ml-2"
-                        OnClick="@(async () => await OnCancel())">
-                        Cancel
-                    </MudButton>
-                </div>
-            </MudCardActions>
-        </MudPaper>
-    </MudCard>
-</MudOverlay>
+<MudDialog>
+    <TitleContent>
+       <MudText Typo="Typo.h6">
+           Add new line item?
+       </MudText> 
+    </TitleContent>
+    <DialogContent>
+        <MudForm Model="@NewDataRow" @ref="Form" Validation="@(Validator.ValidateValue)" ValidationDelay="0">
+            <MudTextField
+                @bind-Value="NewDataRow.Description" For="@(() => NewDataRow.Description)"
+                Validation="@Validator.ValidateValue" Immediate="true" />
+            <MudNumericField Step="Convert.ToInt16(1)"
+                             @bind-Value="NewDataRow.Quantity" For="@(() => NewDataRow.Quantity)"
+                             Validation="@Validator.ValidateValue" Immediate="true"/>
+            <MudNumericField Step="0.1M"
+                             @bind-Value="NewDataRow.UnitPrice" For="@(() => NewDataRow.UnitPrice)"
+                             Validation="@Validator.ValidateValue" Immediate="true"/>
+            <MudNumericField Step="1M"
+                             @bind-Value="NewDataRow.Discount" For="@(() => NewDataRow.Discount)"
+                             Validation="@Validator.ValidateValue" Immediate="true"/>
+            <MudSelect
+                @bind-Value="NewDataRow.AccountId" For="@(() => NewDataRow.AccountId)"
+                Validation="Validator.ValidateValue" Immediate="true" >
+                @foreach (var account in Accounts)
+                {
+                    <MudSelectItem Value="@account.AccountId">@account.Name</MudSelectItem>
+                }
+            </MudSelect>
+            <MudSelect
+                @bind-Value="NewDataRow.BusinessId" For="@(() => NewDataRow.BusinessId)"
+                Validation="@Validator.ValidateValue" Immediate="true">
+                @foreach (var business in BusinessHelper.GetAll())
+                {
+                    <MudSelectItem Value="@business.BusinessId">@business.Name</MudSelectItem>
+                }
+            </MudSelect>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton
+            Color="Color.Error"
+            OnClick="@OnCancel">
+            Cancel
+        </MudButton>
+        <MudButton
+            Color="Color.Primary"
+            OnClick="@(async () => await OnSubmit())">
+            Confirm
+        </MudButton>
+    </DialogActions>
+</MudDialog>

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using AccountsReceivable.BL.Models.Application;
 
 namespace AccountsReceivable.BL.Models.Enum;
 
@@ -7,7 +8,8 @@ public enum BusinessId : byte
 {
     None = 0,
     CloudEdge = 1,
-    MaxHub = 2
+    MaxHub = 2,
+    Merge = 3
 }
 
 public class Business
@@ -16,8 +18,14 @@ public class Business
     [Column("business_id")]
     public BusinessId BusinessId { get; set; }
     
-    [Column("name")]
+    [Column("business_name")]
     public string Name { get; set; } = null!;
+
+    [ForeignKey(nameof(Branding))] 
+    [Column("branding_theme_id")]
+    public Guid BrandingThemeId { get; set; }
+
+    public virtual Branding Branding { get; set; } = null!;
 }
 
 public static class BusinessHelper
@@ -46,6 +54,14 @@ public static class BusinessHelper
             {
                 BusinessId = BusinessId.MaxHub,
                 Name = "MaxHub"
+            }
+        },
+        {
+            BusinessId.Merge,
+            new Business
+            {
+                BusinessId = BusinessId.Merge,
+                Name = "Merge"
             }
         }
     };

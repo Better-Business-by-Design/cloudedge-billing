@@ -3,15 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccountsReceivable.BL.Models.Application;
 
-public class Account : IDataRow
+public class Branding : IDataRow
 {
     [Key]
-    [Column("account_id")]
-    public Guid AccountId { get; set; }
-    
-    [Column("code")]
-    public int Code { get; set; }
+    [Column("branding_theme_id")]
+    public Guid Id { get; set; }
 
-    [Column("account_name")] 
+    [Column("branding_theme_name")] 
     public string Name { get; set; } = null!;
 }

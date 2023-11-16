@@ -18,6 +18,8 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<Account> Accounts { get; set; } = null!;
 
+    public DbSet<Branding> BrandingThemes { get; set; } = null!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Latin1_General_100_CI_AS");
@@ -65,6 +67,12 @@ public class ApplicationDbContext : DbContext
             entity.HasAlternateKey(account => account.Code).HasName("Account_UN");
 
             entity.ToTable("Account", "dbo");
+        });
+
+        modelBuilder.Entity<Branding>(entity =>
+        {
+            entity.HasKey(branding => branding.Id).HasName("Branding_PK");
+            entity.ToTable("Branding", "dbo");
         });
 
         #endregion
