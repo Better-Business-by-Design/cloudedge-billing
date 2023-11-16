@@ -5,6 +5,8 @@ namespace AccountsReceivable.BL.Models.Application;
 
 public class Branding : IDataRow
 {
+    public static string TypeName => "Branding";
+    
     [Key]
     [Column("branding_theme_id")]
     public Guid Id { get; set; }

@@ -10,6 +10,8 @@ namespace AccountsReceivable.BL.Models.Application;
 
 public class PayMonthlyPlan : IDataRow
 {
+    public static string TypeName => "Pay Monthly Plan";
+    
     [Key]
     [Column("plan_id")]
     public int PlanId { get; set; }

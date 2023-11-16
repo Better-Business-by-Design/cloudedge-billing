@@ -5,6 +5,8 @@ namespace AccountsReceivable.BL.Models.Application;
 
 public class Account : IDataRow
 {
+    public static string TypeName => "Account";
+    
     [Key]
     [Column("account_id")]
     public Guid AccountId { get; set; }

@@ -12,8 +12,10 @@ public enum BusinessId : byte
     Merge = 3
 }
 
-public class Business
+public class Business : IDataRow
 {
+    public static string TypeName => "Business";
+    
     [Key]
     [Column("business_id")]
     public BusinessId BusinessId { get; set; }

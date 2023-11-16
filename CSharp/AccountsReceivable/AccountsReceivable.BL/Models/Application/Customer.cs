@@ -8,6 +8,8 @@ namespace AccountsReceivable.BL.Models.Application;
 
 public class Customer : IDataRow
 {
+    public static string TypeName => "Customer";
+
     [Key]
     [Column("customer_id")]
     public int Id { get; set; }

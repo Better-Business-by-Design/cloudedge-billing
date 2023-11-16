@@ -7,10 +7,12 @@
 
 <div class="@((Editable ? "d-flex" : "d-none") + " flex-wrap")">
     <div class="d-flex justify-start align-center">
-        <MudButton OnClick="@OnAddButtonClicked" Color="Color.Primary">@($"Add {typeof(T).Name}")</MudButton>
+        <MudButton OnClick="@OnAddButtonClicked" Color="Color.Primary">@($"Add {T.TypeName}")</MudButton>
     </div>
     <div class="d-flex justify-start align-center">
-        <MudButton OnClick="@RemoveRows" Color="Color.Secondary">@($"Remove {typeof(T).Name} ({SelectedRows.Count})")</MudButton>
+        <MudButton OnClick="@RemoveRows" Color="Color.Secondary" Disabled="@(!SelectedRows.Any())">
+            @($"Remove {T.TypeName}{(SelectedRows.Count > 1 ? $"s ({SelectedRows.Count})" : string.Empty)}")
+        </MudButton>
     </div>
     <div class="@((Revertable ? "d-flex" : "d-none") + " justify-start align-center")">
         <MudButton OnClick="@UndoLastRowChange" Color="Color.Tertiary" Disabled="@(!CompletedChanges.Any())">Undo Last Change</MudButton>

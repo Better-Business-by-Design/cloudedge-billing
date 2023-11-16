@@ -11,6 +11,8 @@ namespace AccountsReceivable.BL.Models.Application;
 
 public class LineItem : IDataRow
 {
+    public static string TypeName => "Line Item";
+    
     [Key]
     [Column("id")]
     public int Id { get; set; }
