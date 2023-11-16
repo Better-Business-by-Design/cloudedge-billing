@@ -71,9 +71,6 @@
 
     protected ImmutableList<Account> Accounts;
 
-    [Inject]
-    private IDialogService DialogService { get; set; } = default!;
-
     protected override Task OnInitializedAsync()
     {
         Validator = new LineItemFluentValidator(DbContext);

@@ -40,19 +40,14 @@ public abstract partial class AddNewDataRowForm<T> : ComponentBase where T : IDa
     
     [Inject] protected virtual ApplicationDbContext DbContext { get; set; } = default!;
     
-
-    /// <summary>
-    /// Task <c>OnCancel</c> ensures that the form values are reset and, if <see cref="IsVisible"/> is implemented,
-    /// that the form closes, when the user presses the exit/cancel button.
-    /// </summary>
     protected void OnCancel() => MudDialog.Cancel();
 
     /// <summary>
     /// Task <c>OnSubmit</c> ensures that the inputted form values are valid before the results are passed back to the
-    /// parent. It also resets the form values.
+    /// parent.
     /// </summary>
     /// <remarks>
-    /// A better implementation would be to simply bind <c>Form.IsValid</c> to a variable and then use it to disable
+    /// A better implementation might be to simply bind <c>Form.IsValid</c> to a variable and then use it to disable
     /// the submit button.
     /// </remarks>
     protected virtual async Task OnSubmit()

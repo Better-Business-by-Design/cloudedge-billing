@@ -1,8 +1,10 @@
 ﻿using System.Linq.Expressions;
 using AccountsReceivable.API.Shared;
+using AccountsReceivable.API.Shared.NewDataRowForm;
 using AccountsReceivable.BL.Models.Application;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
+using AccountsReceivable.API.Shared.FluidValidation;
 
 namespace AccountsReceivable.API.Pages;
 
@@ -14,6 +16,12 @@ partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
         new BreadcrumbItem("Home", ""),
         new BreadcrumbItem("Pay Monthly Plans", null, true)
     };
+
+    protected override Task OnInitializedAsync()
+    {
+        Validator = new PayMonthlyPlanFluentValidator(DbContext);
+        return base.OnInitializedAsync();
+    }
 
     protected override IQueryable<PayMonthlyPlan> BuildFullQuery()
     {
@@ -137,9 +145,28 @@ partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
         return orderedQuery;
     }
 
-    protected override Task OnAddButtonClicked()
+    protected override async Task OnAddButtonClicked()
     {
-        throw new NotImplementedException();
+        var newDefaultPayMonthlyPlan = await BuildNewDefaultRow();
+        var parameters = new DialogParameters<AddNewPayMonthlyPlanForm>()
+        {
+            { dialog => dialog.Validator, Validator },
+            { dialog => dialog.NewDataRow, newDefaultPayMonthlyPlan }
+        };
+
+        var options = new DialogOptions()
+        {
+            CloseButton = true,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true
+        };
+        
+        var dialog = await DialogService.ShowAsync<AddNewPayMonthlyPlanForm>("Add new plan", parameters, options);
+        var result = await dialog.Result;
+        if (!result.Canceled)
+        {
+            await AddRow((LineItem) result.Data);
+        }
     }
 
     protected override void ReadOnlyRowClicked(DataGridRowClickEventArgs<PayMonthlyPlan> args)
