@@ -9,6 +9,8 @@ namespace AccountsReceivable.API.Pages;
 
 partial class Customers : EditableDataGridPage<Customer>
 {
+    [Parameter] public override bool Insertable { get; set; } = false; 
+    
     [Parameter]
     public bool ShowIsActive { get; set; } = true;
     
@@ -155,7 +157,7 @@ partial class Customers : EditableDataGridPage<Customer>
 
     protected override Task OnAddButtonClicked()
     {
-        throw new NotImplementedException();
+        throw new NotSupportedException();
     }
 
     protected override void ReadOnlyRowClicked(DataGridRowClickEventArgs<Customer> args)

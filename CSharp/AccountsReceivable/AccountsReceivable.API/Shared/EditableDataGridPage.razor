@@ -5,24 +5,29 @@
     base.BuildRenderTree(__builder);
 }
 
-<div class="@((Editable ? "d-flex" : "d-none") + " flex-wrap")">
-    <div class="d-flex justify-start align-center">
-        <MudButton OnClick="@OnAddButtonClicked" Color="Color.Primary">@($"Add {T.TypeName}")</MudButton>
-    </div>
-    <div class="d-flex justify-start align-center">
-        <MudButton OnClick="@RemoveRows" Color="Color.Secondary" Disabled="@(!SelectedRows.Any())">
-            @($"Remove {T.TypeName}{(SelectedRows.Count > 1 ? $"s ({SelectedRows.Count})" : string.Empty)}")
+<div class="@((Editable ? "d-flex" : "d-none") + " flex-row justify-center align-center pa-2 gap-2")">
+    <MudSwitch @bind-Checked="@ReadOnly" UnCheckedColor="Color.Primary" 
+               Label="Toggle Edit Mode" LabelPosition="LabelPosition.End"/>
+    
+    <div class="@(Insertable ? "d-flex" : "d-none")">
+        <MudButton OnClick="@OnAddButtonClicked" Color="Color.Primary" Variant="Variant.Outlined">
+            @($"Add {T.TypeName}")
         </MudButton>
     </div>
-    <div class="@((Revertable ? "d-flex" : "d-none") + " justify-start align-center")">
-        <MudButton OnClick="@UndoLastRowChange" Color="Color.Tertiary" Disabled="@(!CompletedChanges.Any())">Undo Last Change</MudButton>
+    <div class="@(Insertable ? "d-flex" : "d-none")">
+        <MudButton OnClick="@RemoveRows" Color="Color.Secondary" Variant="Variant.Outlined" 
+                   Disabled="@(!DataGrid?.SelectedItems.Any() ?? true)">
+            @($"Remove {T.TypeName}{(DataGrid?.SelectedItems.Count > 1 ? $"s ({DataGrid.SelectedItems.Count})" : string.Empty)}")
+        </MudButton>
     </div>
-    <div class="d-flex justify-start align-center">
-        <MudSwitch @bind-Checked="@ReadOnly" Color="Color.Primary">@(ReadOnly ? "Read Only Mode" : "Edit Mode")</MudSwitch>
-    </div>
-    <div class="d-flex flex-grow-1 justify-end align-center">
-        <MudAlert Severity="Severity.Error" Dense="true" Class="@((_errorMessage.Equals(string.Empty) ? "d-none" : "d-block"))" >
-            @(_errorMessage)
-        </MudAlert>
+    <MudSpacer/>
+    <MudAlert Severity="Severity.Error" Dense="true" Class="@((_errorMessage.Equals(string.Empty) ? "d-none" : "d-block"))">
+        @(_errorMessage)
+    </MudAlert>
+    <div class="@(Revertable ? "d-flex" : "d-none")">
+        <MudButton OnClick="@UndoLastRowChange" Color="Color.Tertiary" Variant="Variant.Outlined"
+                   Disabled="@(!CompletedChanges.Any())">
+            Undo Last Change
+        </MudButton>
     </div>
 </div>

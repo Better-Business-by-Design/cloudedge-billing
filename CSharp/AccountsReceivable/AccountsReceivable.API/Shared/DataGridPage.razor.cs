@@ -19,7 +19,7 @@ namespace AccountsReceivable.API.Shared;
 /// </typeparam>
 public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
 {
-    protected MudDataGrid<T> DataGrid = null!;
+    protected MudDataGrid<T>? DataGrid;
     
     /// <value>
     /// Property <c>ShowBreadcrumb</c> dictates whether or not the Breadcrumb should be visible, defaults to true.

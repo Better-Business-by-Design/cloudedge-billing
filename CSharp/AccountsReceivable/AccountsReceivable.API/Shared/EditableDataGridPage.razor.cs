@@ -28,6 +28,8 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
     [Parameter]
     public bool Editable { get; set; } = true;
 
+    [Parameter] public virtual bool Insertable { get; set; } = true;
+
     /// <value>
     /// Property <c>Revertable</c> dictates whether or not the EditableDataGrid should show the control used to revert
     /// previously completed changes.
@@ -50,10 +52,10 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
     /// Property <c>Validator</c> provides validation functionality for use in adding and editing row values.
     /// Validator rules should mirror (or extend) all database table rules to ensure SQLExceptions are avoided.
     /// </value>
-    public DataRowFluentValidator<T> Validator { get; set; } = default!;
+    protected DataRowFluentValidator<T> Validator { get; set; } = default!;
 
     // Set of all rows currently selected by the user, only used if Editable is true.
-    protected readonly HashSet<T> SelectedRows = new();
+    // protected readonly HashSet<T> SelectedRows = new();
     // Stores the current value of the Read Only <-> Edit Mode toggle, only used if Editable is true.
     protected bool ReadOnly = true;
     // Stack of all changes that have been submitted so far in this session, only used if Revertable is true.
@@ -126,12 +128,11 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
     /// </summary>
     protected virtual async Task RemoveRows()
     {
-        Console.WriteLine($"Rows removed:\n {string.Join("\n", SelectedRows.Select(row => System.Text.Json.JsonSerializer.Serialize(row)))}");
-        var change = new RemoveDataRowsChange(SelectedRows.ToImmutableList());
+        Console.WriteLine($"Rows removed:\n {string.Join("\n", DataGrid.SelectedItems.Select(row => System.Text.Json.JsonSerializer.Serialize(row)))}");
+        var change = new RemoveDataRowsChange(DataGrid.SelectedItems.ToImmutableList());
         await change.ApplyChange(DbContext);
-
         CompletedChanges.Push(change);
-        SelectedRows.Clear();
+        DataGrid.SelectedItems.Clear();
         await DataGrid.ReloadServerData();
     }
 
