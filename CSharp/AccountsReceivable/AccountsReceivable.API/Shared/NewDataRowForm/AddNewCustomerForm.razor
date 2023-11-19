@@ -1,0 +1,53 @@
+@inherits AddNewDataRowForm<Customer>
+
+<MudDialog>
+    <TitleContent>
+       <MudText Typo="Typo.h6">
+           Add new customer?
+       </MudText> 
+    </TitleContent>
+    <DialogContent>
+        <MudForm Model="@NewDataRow" @ref="Form" Validation="@(Validator.ValidateValue)" ValidationDelay="0">
+            <MudTextField
+                @bind-Value="NewDataRow.CustomerName" For="@(() => NewDataRow.CustomerName)"
+                Validation="@Validator.ValidateValue" Immediate="true" />
+            <MudTextField
+                @bind-Value="NewDataRow.DomainName" For="@(() => NewDataRow.DomainName)"
+                Validation="@Validator.ValidateValue" Immediate="true" Clearable="true"/>
+            <MudTextField
+                @bind-Value="NewDataRow.DomainUuid" For="@(() => NewDataRow.DomainUuid)"
+                Validation="@Validator.ValidateValue" Immediate="true" Clearable="true"/>
+            <MudTextField
+                @bind-Value="NewDataRow.XeroContactName" For="@(() => NewDataRow.XeroContactName)"
+                Validation="@Validator.ValidateValue" Immediate="true" />
+            <MudSelect
+                @bind-Value="NewDataRow.PayMonthlyPlanId" For="@(() => NewDataRow.PayMonthlyPlanId)"
+                Validation="Validator.ValidateValue" Immediate="true" >
+                @foreach (var plan in PayMonthlyPlans)
+                {
+                    <MudSelectItem Value="@plan.PlanId">@plan.PlanName</MudSelectItem>
+                }
+            </MudSelect>
+            <MudSwitch
+                @bind-Checked="NewDataRow.IsActive" For="@(() => NewDataRow.IsActive)"
+                Validation="Validator.ValidateValue"
+            />
+            <MudTextField
+                @bind-Value="NewDataRow.Location" For="@(() => NewDataRow.Location)"
+                Validation="@Validator.ValidateValue" Immediate="true" />
+            
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton
+            Color="Color.Error"
+            OnClick="@OnCancel">
+            Cancel
+        </MudButton>
+        <MudButton
+            Color="Color.Primary"
+            OnClick="@(async () => await OnSubmit())">
+            Confirm
+        </MudButton>
+    </DialogActions>
+</MudDialog>

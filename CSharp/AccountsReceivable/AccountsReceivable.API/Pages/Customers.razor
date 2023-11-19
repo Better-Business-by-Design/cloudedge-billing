@@ -36,7 +36,9 @@
         {
             <PropertyColumn Property="@(x => x.IsActive)" Title="Is Active" Required="false">
                 <EditTemplate>
-                    <MudSwitch @bind-Checked="@context.Item.IsActive" Color="Color.Primary">@(context.Item.IsActive ? "True" : "False")</MudSwitch>
+                    <MudSwitch @bind-Checked="@context.Item.IsActive" Color="Color.Primary" Size="Size.Small">
+                        @(context.Item.IsActive ? "True" : "False")
+                    </MudSwitch>
                 </EditTemplate>
             </PropertyColumn>
         }

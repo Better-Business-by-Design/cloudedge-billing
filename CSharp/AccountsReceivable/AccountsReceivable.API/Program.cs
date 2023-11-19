@@ -19,10 +19,7 @@ public class Program
         // Azure AD Authentication
         builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme).AddMicrosoftIdentityWebApp(
             options =>
-            {
-                builder.Configuration.Bind("AzureAd", options);
-                options.Events ??= new OpenIdConnectEvents();
-            });
+            { builder.Configuration.Bind("AzureAd", options); });
         builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
         builder.Services.AddAuthorization(options => { options.FallbackPolicy = options.DefaultPolicy; });
         
@@ -30,8 +27,7 @@ public class Program
         {
             options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         });
-
-
+        
         // Service Dependencies
         builder.Services.AddRazorPages();
         builder.Services.AddServerSideBlazor().AddMicrosoftIdentityConsentHandler();

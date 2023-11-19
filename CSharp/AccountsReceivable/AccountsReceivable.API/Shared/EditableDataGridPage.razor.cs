@@ -29,6 +29,7 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
     public bool Editable { get; set; } = true;
 
     [Parameter] public virtual bool Insertable { get; set; } = true;
+    [Parameter] public virtual bool Removable { get; set; } = true;
 
     /// <value>
     /// Property <c>Revertable</c> dictates whether or not the EditableDataGrid should show the control used to revert

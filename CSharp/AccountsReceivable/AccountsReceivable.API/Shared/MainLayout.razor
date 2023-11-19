@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using System.Security.Claims
+@inherits LayoutComponentBase
 
 <MudLayout>
             <MudAppBar Fixed="true">
@@ -9,6 +10,7 @@
                 <MudLink Class="mx-4" Color="Color.Inherit" Href="customers">All Customers</MudLink>
                 <MudLink Class="mx-4" Color="Color.Inherit" Href="plans">Pay Monthly Plans</MudLink>
                 <MudSpacer/>
+                <MudText>@(User.Claims.FirstOrDefault(c => c.Type.Equals("name"))?.Value ?? string.Empty)</MudText>
             </MudAppBar>
 
             <MudMainContent>

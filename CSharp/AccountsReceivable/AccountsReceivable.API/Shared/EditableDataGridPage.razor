@@ -14,7 +14,7 @@
             @($"Add {T.TypeName}")
         </MudButton>
     </div>
-    <div class="@(Insertable ? "d-flex" : "d-none")">
+    <div class="@(Removable ? "d-flex" : "d-none")">
         <MudButton OnClick="@RemoveRows" Color="Color.Secondary" Variant="Variant.Outlined" 
                    Disabled="@(!DataGrid?.SelectedItems.Any() ?? true)">
             @($"Remove {T.TypeName}{(DataGrid?.SelectedItems.Count > 1 ? $"s ({DataGrid.SelectedItems.Count})" : string.Empty)}")

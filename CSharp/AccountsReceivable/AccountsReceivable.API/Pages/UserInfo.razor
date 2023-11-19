@@ -1,0 +1,18 @@
+﻿@page "/user"
+
+<button @onclick="GetClaimsPrincipalData">Get ClaimsPrincipal Data</button>
+<h1>ClaimsPrincipal Data</h1>
+
+<p>@authMessage</p>
+
+<p>@surname</p>
+
+@if (claims.Count() > 0)
+{
+    <ul>
+        @foreach (var claim in claims)
+        {
+            <li>@claim.Type: @claim.Value</li>
+        }
+    </ul>
+}

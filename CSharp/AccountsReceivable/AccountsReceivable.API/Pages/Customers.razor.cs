@@ -1,5 +1,8 @@
-﻿using System.Linq.Expressions;
+﻿using System.Collections.Immutable;
+using System.Linq.Expressions;
 using AccountsReceivable.API.Shared;
+using AccountsReceivable.API.Shared.FluidValidation;
+using AccountsReceivable.API.Shared.NewDataRowForm;
 using AccountsReceivable.BL.Models.Application;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +12,7 @@ namespace AccountsReceivable.API.Pages;
 
 partial class Customers : EditableDataGridPage<Customer>
 {
-    [Parameter] public override bool Insertable { get; set; } = false; 
+    [Parameter] public override bool Removable { get; set; } = false; 
     
     [Parameter]
     public bool ShowIsActive { get; set; } = true;
@@ -21,6 +24,12 @@ partial class Customers : EditableDataGridPage<Customer>
         new BreadcrumbItem("Home", ""),
         new BreadcrumbItem("Customers", null, true)
     };
+    
+    protected override Task OnInitializedAsync()
+    {
+        Validator = new CustomerFluentValidator(DbContext);
+        return base.OnInitializedAsync();
+    }
 
     protected override IQueryable<Customer> BuildFullQuery()
     {
@@ -155,9 +164,29 @@ partial class Customers : EditableDataGridPage<Customer>
         return orderedQuery;
     }
 
-    protected override Task OnAddButtonClicked()
+    protected override async Task OnAddButtonClicked()
     {
-        throw new NotSupportedException();
+        var newDefaultCustomer = await BuildNewDefaultRow();
+        var parameters = new DialogParameters<AddNewCustomerForm>()
+        {
+            { dialog => dialog.Validator, Validator },
+            { dialog => dialog.NewDataRow, newDefaultCustomer },
+            { dialog => dialog.PayMonthlyPlans, DbContext.PayMonthlyPlans.ToImmutableList()}
+        };
+
+        var options = new DialogOptions()
+        {
+            CloseButton = true,
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true
+        };
+        
+        var dialog = await DialogService.ShowAsync<AddNewCustomerForm>("Add new customer", parameters, options);
+        var result = await dialog.Result;
+        if (!result.Canceled)
+        {
+            await AddRow((Customer) result.Data);
+        }
     }
 
     protected override void ReadOnlyRowClicked(DataGridRowClickEventArgs<Customer> args)
