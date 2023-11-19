@@ -14,7 +14,7 @@
     MultiSelection="true" SelectedItemsChanged="@SelectedRowsChanged"
     Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 13.2rem)">
     <Columns>
-        @if (Insertable)
+        @if (Removable)
         {
             <SelectColumn T="Customer" ShowInFooter="false"/>
         }
