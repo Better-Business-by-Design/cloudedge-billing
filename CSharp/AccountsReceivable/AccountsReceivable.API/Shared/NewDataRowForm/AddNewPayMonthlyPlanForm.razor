@@ -12,11 +12,6 @@
                 @bind-Value="NewDataRow.PlanName" For="@(() => NewDataRow.PlanName)"
                 Validation="@Validator.ValidateValue" Immediate="true" />
             <MudNumericField Step="1"
-                             @bind-Value="NewDataRow.LocalSize" For="@(() => NewDataRow.LocalSize)"
-                             Validation="@Validator.ValidateValue" Immediate="true" Min="0"
-                             Adornment="Adornment.End" AdornmentText="Minutes"
-                             HideSpinButtons="true" Clearable="true"/>
-            <MudNumericField Step="1"
                              @bind-Value="NewDataRow.NationalSize" For="@(() => NewDataRow.NationalSize)"
                              Validation="@Validator.ValidateValue" Immediate="true" Min="0"
                              Adornment="Adornment.End" AdornmentText="Minutes"

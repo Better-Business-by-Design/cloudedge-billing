@@ -18,13 +18,6 @@
     <Columns>
         <SelectColumn T="PayMonthlyPlan" ShowInFooter="false"/>
         <PropertyColumn Property="@(x => x.PlanName)" Title="Name"/>
-        <PropertyColumn Property="@(x => x.LocalSize)" Title="Local Size">
-            <EditTemplate>
-                <MudNumericField Step="1"
-                                 @bind-Value="context.Item.LocalSize" Min="0"
-                                 HideSpinButtons="true" Clearable="true"/>
-            </EditTemplate>
-        </PropertyColumn>
         <PropertyColumn Property="@(x => x.NationalSize)" Title="National Size">
             <EditTemplate>
                 <MudNumericField Step="1"

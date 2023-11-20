@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 using MudBlazor;
 
 // ReSharper disable PropertyCanBeMadeInitOnly.Global
@@ -19,10 +18,6 @@ public class PayMonthlyPlan : IDataRow
     [Column("plan_name")]
     [Label("Plan Name")]
     public string PlanName { get; set; } = null!;
-    
-    [Column("local_size")]
-    [Label("Local Size")]
-    public int? LocalSize { get; set; }
     
     [Column("national_size")]
     [Label("National Size")]

@@ -13,9 +13,6 @@ public class PayMonthlyPlanFluentValidator: DataRowFluentValidator<PayMonthlyPla
             .NotEmpty()
             .Length(1, 255);
 
-        RuleFor(l => l.LocalSize)
-            .GreaterThan(0);
-
         RuleFor(l => l.NationalSize)
             .GreaterThan(0);
 

@@ -20,6 +20,8 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<Branding> BrandingThemes { get; set; } = null!;
 
+    public DbSet<Invoice> Invoices { get; set; } = null!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Latin1_General_100_CI_AS");
@@ -73,6 +75,12 @@ public class ApplicationDbContext : DbContext
         {
             entity.HasKey(branding => branding.Id).HasName("Branding_PK");
             entity.ToTable("Branding", "dbo");
+        });
+
+        modelBuilder.Entity<Invoice>(entity =>
+        {
+            entity.HasKey(invoice => new { invoice.CustomerId, invoice.DateTime });
+            entity.ToTable("invoices", "dbo");
         });
 
         #endregion
@@ -270,7 +278,6 @@ public class ApplicationDbContext : DbContext
                     .ExecuteUpdateAsync(
                         setters => setters
                             .SetProperty(p => p.PlanName, payMonthlyPlan.PlanName)
-                            .SetProperty(p => p.LocalSize, payMonthlyPlan.LocalSize)
                             .SetProperty(p => p.NationalSize, payMonthlyPlan.NationalSize)
                             .SetProperty(p => p.MobileSize, payMonthlyPlan.MobileSize)
                             .SetProperty(p => p.InternationalSize, payMonthlyPlan.InternationalSize)

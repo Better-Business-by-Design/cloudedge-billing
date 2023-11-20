@@ -82,7 +82,6 @@ partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
                 Expression<Func<PayMonthlyPlan, decimal>> selectPredicate = filterDefinition.Title switch
                 {
                     "ID" => plan => plan.PlanId,
-                    "Local Size" => plan => Convert.ToDecimal(plan.LocalSize ?? 0),
                     "National Size" => plan => Convert.ToDecimal(plan.NationalSize ?? 0),
                     "Mobile Size" => plan => Convert.ToDecimal(plan.MobileSize ?? 0),
                     "International Size" => plan => Convert.ToDecimal(plan.InternationalSize ?? 0),
@@ -125,7 +124,6 @@ partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
             {
                 "PlanId" => plan => plan.PlanId,
                 "PlanName" => plan => plan.PlanName,
-                "LocalSize" => plan => plan.LocalSize ?? 0,
                 "NationalSize" => plan => plan.NationalSize ?? 0,
                 "MobileSize" => plan => plan.MobileSize ?? 0,
                 "InternationalSize" => plan => plan.InternationalSize ?? 0,

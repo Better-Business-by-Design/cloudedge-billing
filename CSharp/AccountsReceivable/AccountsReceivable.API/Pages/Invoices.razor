@@ -1,0 +1,86 @@
+@page "/invoices"
+@inherits DataGridPage<Invoice>
+
+@{
+    base.BuildRenderTree(__builder);
+}
+
+<MudDataGrid
+    @ref="DataGrid" T="Invoice" ServerData="@(new Func<GridState<Invoice>, Task<GridData<Invoice>>>(GridServerReload))"
+    SortMode="SortMode.Multiple" Filterable="true" FilterMode="DataGridFilterMode.ColumnFilterMenu"
+    RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc"
+    Dense="true" Hover="true" Striped="true" Bordered="true" 
+    FixedHeader="true" Height="calc(100vh - 9.8rem)"
+    >
+    <Columns>
+        <HierarchyColumn T="Invoice"/>
+        <PropertyColumn Property="@(x => x.CustomerName)" Title="Customer"/>
+        <PropertyColumn Property="@(x => x.XeroContactName)" Title="Xero Contact Name"/>
+        <PropertyColumn Property="@(x => x.DateTime)" Title="Date" Format="MMM yyyy"/>
+        <PropertyColumn Property="@(x => x.TotalVoipCost)" Title="Total VOIP Cost" Format="c"/>
+        <PropertyColumn Property="@(x => x.TotalTollFreeCost)" Title="Total Toll Free Cost" Format="c"/>
+        <PropertyColumn Property="@(x => x.TotalCost)" Title="Total Cost" Format="c"/>
+        <PropertyColumn Property="@(x => x.PlanName)" Title="Plan Name"/>
+    </Columns>
+    <ChildRowContent>
+        <MudStack Row="true" Justify="Justify.Center">
+            <MudCard Class="flex-grow-1">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">VOIP Sum Costs</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudSimpleTable Striped="true" Bordered="true" Elevation="0">
+                        <thead>
+                        <tr>
+                            <th>Mobile</th>
+                            <th>National</th>
+                            <th>International</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>$@context.Item.LandlineMobileSumCost</td>
+                            <td>$@context.Item.LandlineNationalSumCost</td>
+                            <td>$@context.Item.LandlineInternationalSumCost</td>
+                        </tr>
+                        </tbody>
+                    </MudSimpleTable>
+                </MudCardContent>
+            </MudCard>
+            <MudCard Class="flex-grow-1">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">Toll Free Sum Costs</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudSimpleTable Striped="true" Bordered="true" Elevation="0">
+                        <thead>
+                        <tr>
+                            <th>Landline</th>
+                            <th>Mobile</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>$@context.Item.TollFreeFromLandlineSumCost</td>
+                            <td>$@context.Item.TollFreeFromMobileSumCost</td>
+                        </tr>
+                        </tbody>
+                    </MudSimpleTable>
+                </MudCardContent>
+            </MudCard>
+        </MudStack>
+    </ChildRowContent>
+     <NoRecordsContent>
+         <MudText>No matching invoices found</MudText>
+     </NoRecordsContent>
+     <LoadingContent>
+         <MudText>Loading invoices...</MudText>
+     </LoadingContent>
+    <PagerContent>
+        <MudDataGridPager T="Invoice" PageSizeOptions="new[] { 25, 50, 100 }"/>
+    </PagerContent>
+</MudDataGrid>
