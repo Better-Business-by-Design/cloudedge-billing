@@ -1,5 +1,6 @@
 using System.Security.Authentication;
 using System.Text.Json.Serialization;
+using AccountsReceivable.API.Pages;
 using AccountsReceivable.BAL.Data;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +33,10 @@ public class Program
         builder.Services.AddRazorPages();
         builder.Services.AddServerSideBlazor().AddMicrosoftIdentityConsentHandler();
         builder.Services.AddMudServices();
+        
+        // Rest 
+        builder.Services.Configure<ConfigurationDto>(builder.Configuration.GetSection("UiPathOrchestrator"));
+        builder.Services.AddSingleton<UiPathClient>();
 
         // Database Services
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -49,7 +54,7 @@ public class Program
             app.UseExceptionHandler("/Error");
             app.UseHsts();
         }
-
+        
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseRouting();

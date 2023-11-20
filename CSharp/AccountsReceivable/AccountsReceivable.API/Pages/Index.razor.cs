@@ -12,9 +12,9 @@ partial class Index
         new BreadcrumbItem("Home", null, true)
     };
 
-    private static IQueryable<Invoice> StaticLastMonthFilter(IQueryable<Invoice> invoices) 
+    private static IQueryable<Customer> StaticIsActiveFilter(IQueryable<Customer> customers) 
     {
-        return invoices.Where(i => i.DateTime.Month == (DateTime.Now.Month - 1));
+        return customers.Where(c => c.IsActive);
     }
     
 }

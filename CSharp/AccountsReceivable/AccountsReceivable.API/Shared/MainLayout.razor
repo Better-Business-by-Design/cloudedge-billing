@@ -6,9 +6,10 @@
                     <MudImage Height="50" Src="assets/merge.png" Alt="Merge Logo"></MudImage>
                 </MudLink>
                 <MudSpacer/>
-                <MudLink Class="mx-4" Color="Color.Inherit" Href="customers">All Customers</MudLink>
+                <MudLink Class="mx-4" Color="Color.Inherit" Href="customers">Customers</MudLink>
                 <MudLink Class="mx-4" Color="Color.Inherit" Href="plans">Pay Monthly Plans</MudLink>
-                <MudLink Class="mx-4" Color="Color.Inherit" Href="invoices">Invoices</MudLink>
+                <MudLink Class="mx-4" Color="Color.Inherit" Href="invoices">All Invoices</MudLink>
+                <MudLink Class="mx-4" Color="Color.Inherit" Href="robot">Robot</MudLink>
                 <MudSpacer/>
                 <MudText>@(User.Claims.FirstOrDefault(c => c.Type.Equals("name"))?.Value ?? string.Empty)</MudText>
             </MudAppBar>
