@@ -1,2 +1,8 @@
 @page "/robot"
+@using System.Globalization
 <h3>@_queueItem?.Name</h3>
+<h3>@_processDto?.Name</h3>
+<h3>@_argument</h3>
+<h3>@_job?.CreationTime.ToString(CultureInfo.InvariantCulture)</h3>
+
+<MudButton Color="Color.Primary" OnClick="@OnClick">Start Process</MudButton>
