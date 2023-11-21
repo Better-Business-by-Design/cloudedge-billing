@@ -46,6 +46,16 @@ public class UiPathClient : IDisposable
         var response = await _client.ExecuteAsync<UiPathJobSingleton>(request);
         return response.Data!.Value.First();
     }
+
+    public async Task<UiPathJobStatusDto> GetProcessStatus(string name)
+    {
+        var request = new RestRequest("orchestrator_/odata/Jobs", Method.Get);
+        //request.AddQueryParameter("top", 1);
+        request.AddQueryParameter("$filter", $"ReleaseName eq '{name}'");
+        request.AddQueryParameter("$orderby", "CreationTime DESC");
+        var response = await _client.ExecuteAsync<UiPathJobStatusCollection>(request);
+        return response.Data!.Value.First();
+    }
     
 
     public void Dispose()

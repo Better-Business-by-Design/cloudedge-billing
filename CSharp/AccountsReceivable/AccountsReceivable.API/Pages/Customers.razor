@@ -21,7 +21,7 @@
         <PropertyColumn Property="@(x => x.CustomerName)" Title="Customer Name" Required="false"/>
         <PropertyColumn Property="@(x => x.DomainName)" Title="Domain Name" Required="false" IsEditable="false"/>
         <PropertyColumn Property="@(x => x.XeroContactName)" Title="Xero Contact Name" Required="false" IsEditable="false"/>
-        <PropertyColumn Property="@(x => x.PayMonthlyPlan != null ? x.PayMonthlyPlan.PlanName : string.Empty)" Title="Plan Name" Required="false">
+        <PropertyColumn Property="@(x => x.PayMonthlyPlan)" Title="Plan Name" Required="false">
             <EditTemplate>
                 <MudSelect T="@(PayMonthlyPlan?)" @bind-Value="@(context.Item.PayMonthlyPlan)"
                            Clearable="true" Dense="true">

@@ -13,8 +13,10 @@ public partial class Robot : ComponentBase
     private UiPathQueueItem? _queueItem;
     private UiPathProcessDto? _processDto;
     private string? _argument;
+    private DateTime? _yearMonth;
 
-    private UiPathJobDto? _job;
+    public UiPathJobDto? Job;
+    private UiPathJobStatusDto? _jobStatus;
 
     protected override async Task OnInitializedAsync()
     {
@@ -35,11 +37,11 @@ public partial class Robot : ComponentBase
             process.Key,
             inputArguments:  new Dictionary<string, string>()
             {
-                {argument, DateTime.Now.AddDays(-1 * (DateTime.Today.Day - 1)).ToString(CultureInfo.InvariantCulture)}
+                {argument, (_yearMonth ?? DateTime.Today.AddDays(-1 * (DateTime.Today.Day - 1))).ToString(CultureInfo.InvariantCulture)}
             }
         );
 
-        _job = await UiPathClient.StartProcess(startInfo);
+        Job = await UiPathClient.StartProcess(startInfo);
     }
 
 }

@@ -1,0 +1,60 @@
+@using System.Timers
+@using AccountsReceivable.BL.Models.Json
+@inject UiPathClient UiPathClient
+<h3>@_status?.State</h3>
+<h3>@_jobLength?.ToString(@"hh\:mm\:ss")</h3>
+
+@if (_inProgress)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7"></MudProgressLinear>
+}
+
+@code {
+    [CascadingParameter]
+    public UiPathJobDto? Job { get; set; }
+    
+    private Timer _timer;
+    private bool _inProgress = false;
+    private UiPathJobStatusDto? _status;
+    private TimeSpan? _jobLength;
+
+    [Parameter]
+    public double Interval { get; set; } = 1000;
+
+    protected override void OnInitialized()
+    {
+        _timer = new Timer(Interval);
+        _timer.Elapsed += async (s, e) =>
+        {
+            await InvokeAsync(GetProcessStatus);
+        };
+        _timer.Enabled = true;
+
+    }
+
+    private async Task GetProcessStatus()
+    {
+        if (Job is not null)
+        {
+            _status = await UiPathClient.GetProcessStatus(Job.ReleaseName);
+            var endTime = _status.EndTime ?? TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time"));
+            var startTime = _status.StartTime;
+
+            if (startTime is not null)
+            {
+                _jobLength = endTime - startTime;
+            }
+            if (_status.State.Equals("Successful"))
+            {
+                _timer.Enabled = false;
+                _inProgress = false;
+            }
+            else
+            {
+                _inProgress = true;
+            }
+            StateHasChanged();
+        }
+    }
+
+}
