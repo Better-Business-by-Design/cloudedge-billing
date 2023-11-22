@@ -9,19 +9,16 @@ namespace AccountsReceivable.API.Pages;
 public partial class Robot : ComponentBase
 {
     [Inject] private UiPathClient UiPathClient { get; set; } = null!;
-
-    private UiPathQueueItem? _queueItem;
+    
     private UiPathProcessDto? _processDto;
     private string? _argument;
+    
     private DateTime? _yearMonth;
 
-    public UiPathJobDto? Job;
-    private UiPathJobStatusDto? _jobStatus;
+    private readonly List<UiPathJobDto> _jobs = new();
 
     protected override async Task OnInitializedAsync()
     {
-        var items = await UiPathClient.GetQueueItems();
-        _queueItem = items.FirstOrDefault();
         var processes = await UiPathClient.GetProcessesByName("CloudEdgeBilling");
         _processDto = processes.FirstOrDefault();
         _argument = _processDto?.Arguments.GetInputJArray().FirstOrDefault()?.Value<string>("name");
@@ -41,7 +38,9 @@ public partial class Robot : ComponentBase
             }
         );
 
-        Job = await UiPathClient.StartProcess(startInfo);
+        var job = await UiPathClient.StartProcess(startInfo);
+        _jobs.Add(job);
+        StateHasChanged();
     }
 
 }

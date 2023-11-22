@@ -1,18 +1,26 @@
 @page "/robot"
-@using System.Globalization
 @using AccountsReceivable.API.Shared.UiPath
-<h3>@_queueItem?.Name</h3>
-<h3>@_processDto?.Name</h3>
-<h3>@_argument</h3>
-<h3>@Job?.CreationTime.ToString(CultureInfo.InvariantCulture)</h3>
-<h3>@_yearMonth?.ToString(CultureInfo.InvariantCulture)</h3>
 
-<MudDatePicker @bind-Date="_yearMonth" OpenTo="OpenTo.Year" FixDay="1" DateFormat="yyyy/MM"/>
-<MudButton Color="Color.Primary" OnClick="@OnClick" Variant="Variant.Filled">Start Process</MudButton>
 
-@if (Job is not null)
-{
-    <CascadingValue Value="Job">
-        <JobStatusIndicator></JobStatusIndicator>
-    </CascadingValue>
-}
+<MudGrid Class="mud-height-full pa-0 ma-0" Style="width: 100%">
+    <MudItem xs="6" Class="pa-0">
+        <MudPaper>
+            <MudDatePicker @bind-Date="_yearMonth" OpenTo="OpenTo.Year" FixDay="1" DateFormat="yyyy/MM" Label="Month"/>
+            <MudButton Color="Color.Primary" OnClick="@OnClick" Variant="Variant.Filled">Start Process</MudButton>
+        </MudPaper>
+    </MudItem>
+    
+    @* <MudDivider Vertical="true" DividerType="DividerType.Middle" Class="width: 0px"/> *@
+            
+    <MudItem xs="6" Class="pa-0">
+        <MudStack Justify="Justify.FlexStart">
+            @foreach (var job in _jobs)
+            {
+                <JobStatusIndicator Job="@job"/>
+            }
+        </MudStack>
+    </MudItem>
+</MudGrid>
+
+
+

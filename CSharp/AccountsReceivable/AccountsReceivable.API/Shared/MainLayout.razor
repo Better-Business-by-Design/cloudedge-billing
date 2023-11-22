@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
-<MudLayout>
+<MudLayout >
             <MudAppBar Fixed="true">
                 <MudLink Href="">
                     <MudImage Height="50" Src="assets/merge.png" Alt="Merge Logo"></MudImage>
@@ -14,7 +14,7 @@
                 <MudText>@(User.Claims.FirstOrDefault(c => c.Type.Equals("name"))?.Value ?? string.Empty)</MudText>
             </MudAppBar>
 
-            <MudMainContent>
+            <MudMainContent Style="height: 100vh">
                 @Body
             </MudMainContent>
 

@@ -1,6 +1,8 @@
 using AccountsReceivable.BL.Models.Json;
 using Microsoft.Extensions.Options;
 using RestSharp;
+using RestSharp.Serializers.NewtonsoftJson;
+
 // ReSharper disable ClassNeverInstantiated.Global
 
 namespace AccountsReceivable.API.Shared.UiPath;
@@ -20,7 +22,7 @@ public class UiPathClient : IDisposable
         {
             Authenticator = new UiPathAuthenticator(config)
         };
-        _client = new RestClient(options);
+        _client = new RestClient(options, configureSerialization: s => s.UseNewtonsoftJson());
         _client.AddDefaultHeader("X-UIPATH-TenantName", config.TenantName);
         _client.AddDefaultHeader("X-UIPATH-OrganizationUnitId", config.FolderId);
     }
@@ -54,7 +56,8 @@ public class UiPathClient : IDisposable
         request.AddQueryParameter("$filter", $"ReleaseName eq '{name}'");
         request.AddQueryParameter("$orderby", "CreationTime DESC");
         var response = await _client.ExecuteAsync<UiPathJobStatusCollection>(request);
-        return response.Data!.Value.First();
+
+        return response.IsSuccessful ? response.Data!.Value.First() : throw new IOException(response.ErrorMessage);
     }
     
 
