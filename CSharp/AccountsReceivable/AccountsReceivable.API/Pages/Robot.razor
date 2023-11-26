@@ -2,25 +2,55 @@
 @using AccountsReceivable.API.Shared.UiPath
 
 
-<MudGrid Class="mud-height-full pa-0 ma-0" Style="width: 100%">
-    <MudItem xs="6" Class="pa-0">
-        <MudPaper>
-            <MudDatePicker @bind-Date="_yearMonth" OpenTo="OpenTo.Year" FixDay="1" DateFormat="yyyy/MM" Label="Month"/>
-            <MudButton Color="Color.Primary" OnClick="@OnClick" Variant="Variant.Filled">Start Process</MudButton>
-        </MudPaper>
-    </MudItem>
+<MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Stretch" Class="mud-height-full" Spacing="0">
+        <MudCard Class="ma-10 pa-5 flex-grow-1 overflow-hidden" Style="width: 40vw">
+            <MudCardHeader>
+                <MudStack Class="mud-width-full">
+                    <MudText Typo="Typo.h3">New Job Arguments:</MudText>
+                    <MudDivider Class="flex-grow-0"/>
+                </MudStack>
+            </MudCardHeader>
+            <MudForm @ref="form" Model="@_jobArguments" Validation="@(Validator.ValidateValue)" ValidationDelay="0">
+                <MudCardContent>
+                    <MudDatePicker
+                        @bind-Date="@_jobArguments.in_StartRangeDateTime"
+                        For="@(() => _jobArguments.in_StartRangeDateTime)"
+                        Label="Invoice Month"
+                        OpenTo="OpenTo.Year"
+                        FixDay="1"
+                        DateFormat="yyyy/MM"/>
+                </MudCardContent>
+            </MudForm>
+            <MudCardActions>
+                <MudButton
+                    Color="Color.Primary" OnClick="@OnClick" Variant="Variant.Filled"
+                    Class="ml-auto" Disabled="@(_processDto is null)">
+                    Start Process
+                </MudButton>
+            </MudCardActions>
+
+        </MudCard>
     
-    @* <MudDivider Vertical="true" DividerType="DividerType.Middle" Class="width: 0px"/> *@
-            
-    <MudItem xs="6" Class="pa-0">
-        <MudStack Justify="Justify.FlexStart">
-            @foreach (var job in _jobs)
-            {
-                <JobStatusIndicator Job="@job"/>
-            }
-        </MudStack>
-    </MudItem>
-</MudGrid>
+        
+    <MudDivider Class="ma-0 pa-0 flex-grow-0" Vertical="true" DividerType="DividerType.Middle"/> 
+    
+    <MudCard Class="ma-10 pa-5 flex-grow-1 overflow-hidden" Style="width: 40vw">
+        <MudCardHeader>
+            <MudStack Class="mud-width-full">
+                <MudText Typo="Typo.h3">Jobs</MudText>
+                <MudDivider Class="flex-grow-0"></MudDivider>
+            </MudStack>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudStack Justify="Justify.FlexStart">
+                @foreach (var job in _jobs)
+                {
+                    <JobStatusIndicator Job="@job" OnRemoveClick="@RemoveJob"/>
+                }
+            </MudStack>
+        </MudCardContent>
+    </MudCard>
+</MudStack>
 
 
 

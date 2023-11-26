@@ -6,20 +6,26 @@
 <MudCard>
     <MudCardHeader>
         <CardHeaderContent>
-            <MudStack Row="true" AlignItems="AlignItems.Center">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
                 <MudText Typo="Typo.h6">@Job?.ReleaseName</MudText>
+                <MudAlert Severity="@(_status?.State.Severity() ?? Severity.Info)" Class="@(_status is null ? "invisible" : "visible")">Job state: @_status?.State</MudAlert>
             </MudStack>
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
-        <MudAlert Severity="@(_status?.State.Severity() ?? Severity.Info)" Class="flex-grow-0">Job state: @_status?.State</MudAlert>
         <MudText Typo="Typo.body1">Runtime: @_jobLength?.ToString(@"hh\:mm\:ss")</MudText>
+
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="@((!_status?.State.Completed() ?? false) ? "visible" : "invisible")"/>
     </MudCardContent>
     <MudCardActions>
-        @if (!_status?.State.Completed() ?? false)
-        {
-            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7"/>
-        }
+        <MudStack Row="true" Justify="Justify.SpaceBetween" Style="width: 100%">
+            <MudSpacer />
+            <MudButton
+                StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Outlined"
+                Disabled="@(!_status?.State.Completed() ?? true)" OnClick="@(async () => await OnRemoveClick.InvokeAsync(Job))">
+                Remove
+            </MudButton>
+        </MudStack>
     </MudCardActions>
 </MudCard>
 
@@ -30,12 +36,15 @@
     public UiPathJobDto? Job { get; set; }
     
     private Timer _timer;
-    private UiPathJobStatusDto? _status;
+    private UiPathJobDto? _status;
     private TimeSpan? _jobLength;
     private Severity _severity;
 
     [Parameter]
     public double Interval { get; set; } = 1000;
+    
+    [Parameter]
+    public EventCallback<UiPathJobDto> OnRemoveClick { get; set; } 
 
     protected override void OnInitialized()
     {
@@ -52,7 +61,7 @@
     {
         if (Job is not null)
         {
-            _status = await UiPathClient.GetProcessStatus(Job.ReleaseName);
+            _status = await UiPathClient.GetJobById(Job.Id);
             var endTime = _status.EndTime ?? TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time"));
             var startTime = _status.StartTime;
 

@@ -1,14 +1,18 @@
-using System.Globalization;
+using AccountsReceivable.API.Shared.FluidValidation;
 using AccountsReceivable.API.Shared.UiPath;
+using AccountsReceivable.BAL.Data;
 using AccountsReceivable.BL.Models.Json;
 using Microsoft.AspNetCore.Components;
-using Newtonsoft.Json.Linq;
+using MudBlazor;
 
 namespace AccountsReceivable.API.Pages;
 
 public partial class Robot : ComponentBase
 {
     [Inject] private UiPathClient UiPathClient { get; set; } = null!;
+    [Inject] private ApplicationDbContext DbContext { get; set; } = null!;
+
+    private MudForm form;
     
     private UiPathProcessDto? _processDto;
     private string? _argument;
@@ -16,30 +20,38 @@ public partial class Robot : ComponentBase
     private DateTime? _yearMonth;
 
     private readonly List<UiPathJobDto> _jobs = new();
+    
+    private CloudEdgeBillingJobArguments _jobArguments = new();
+
+    private CloudEdgeBillingJobArgumentsFluidValidator Validator;
 
     protected override async Task OnInitializedAsync()
     {
+        Validator = new CloudEdgeBillingJobArgumentsFluidValidator(DbContext);
         var processes = await UiPathClient.GetProcessesByName("CloudEdgeBilling");
         _processDto = processes.FirstOrDefault();
-        _argument = _processDto?.Arguments.GetInputJArray().FirstOrDefault()?.Value<string>("name");
         await base.OnInitializedAsync();
     }
 
     private async Task OnClick()
     {
         var process = _processDto ?? throw new ArgumentNullException(nameof(_processDto));
-        var argument = _argument ?? throw new ArgumentNullException(nameof(_argument));
         
-        var startInfo = UiPathJobStartInfoFactory.BuildJobStartInfo(
-            process.Key,
-            inputArguments:  new Dictionary<string, string>()
-            {
-                {argument, (_yearMonth ?? DateTime.Today.AddDays(-1 * (DateTime.Today.Day - 1))).ToString(CultureInfo.InvariantCulture)}
-            }
-        );
+        await form.Validate();
 
-        var job = await UiPathClient.StartProcess(startInfo);
-        _jobs.Add(job);
+        if (form.IsValid)
+        {
+            var startInfo = UiPathJobStartInfoFactory.BuildJobStartInfo(process, _jobArguments);
+            var job = await UiPathClient.StartProcess(startInfo);
+            _jobs.Add(job);
+            
+            StateHasChanged();
+        }
+    }
+
+    private void RemoveJob(UiPathJobDto job)
+    {
+        _jobs.Remove(job);
         StateHasChanged();
     }
 
