@@ -1,15 +1,12 @@
-using System.Security.Authentication;
 using System.Text.Json.Serialization;
-using AccountsReceivable.API.Pages;
-using AccountsReceivable.API.Shared.UiPath;
 using AccountsReceivable.BAL.Data;
-using AccountsReceivable.BL.Models.Json;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 using MudBlazor.Services;
-using Newtonsoft.Json;
+using UiPathApi.Swagger.Api;
+using UiPathApi.Swagger.Client;
 
 namespace AccountsReceivable.API;
 
@@ -37,8 +34,8 @@ public class Program
         builder.Services.AddMudServices();
         
         // Rest 
-        builder.Services.Configure<ConfigurationDto>(builder.Configuration.GetSection("UiPathOrchestrator"));
-        builder.Services.AddSingleton<UiPathClient>();
+        builder.Services.Configure<Configuration>(builder.Configuration.GetSection("UiPathOrchestrator"));
+        builder.Services.AddSingleton<ReleasesApi>();
 
         // Database Services
         builder.Services.AddDbContext<ApplicationDbContext>(options =>

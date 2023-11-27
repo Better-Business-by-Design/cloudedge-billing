@@ -1,0 +1,74 @@
+@using System.Timers
+@using UiPathApi.Swagger.Api
+@using UiPathApi.Swagger.Model
+@inject JobsApi JobsApi
+
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudStack Row="true" AlignItems="AlignItems.Center">
+                <MudText Typo="Typo.h6">@Job?.ReleaseName</MudText>
+            </MudStack>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudAlert Severity="@(Severity.Info)" Class="flex-grow-0">Job state: @Job?.State</MudAlert>
+        <MudText Typo="Typo.body1">Runtime: @_jobLength?.ToString(@"hh\:mm\:ss")</MudText>
+    </MudCardContent>
+    <MudCardActions>
+        @if (Job?.State is not (JobDto.StateEnum.Successful or JobDto.StateEnum.Stopped or JobDto.StateEnum.Faulted))
+        {
+            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7"/>
+        }
+    </MudCardActions>
+    <MudButton OnClick="@OnRemoveClick">Remove</MudButton>
+</MudCard>
+
+
+
+@code {
+    [Parameter]
+    public JobDto? Job { get; set; }
+    
+    [Parameter]
+    public EventCallback OnRemoveClick { get; set; }
+    
+    private Timer _timer;
+    private TimeSpan? _jobLength;
+    private Severity _severity;
+
+    [Parameter]
+    public double Interval { get; set; } = 1000;
+
+    protected override void OnInitialized()
+    {
+        _timer = new Timer(Interval);
+        _timer.Elapsed += async (s, e) =>
+        {
+            await InvokeAsync(GetProcessStatus);
+        };
+        _timer.Enabled = true;
+
+    }
+
+    private async Task GetProcessStatus()
+    {
+        if (Job is not null)
+        {
+            Job = await JobsApi.JobsGetByIdAsync(Job.Id, xUipathOrganizationUnitId: 314814);
+            var endTime = Job.EndTime ?? TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time"));
+            var startTime = Job.StartTime;
+
+            if (startTime is not null)
+            {
+                _jobLength = endTime - startTime;
+            }
+            if (Job.State is JobDto.StateEnum.Successful or JobDto.StateEnum.Stopped or JobDto.StateEnum.Faulted)
+            {
+                _timer.Enabled = false;
+            }
+            StateHasChanged();
+        }
+    }
+
+}

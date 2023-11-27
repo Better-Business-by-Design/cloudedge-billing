@@ -1,5 +1,4 @@
 @page "/robot"
-@using AccountsReceivable.API.Shared.UiPath
 
 
 <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Stretch" Class="mud-height-full" Spacing="0">
@@ -24,7 +23,7 @@
             <MudCardActions>
                 <MudButton
                     Color="Color.Primary" OnClick="@OnClick" Variant="Variant.Filled"
-                    Class="ml-auto" Disabled="@(_processDto is null)">
+                    Class="ml-auto" Disabled="@(_releaseDto is null)">
                     Start Process
                 </MudButton>
             </MudCardActions>

@@ -17,6 +17,7 @@
         <PackageReference Include="MudBlazor" Version="6.11.0"/>
         <PackageReference Include="RestSharp" Version="110.2.0" />
         <PackageReference Include="RestSharp.Serializers.NewtonsoftJson" Version="110.2.0" />
+        <PackageReference Include="UiPathApi.Swagger" Version="1.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -128,5 +129,6 @@
         <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\scss\_utilities.scss"/>
         <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\scss\_variables-dark.scss"/>
         <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\scss\_variables.scss"/>
+        <_ContentIncludedByDefault Remove="Shared\UiPath\JobStatusIndicator.razor" />
     </ItemGroup>
 </Project>
