@@ -5,35 +5,34 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Newtonsoft.Json;
 using UiPathApi.Swagger.Api;
+using UiPathApi.Swagger.Client;
 using UiPathApi.Swagger.Model;
 
 namespace AccountsReceivable.API.Pages;
 
 public partial class Robot : ComponentBase
 {
+    [Inject] private ApplicationDbContext DbContext { get; set; } = null!;
+    
     [Inject] private ReleasesApi ReleasesApi { get; set; } = null!;
     [Inject] private JobsApi JobsApi { get; set; } = null!;
-    
-    [Inject] private ApplicationDbContext DbContext { get; set; } = null!;
 
-    private MudForm form;
-    private CloudEdgeBillingJobArguments _jobArguments;
+    private MudForm _form = null!;
+    private readonly CloudEdgeBillingJobArguments _jobArguments = new();
     
     private ReleaseDto? _releaseDto;
-    
-    private DateTime? _yearMonth;
 
     private readonly List<JobDto> _jobs = new();
 
-    private CloudEdgeBillingJobArgumentsFluidValidator Validator;
+    private CloudEdgeBillingJobArgumentsFluidValidator _validator = null!;
 
     private const long ProcessId = 23346;
     private const long FolderId = 314814;
 
     protected override async Task OnInitializedAsync()
     {
-        Validator = new CloudEdgeBillingJobArgumentsFluidValidator(DbContext);
-        _releaseDto = await ReleasesApi.ReleasesGetByIdAsync(ProcessId, xUipathOrganizationUnitId: FolderId);
+        _validator = new CloudEdgeBillingJobArgumentsFluidValidator(DbContext);
+        _releaseDto = await ReleasesApi.ReleasesGetByIdAsync(ProcessId);
         await base.OnInitializedAsync();
     }
 
@@ -41,21 +40,19 @@ public partial class Robot : ComponentBase
     {
         var process = _releaseDto ?? throw new ArgumentNullException(nameof(_releaseDto));
         
-        await form.Validate();
+        await _form.Validate();
 
-        if (form.IsValid)
+        if (_form.IsValid)
         {
-            var startJobsRequest = new StartJobsRequest()
-            {
-                StartInfo = new StartProcessDto()
+            var startJobsRequest = new StartJobsRequest( new StartProcessDto
                 {
                     ReleaseKey = process.Key,
                     Strategy = StartProcessDto.StrategyEnum.ModernJobsCount,
                     JobsCount = 1,
                     InputArguments = JsonConvert.SerializeObject(_jobArguments)
                 }
-            };
-            var jobODataValue = await JobsApi.JobsStartJobsAsync(startJobsRequest, xUipathOrganizationUnitId: FolderId);
+            );
+            var jobODataValue = await JobsApi.JobsStartJobsAsync(startJobsRequest);
             var job = jobODataValue.Value.First();
             _jobs.Add(job);
             
@@ -71,7 +68,8 @@ public partial class Robot : ComponentBase
 
     public record CloudEdgeBillingJobArguments : IDataRow
     {
-        public DateTime in_StartRangeDateTime { get; set; } = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+        // ReSharper disable once InconsistentNaming
+        public DateTime? in_StartRangeDateTime { get; set; } = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
     }
         
 

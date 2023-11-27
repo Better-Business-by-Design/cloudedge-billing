@@ -34,7 +34,11 @@ public class Program
         builder.Services.AddMudServices();
         
         // Rest 
-        builder.Services.Configure<Configuration>(builder.Configuration.GetSection("UiPathOrchestrator"));
+        var orchestratorConfig = builder.Configuration.GetSection("UiPathOrchestrator").Get<OrchestratorConfigDto>();
+        builder.Services.AddSingleton<IReadableConfiguration, Configuration>(sp => new Configuration(orchestratorConfig) );
+        
+        builder.Services.AddSingleton<JobsApi>();
+        builder.Services.AddSingleton<ProcessesApi>();
         builder.Services.AddSingleton<ReleasesApi>();
 
         // Database Services

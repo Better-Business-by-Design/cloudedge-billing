@@ -9,7 +9,7 @@
                     <MudDivider Class="flex-grow-0"/>
                 </MudStack>
             </MudCardHeader>
-            <MudForm @ref="form" Model="@_jobArguments" Validation="@(Validator.ValidateValue)" ValidationDelay="0">
+            <MudForm @ref="_form" Model="@_jobArguments" Validation="@(_validator.ValidateValue)" ValidationDelay="0">
                 <MudCardContent>
                     <MudDatePicker
                         @bind-Date="@_jobArguments.in_StartRangeDateTime"

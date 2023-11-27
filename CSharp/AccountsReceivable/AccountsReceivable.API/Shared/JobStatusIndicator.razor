@@ -1,27 +1,33 @@
 @using System.Timers
 @using UiPathApi.Swagger.Api
 @using UiPathApi.Swagger.Model
+@using UiPathApi.Swagger.Model.Enum
 @inject JobsApi JobsApi
 
 <MudCard>
     <MudCardHeader>
         <CardHeaderContent>
-            <MudStack Row="true" AlignItems="AlignItems.Center">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
                 <MudText Typo="Typo.h6">@Job?.ReleaseName</MudText>
+                <MudAlert Severity="@(Severity.Info)" Class="@(Job?.State is null ? "invisible" : "visible")">Job state: @Job?.State</MudAlert>
             </MudStack>
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
-        <MudAlert Severity="@(Severity.Info)" Class="flex-grow-0">Job state: @Job?.State</MudAlert>
         <MudText Typo="Typo.body1">Runtime: @_jobLength?.ToString(@"hh\:mm\:ss")</MudText>
+
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="@(!Job?.State?.Completed() ?? false ? "visible" : "invisible")"/>
     </MudCardContent>
     <MudCardActions>
-        @if (Job?.State is not (JobDto.StateEnum.Successful or JobDto.StateEnum.Stopped or JobDto.StateEnum.Faulted))
-        {
-            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7"/>
-        }
+        <MudStack Row="true" Justify="Justify.SpaceBetween" Style="width: 100%">
+            <MudSpacer />
+            <MudButton
+                StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Outlined"
+                Disabled="@(Job?.State?.Completed() ?? true)" OnClick="@(async () => await OnRemoveClick.InvokeAsync(Job))">
+                Remove
+            </MudButton>
+        </MudStack>
     </MudCardActions>
-    <MudButton OnClick="@OnRemoveClick">Remove</MudButton>
 </MudCard>
 
 
@@ -31,7 +37,7 @@
     public JobDto? Job { get; set; }
     
     [Parameter]
-    public EventCallback OnRemoveClick { get; set; }
+    public EventCallback<JobDto> OnRemoveClick { get; set; } 
     
     private Timer _timer;
     private TimeSpan? _jobLength;
@@ -48,14 +54,13 @@
             await InvokeAsync(GetProcessStatus);
         };
         _timer.Enabled = true;
-
     }
 
     private async Task GetProcessStatus()
     {
         if (Job is not null)
         {
-            Job = await JobsApi.JobsGetByIdAsync(Job.Id, xUipathOrganizationUnitId: 314814);
+            Job = await JobsApi.JobsGetByIdAsync(Job.Id);
             var endTime = Job.EndTime ?? TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time"));
             var startTime = Job.StartTime;
 
@@ -63,12 +68,13 @@
             {
                 _jobLength = endTime - startTime;
             }
-            if (Job.State is JobDto.StateEnum.Successful or JobDto.StateEnum.Stopped or JobDto.StateEnum.Faulted)
+            if (Job?.State?.Completed() ?? false)
             {
                 _timer.Enabled = false;
             }
             StateHasChanged();
         }
     }
+    
 
 }
