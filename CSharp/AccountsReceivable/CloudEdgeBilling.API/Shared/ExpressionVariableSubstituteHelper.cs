@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Linq.Expressions;
-using AccountsReceivable.API.Pages;
+using CloudEdgeBilling.API.Pages;
 
-namespace AccountsReceivable.API.Shared;
+namespace CloudEdgeBilling.API.Shared;
 
 public static class ExpressionVariableSubstituteHelper
 {

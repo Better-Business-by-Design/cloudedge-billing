@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AccountsReceivable.BL.Models.Application;
+namespace CloudEdgeBilling.BL.Models.Application;
 
 public class Invoice : IDataRow
 {

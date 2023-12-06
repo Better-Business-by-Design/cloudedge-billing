@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
-using AccountsReceivable.API.Shared;
-using AccountsReceivable.BL.Models.Application;
+using CloudEdgeBilling.API.Shared;
+using CloudEdgeBilling.BL.Models.Application;
 using MudBlazor;
 
-namespace AccountsReceivable.API.Pages;
+namespace CloudEdgeBilling.API.Pages;
 
 public partial class Invoices : DataGridPage<Invoice>
 {

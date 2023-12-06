@@ -1,9 +1,9 @@
-﻿using AccountsReceivable.BL.Models.Application;
-using AccountsReceivable.BL.Models.Enum;
+﻿using CloudEdgeBilling.BL.Models.Application;
+using CloudEdgeBilling.BL.Models.Enum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace AccountsReceivable.BAL.Data;
+namespace CloudEdgeBilling.BAL.Data;
 
 public class ApplicationDbContext : DbContext
 {

@@ -1,10 +1,10 @@
 ﻿using System.Security.Authentication;
 using System.Security.Claims;
-using AccountsReceivable.BAL.Data;
+using CloudEdgeBilling.BAL.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
-namespace AccountsReceivable.API.Shared;
+namespace CloudEdgeBilling.API.Shared;
 
 partial class MainLayout
 {

@@ -1,12 +1,12 @@
 ﻿using System.Linq.Expressions;
-using AccountsReceivable.API.Shared;
-using AccountsReceivable.API.Shared.NewDataRowForm;
-using AccountsReceivable.BL.Models.Application;
+using CloudEdgeBilling.API.Shared;
+using CloudEdgeBilling.API.Shared.NewDataRowForm;
+using CloudEdgeBilling.BL.Models.Application;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
-using AccountsReceivable.API.Shared.FluidValidation;
+using CloudEdgeBilling.API.Shared.FluidValidation;
 
-namespace AccountsReceivable.API.Pages;
+namespace CloudEdgeBilling.API.Pages;
 
 partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
 {

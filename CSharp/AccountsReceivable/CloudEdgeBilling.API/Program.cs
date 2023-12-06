@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using AccountsReceivable.BAL.Data;
+using CloudEdgeBilling.BAL.Data;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
@@ -8,7 +8,7 @@ using MudBlazor.Services;
 using UiPathApi.Swagger.Api;
 using UiPathApi.Swagger.Client;
 
-namespace AccountsReceivable.API;
+namespace CloudEdgeBilling.API;
 
 public class Program
 {

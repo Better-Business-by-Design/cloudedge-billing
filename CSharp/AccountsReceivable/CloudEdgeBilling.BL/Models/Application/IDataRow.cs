@@ -1,4 +1,4 @@
-namespace AccountsReceivable.BL.Models.Application;
+namespace CloudEdgeBilling.BL.Models.Application;
 
 public interface IDataRow
 {

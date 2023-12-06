@@ -1,8 +1,8 @@
-using AccountsReceivable.BAL.Data;
-using AccountsReceivable.BL.Models.Application;
+using CloudEdgeBilling.BAL.Data;
+using CloudEdgeBilling.BL.Models.Application;
 using FluentValidation;
 
-namespace AccountsReceivable.API.Shared.FluidValidation;
+namespace CloudEdgeBilling.API.Shared.FluidValidation;
 
 public class CustomerFluentValidator : DataRowFluentValidator<Customer>
 {

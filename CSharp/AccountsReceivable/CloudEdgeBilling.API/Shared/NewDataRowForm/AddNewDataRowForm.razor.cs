@@ -1,10 +1,10 @@
-using AccountsReceivable.API.Shared.FluidValidation;
-using AccountsReceivable.BAL.Data;
-using AccountsReceivable.BL.Models.Application;
+using CloudEdgeBilling.API.Shared.FluidValidation;
+using CloudEdgeBilling.BAL.Data;
+using CloudEdgeBilling.BL.Models.Application;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace AccountsReceivable.API.Shared.NewDataRowForm;
+namespace CloudEdgeBilling.API.Shared.NewDataRowForm;
 
 /// <summary>
 /// Abstract class <c>AddNewDataRowForm</c> represents a component using a MudForm to accept and validate user input

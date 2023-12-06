@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace AccountsReceivable.API.Shared;
+namespace CloudEdgeBilling.API.Shared;
 
 partial class Breadcrumb : ComponentBase
 {

@@ -1,9 +1,9 @@
-using AccountsReceivable.BAL.Data;
-using AccountsReceivable.BL.Models.Application;
-using AccountsReceivable.BL.Models.Enum;
+using CloudEdgeBilling.BAL.Data;
+using CloudEdgeBilling.BL.Models.Application;
+using CloudEdgeBilling.BL.Models.Enum;
 using FluentValidation;
 
-namespace AccountsReceivable.API.Shared.FluidValidation;
+namespace CloudEdgeBilling.API.Shared.FluidValidation;
 
 public class LineItemFluentValidator : DataRowFluentValidator<LineItem>
 {

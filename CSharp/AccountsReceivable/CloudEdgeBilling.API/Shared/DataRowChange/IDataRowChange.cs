@@ -1,6 +1,6 @@
-using AccountsReceivable.BAL.Data;
+using CloudEdgeBilling.BAL.Data;
 
-namespace AccountsReceivable.API.Shared.DataRowChange;
+namespace CloudEdgeBilling.API.Shared.DataRowChange;
 
 public interface IDataRowChange
 { 

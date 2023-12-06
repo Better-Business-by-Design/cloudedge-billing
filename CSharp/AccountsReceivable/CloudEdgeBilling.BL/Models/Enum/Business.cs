@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using AccountsReceivable.BL.Models.Application;
+using CloudEdgeBilling.BL.Models.Application;
 
-namespace AccountsReceivable.BL.Models.Enum;
+namespace CloudEdgeBilling.BL.Models.Enum;
 
 public enum BusinessId : byte
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace AccountsReceivable.API.Shared;
+namespace CloudEdgeBilling.API.Shared;
 
 partial class RedirectToLogin
 {

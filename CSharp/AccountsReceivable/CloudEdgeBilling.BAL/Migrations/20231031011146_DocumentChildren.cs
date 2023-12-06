@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace AccountsReceivable.BAL.Migrations
+namespace CloudEdgeBilling.BAL.Migrations
 {
     public partial class DocumentChildren : Migration
     {

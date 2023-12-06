@@ -1,9 +1,9 @@
-using AccountsReceivable.BAL.Data;
-using AccountsReceivable.BL.Models.Application;
+using CloudEdgeBilling.BAL.Data;
+using CloudEdgeBilling.BL.Models.Application;
 using FluentValidation;
 using Newtonsoft.Json;
 
-namespace AccountsReceivable.API.Shared.FluidValidation;
+namespace CloudEdgeBilling.API.Shared.FluidValidation;
 
 /// <summary>
 /// Abstract class <c>AuthenticatedDataRowFluentValidator</c> extends <c>AbstractValidator</c> and provides common

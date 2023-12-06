@@ -1,14 +1,14 @@
 ﻿using System.Collections.Immutable;
 using System.Linq.Expressions;
-using AccountsReceivable.API.Shared;
-using AccountsReceivable.API.Shared.FluidValidation;
-using AccountsReceivable.API.Shared.NewDataRowForm;
-using AccountsReceivable.BL.Models.Application;
+using CloudEdgeBilling.API.Shared;
+using CloudEdgeBilling.API.Shared.FluidValidation;
+using CloudEdgeBilling.API.Shared.NewDataRowForm;
+using CloudEdgeBilling.BL.Models.Application;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 
-namespace AccountsReceivable.API.Pages;
+namespace CloudEdgeBilling.API.Pages;
 
 partial class Customers : EditableDataGridPage<Customer>
 {

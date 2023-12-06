@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace AccountsReceivable.BAL.Data;
+namespace CloudEdgeBilling.BAL.Data;
 
 public class ApplicationContextDesignFactory : DesignTimeDbContextFactoryBase<ApplicationDbContext>
 {

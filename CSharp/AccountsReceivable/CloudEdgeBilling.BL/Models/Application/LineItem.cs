@@ -1,13 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection.Emit;
-using AccountsReceivable.BL.Models.Enum;
+using CloudEdgeBilling.BL.Models.Enum;
 using MudBlazor;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable PropertyCanBeMadeInitOnly.Global
 
-namespace AccountsReceivable.BL.Models.Application;
+namespace CloudEdgeBilling.BL.Models.Application;
 
 public class LineItem : IDataRow
 {

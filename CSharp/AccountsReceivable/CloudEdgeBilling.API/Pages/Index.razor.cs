@@ -1,8 +1,8 @@
 ﻿
-using AccountsReceivable.BL.Models.Application;
+using CloudEdgeBilling.BL.Models.Application;
 using MudBlazor;
 
-namespace AccountsReceivable.API.Pages;
+namespace CloudEdgeBilling.API.Pages;
 
 partial class Index
 {

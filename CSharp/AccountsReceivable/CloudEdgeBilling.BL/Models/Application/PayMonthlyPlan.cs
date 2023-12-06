@@ -5,7 +5,7 @@ using MudBlazor;
 // ReSharper disable PropertyCanBeMadeInitOnly.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
-namespace AccountsReceivable.BL.Models.Application;
+namespace CloudEdgeBilling.BL.Models.Application;
 
 public class PayMonthlyPlan : IDataRow
 {

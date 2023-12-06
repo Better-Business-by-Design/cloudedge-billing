@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable PropertyCanBeMadeInitOnly.Global
 
-namespace AccountsReceivable.BL.Models.Application;
+namespace CloudEdgeBilling.BL.Models.Application;
 
 public class Customer : IDataRow
 {

@@ -1,11 +1,11 @@
 using System.Linq.Expressions;
-using AccountsReceivable.BAL.Data;
-using AccountsReceivable.BL.Models.Application;
+using CloudEdgeBilling.BAL.Data;
+using CloudEdgeBilling.BL.Models.Application;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 
-namespace AccountsReceivable.API.Shared;
+namespace CloudEdgeBilling.API.Shared;
 
 /// <summary>
 /// Abstract class <c>DataGridPage</c> represents a page/component using a MudDataGrid to present a database table.

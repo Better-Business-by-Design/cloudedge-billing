@@ -1,8 +1,8 @@
-using AccountsReceivable.API.Pages;
-using AccountsReceivable.BAL.Data;
+using CloudEdgeBilling.API.Pages;
+using CloudEdgeBilling.BAL.Data;
 using FluentValidation;
 
-namespace AccountsReceivable.API.Shared.FluidValidation;
+namespace CloudEdgeBilling.API.Shared.FluidValidation;
 
 public class CloudEdgeBillingJobArgumentsFluidValidator : DataRowFluentValidator<Robot.CloudEdgeBillingJobArguments>
 {

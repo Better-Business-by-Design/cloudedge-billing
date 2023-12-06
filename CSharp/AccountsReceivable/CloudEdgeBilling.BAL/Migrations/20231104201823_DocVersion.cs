@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace AccountsReceivable.BAL.Migrations
+namespace CloudEdgeBilling.BAL.Migrations
 {
     public partial class DocVersion : Migration
     {

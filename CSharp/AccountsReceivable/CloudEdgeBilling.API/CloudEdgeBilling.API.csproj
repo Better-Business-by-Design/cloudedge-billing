@@ -3,9 +3,8 @@
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <UserSecretsId>aspnet-AccountsReceivable-994f200b-25f4-4526-82e1-a20aa3f98cff</UserSecretsId>
         <WebProject_DirectoryAccessLevelKey>0</WebProject_DirectoryAccessLevelKey>
-        <RootNamespace>AccountsReceivable.API</RootNamespace>
+        <RootNamespace>CloudEdgeBilling.API</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -29,13 +28,6 @@
     <ItemGroup>
         <_ContentIncludedByDefault Remove="Pages\Error.cshtml"/>
         <_ContentIncludedByDefault Remove="Pages\_Host.cshtml"/>
-        <_ContentIncludedByDefault Remove="Pages\ATS.razor"/>
-        <_ContentIncludedByDefault Remove="Pages\InvoiceDetails.razor"/>
-        <_ContentIncludedByDefault Remove="Pages\InvoiceHistory.razor"/>
-        <_ContentIncludedByDefault Remove="Pages\Management.razor"/>
-        <_ContentIncludedByDefault Remove="Pages\Pricing.razor"/>
-        <_ContentIncludedByDefault Remove="Pages\PricingDetails.razor"/>
-        <_ContentIncludedByDefault Remove="Pages\PricingHistory.razor"/>
         <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\js\bootstrap.bundle.min.js"/>
         <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\js\bootstrap.bundle.min.js.map"/>
         <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\scss\bootstrap-grid.scss"/>

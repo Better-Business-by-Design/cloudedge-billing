@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace AccountsReceivable.BAL.Data;
+namespace CloudEdgeBilling.BAL.Data;
 
 public abstract class DesignTimeDbContextFactoryBase<TContext> : IDesignTimeDbContextFactory<TContext>
     where TContext : DbContext

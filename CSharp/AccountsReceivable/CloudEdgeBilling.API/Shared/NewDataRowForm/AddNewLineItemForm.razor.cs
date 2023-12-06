@@ -1,10 +1,10 @@
 using System.Collections.Immutable;
-using AccountsReceivable.API.Shared.NewDataRowForm;
-using AccountsReceivable.BL.Models.Application;
+using CloudEdgeBilling.API.Shared.NewDataRowForm;
+using CloudEdgeBilling.BL.Models.Application;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace AccountsReceivable.API.Shared.NewDataRowForm;
+namespace CloudEdgeBilling.API.Shared.NewDataRowForm;
 
 public partial class AddNewLineItemForm : AddNewDataRowForm<LineItem>
 {

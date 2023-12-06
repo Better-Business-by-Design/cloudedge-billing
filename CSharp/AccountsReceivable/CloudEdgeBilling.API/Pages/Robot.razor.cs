@@ -1,13 +1,13 @@
-using AccountsReceivable.API.Shared.FluidValidation;
-using AccountsReceivable.BAL.Data;
-using AccountsReceivable.BL.Models.Application;
+using CloudEdgeBilling.API.Shared.FluidValidation;
+using CloudEdgeBilling.BAL.Data;
+using CloudEdgeBilling.BL.Models.Application;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Newtonsoft.Json;
 using UiPathApi.Swagger.Api;
 using UiPathApi.Swagger.Model;
 
-namespace AccountsReceivable.API.Pages;
+namespace CloudEdgeBilling.API.Pages;
 
 public partial class Robot : ComponentBase
 {

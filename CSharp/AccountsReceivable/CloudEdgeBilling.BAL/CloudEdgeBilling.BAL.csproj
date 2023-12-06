@@ -7,7 +7,7 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Version>$([System.DateTime]::Now.ToString(yyyy.MM.dd.HHmm))</Version>
         <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
-        <RootNamespace>AccountsReceivable.BAL</RootNamespace>
+        <RootNamespace>CloudEdgeBilling.BAL</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

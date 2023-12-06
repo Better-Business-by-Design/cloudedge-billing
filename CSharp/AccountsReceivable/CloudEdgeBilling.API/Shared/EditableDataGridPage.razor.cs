@@ -1,12 +1,12 @@
 ﻿using System.Collections.Immutable;
-using AccountsReceivable.API.Shared.DataRowChange;
-using AccountsReceivable.API.Shared.FluidValidation;
-using AccountsReceivable.BL.Models.Application;
+using CloudEdgeBilling.API.Shared.DataRowChange;
+using CloudEdgeBilling.API.Shared.FluidValidation;
+using CloudEdgeBilling.BL.Models.Application;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MudBlazor;
 
-namespace AccountsReceivable.API.Shared;
+namespace CloudEdgeBilling.API.Shared;
 
 /// <summary>
 /// Abstract class <c>EditableDataGridPage</c> represents a page/component using a MudDataGrid to present,

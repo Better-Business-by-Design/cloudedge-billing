@@ -1,6 +1,6 @@
 ﻿using MudBlazor;
 
-namespace AccountsReceivable.API;
+namespace CloudEdgeBilling.API;
 
 partial class App
 {

@@ -1,3 +1,3 @@
-# Pāmu - Accounts Receivable [Finance]
+# Cloud Edge Billing
 
-https://www.notion.so/better-business-by-design/AR-Killsheets-140c6ac130a24f06996aa4f94f92ff1a
+https://www.notion.so/better-business-by-design/Cloud-Edge-Billing-f070021825184678a6cf8d5505508f27?pvs=4

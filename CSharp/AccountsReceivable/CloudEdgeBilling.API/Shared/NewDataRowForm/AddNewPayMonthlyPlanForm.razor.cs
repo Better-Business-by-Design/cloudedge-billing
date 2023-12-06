@@ -1,6 +1,6 @@
-using AccountsReceivable.BL.Models.Application;
+using CloudEdgeBilling.BL.Models.Application;
 
-namespace AccountsReceivable.API.Shared.NewDataRowForm;
+namespace CloudEdgeBilling.API.Shared.NewDataRowForm;
 
 public partial class AddNewPayMonthlyPlanForm : AddNewDataRowForm<PayMonthlyPlan>
 {
