@@ -18,7 +18,7 @@
     ReadOnly="@ReadOnly" EditMode="DataGridEditMode.Cell"
     CommittedItemChanges="@CommittedRowChanges"
     MultiSelection="true" SelectedItemsChanged="@SelectedRowsChanged"
-    Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 13.2rem)">
+    Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 13.2rem)" ColumnResizeMode="ResizeMode.Column">
     <Columns>
         <SelectColumn T="LineItem" ShowInFooter="false"/>
         <PropertyColumn Property="@(x => x.Id)" Title="ID" IsEditable="false"/>

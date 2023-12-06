@@ -9,7 +9,7 @@
     @ref="DataGrid" T="Invoice" ServerData="@(new Func<GridState<Invoice>, Task<GridData<Invoice>>>(GridServerReload))"
     SortMode="SortMode.Multiple" Filterable="true" FilterMode="DataGridFilterMode.ColumnFilterMenu"
     RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc"
-    Dense="true" Hover="true" Striped="true" Bordered="true"
+    Dense="true" Hover="true" Striped="true" Bordered="true" ColumnResizeMode="ResizeMode.Column"
     FixedHeader="true" Height="calc(100vh - 9.8rem)">
     <Columns>
         <HierarchyColumn T="Invoice"/>
