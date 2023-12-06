@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Newtonsoft.Json;
 using UiPathApi.Swagger.Api;
-using UiPathApi.Swagger.Client;
 using UiPathApi.Swagger.Model;
 
 namespace AccountsReceivable.API.Pages;
@@ -27,7 +26,6 @@ public partial class Robot : ComponentBase
     private CloudEdgeBillingJobArgumentsFluidValidator _validator = null!;
 
     private const long ProcessId = 23346;
-    private const long FolderId = 314814;
 
     protected override async Task OnInitializedAsync()
     {

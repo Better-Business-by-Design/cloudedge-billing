@@ -19,9 +19,12 @@ public class Program
         // Azure AD Authentication
         builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme).AddMicrosoftIdentityWebApp(
             options =>
-            { builder.Configuration.Bind("AzureAd", options); });
+            { builder.Configuration.Bind("AzureAd", options);});
         builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
-        builder.Services.AddAuthorization(options => { options.FallbackPolicy = options.DefaultPolicy; });
+        builder.Services.AddAuthorization(options =>
+        {
+            options.FallbackPolicy = options.DefaultPolicy;
+        });
         
         builder.Services.AddMvc().AddJsonOptions(options =>
         {
