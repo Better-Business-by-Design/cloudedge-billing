@@ -3,15 +3,15 @@
 
 <MudDialog>
     <TitleContent>
-       <MudText Typo="Typo.h6">
-           Add new line item?
-       </MudText> 
+        <MudText Typo="Typo.h6">
+            Add new line item?
+        </MudText>
     </TitleContent>
     <DialogContent>
         <MudForm Model="@NewDataRow" @ref="Form" Validation="@(Validator.ValidateValue)" ValidationDelay="0">
             <MudTextField
                 @bind-Value="NewDataRow.Description" For="@(() => NewDataRow.Description)"
-                Validation="@Validator.ValidateValue" Immediate="true" />
+                Validation="@Validator.ValidateValue" Immediate="true"/>
             <MudNumericField Step="Convert.ToInt16(1)"
                              @bind-Value="NewDataRow.Quantity" For="@(() => NewDataRow.Quantity)"
                              Validation="@Validator.ValidateValue" Immediate="true"/>
@@ -23,7 +23,7 @@
                              Validation="@Validator.ValidateValue" Immediate="true"/>
             <MudSelect
                 @bind-Value="NewDataRow.AccountId" For="@(() => NewDataRow.AccountId)"
-                Validation="Validator.ValidateValue" Immediate="true" >
+                Validation="Validator.ValidateValue" Immediate="true">
                 @foreach (var account in Accounts)
                 {
                     <MudSelectItem Value="@account.AccountId">@account.Name</MudSelectItem>

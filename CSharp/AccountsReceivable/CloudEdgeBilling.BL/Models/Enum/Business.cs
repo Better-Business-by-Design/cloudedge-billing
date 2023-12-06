@@ -14,20 +14,16 @@ public enum BusinessId : byte
 
 public class Business : IDataRow
 {
-    public static string TypeName => "Business";
-    
-    [Key]
-    [Column("business_id")]
-    public BusinessId BusinessId { get; set; }
-    
-    [Column("business_name")]
-    public string Name { get; set; } = null!;
+    [Key] [Column("business_id")] public BusinessId BusinessId { get; set; }
 
-    [ForeignKey(nameof(Branding))] 
+    [Column("business_name")] public string Name { get; set; } = null!;
+
+    [ForeignKey(nameof(Branding))]
     [Column("branding_theme_id")]
     public Guid BrandingThemeId { get; set; }
 
     public virtual Branding Branding { get; set; } = null!;
+    public static string TypeName => "Business";
 }
 
 public static class BusinessHelper

@@ -3,16 +3,15 @@ using CloudEdgeBilling.BL.Models.Application;
 
 namespace CloudEdgeBilling.API.Shared.DataRowChange;
 
-public class AddDataRowChange : IDataRowChange 
+public class AddDataRowChange : IDataRowChange
 {
-    
-    private IDataRow DataRow { get; } 
-
     public AddDataRowChange(IDataRow dataRow)
     {
         DataRow = dataRow;
     }
-    
+
+    private IDataRow DataRow { get; }
+
     public async Task ApplyChange(ApplicationDbContext dbContext)
     {
         await dbContext.AddValue(DataRow);

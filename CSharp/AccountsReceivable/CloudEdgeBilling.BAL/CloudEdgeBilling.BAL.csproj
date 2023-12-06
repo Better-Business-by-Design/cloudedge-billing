@@ -11,7 +11,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\CloudEdgeBilling.BL\CloudEdgeBilling.BL.csproj" PrivateAssets="all" />
+        <ProjectReference Include="..\CloudEdgeBilling.BL\CloudEdgeBilling.BL.csproj" PrivateAssets="all"/>
     </ItemGroup>
 
     <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="BuildOnlySettings;ResolveReferences">
@@ -22,25 +22,25 @@
 
     <ItemGroup>
         <PackageReference Include="AutoMapper" Version="12.0.1"/>
-        <PackageReference Include="EFCore.NamingConventions" Version="7.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
+        <PackageReference Include="EFCore.NamingConventions" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.0">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.*"/>
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.*"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.0" />
-        <PackageReference Include="RestSharp" Version="110.2.1-alpha.0.16" />
-        <PackageReference Include="RestSharp.Serializers.NewtonsoftJson" Version="110.2.0" />
-        <PackageReference Include="UiPathApi.Swagger" Version="1.1.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.0"/>
+        <PackageReference Include="RestSharp" Version="110.2.1-alpha.0.16"/>
+        <PackageReference Include="RestSharp.Serializers.NewtonsoftJson" Version="110.2.0"/>
+        <PackageReference Include="UiPathApi.Swagger" Version="1.1.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Extensions\" />
+        <Folder Include="Extensions\"/>
     </ItemGroup>
 </Project>

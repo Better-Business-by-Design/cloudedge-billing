@@ -8,36 +8,28 @@ namespace CloudEdgeBilling.BL.Models.Application;
 
 public class Customer : IDataRow
 {
-    public static string TypeName => "Customer";
+    [Key] [Column("customer_id")] public int Id { get; set; }
 
-    [Key]
-    [Column("customer_id")]
-    public int Id { get; set; }
+    [Column("customer_name")] public string CustomerName { get; set; } = null!;
 
-    [Column("customer_name")]
-    public string CustomerName { get; set; } = null!;
-    
-    [Column("domain_name")]
-    public string? DomainName { get; set; }
-    
-    [Column("domain_uuid")]
-    public Guid? DomainUuid { get; set; }
+    [Column("domain_name")] public string? DomainName { get; set; }
 
-    [Column("xero_contact_name")] 
-    public string XeroContactName { get; set; } = null!;
-    
+    [Column("domain_uuid")] public Guid? DomainUuid { get; set; }
+
+    [Column("xero_contact_name")] public string XeroContactName { get; set; } = null!;
+
     [ForeignKey(nameof(PayMonthlyPlan))]
     [Column("pay_monthly_plan_id")]
     public int? PayMonthlyPlanId { get; set; }
-    
+
     public PayMonthlyPlan? PayMonthlyPlan { get; set; }
-    
-    [Column("is_active")]
-    public bool IsActive { get; set; }
-    
-    [Column("location")]
-    public string? Location { get; set; }
-    
+
+    [Column("is_active")] public bool IsActive { get; set; }
+
+    [Column("location")] public string? Location { get; set; }
+
+    public static string TypeName => "Customer";
+
     public override string ToString()
     {
         return Id.ToString();

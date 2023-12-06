@@ -11,21 +11,20 @@ namespace CloudEdgeBilling.API.Pages;
 
 public partial class Robot : ComponentBase
 {
-    [Inject] private ApplicationDbContext DbContext { get; set; } = null!;
-    
-    [Inject] private ReleasesApi ReleasesApi { get; set; } = null!;
-    [Inject] private JobsApi JobsApi { get; set; } = null!;
-
-    private MudForm _form = null!;
+    private const long ProcessId = 23346;
     private readonly CloudEdgeBillingJobArguments _jobArguments = new();
-    
-    private ReleaseDto? _releaseDto;
 
     private readonly List<JobDto> _jobs = new();
 
-    private CloudEdgeBillingJobArgumentsFluidValidator _validator = null!;
+    private MudForm _form = null!;
 
-    private const long ProcessId = 23346;
+    private ReleaseDto? _releaseDto;
+
+    private CloudEdgeBillingJobArgumentsFluidValidator _validator = null!;
+    [Inject] private ApplicationDbContext DbContext { get; set; } = null!;
+
+    [Inject] private ReleasesApi ReleasesApi { get; set; } = null!;
+    [Inject] private JobsApi JobsApi { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -37,12 +36,12 @@ public partial class Robot : ComponentBase
     private async Task OnClick()
     {
         var process = _releaseDto ?? throw new ArgumentNullException(nameof(_releaseDto));
-        
+
         await _form.Validate();
 
         if (_form.IsValid)
         {
-            var startJobsRequest = new StartJobsRequest( new StartProcessDto
+            var startJobsRequest = new StartJobsRequest(new StartProcessDto
                 {
                     ReleaseKey = process.Key,
                     Strategy = StartProcessDto.StrategyEnum.ModernJobsCount,
@@ -53,7 +52,7 @@ public partial class Robot : ComponentBase
             var jobODataValue = await JobsApi.JobsStartJobsAsync(startJobsRequest);
             var job = jobODataValue.Value.First();
             _jobs.Add(job);
-            
+
             StateHasChanged();
         }
     }
@@ -69,6 +68,4 @@ public partial class Robot : ComponentBase
         // ReSharper disable once InconsistentNaming
         public DateTime? in_StartRangeDateTime { get; set; } = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
     }
-        
-
 }

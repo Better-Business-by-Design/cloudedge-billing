@@ -1,7 +1,7 @@
+@using UiPathApi.Swagger.Model.Enum
+@using UiPathApi.Swagger.Model
 @using System.Timers
 @using UiPathApi.Swagger.Api
-@using UiPathApi.Swagger.Model
-@using UiPathApi.Swagger.Model.Enum
 @inject JobsApi JobsApi
 
 <MudCard>
@@ -20,7 +20,7 @@
     </MudCardContent>
     <MudCardActions>
         <MudStack Row="true" Justify="Justify.SpaceBetween" Style="width: 100%">
-            <MudSpacer />
+            <MudSpacer/>
             <MudButton
                 StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Outlined"
                 Disabled="@(Job?.State?.Completed() ?? true)" OnClick="@(async () => await OnRemoveClick.InvokeAsync(Job))">
@@ -31,15 +31,15 @@
 </MudCard>
 
 
-
 @code {
+
     [Parameter]
     public JobDto? Job { get; set; }
-    
+
     [Parameter]
-    public EventCallback<JobDto> OnRemoveClick { get; set; } 
-    
-    private Timer _timer;
+    public EventCallback<JobDto> OnRemoveClick { get; set; }
+
+    private Timer _timer = null!;
     private TimeSpan? _jobLength;
     private Severity _severity;
 
@@ -49,10 +49,7 @@
     protected override void OnInitialized()
     {
         _timer = new Timer(Interval);
-        _timer.Elapsed += async (s, e) =>
-        {
-            await InvokeAsync(GetProcessStatus);
-        };
+        _timer.Elapsed += async (_, _) => { await InvokeAsync(GetProcessStatus); };
         _timer.Enabled = true;
     }
 
@@ -75,6 +72,6 @@
             StateHasChanged();
         }
     }
-    
+
 
 }

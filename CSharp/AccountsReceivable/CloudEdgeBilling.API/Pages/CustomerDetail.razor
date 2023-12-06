@@ -1,10 +1,10 @@
 @page "/customers/{Id}"
+@using System.Collections.Immutable
 @using System.Linq.Expressions
+@using Microsoft.EntityFrameworkCore
 @using CloudEdgeBilling.API.Shared.FluidValidation
 @using CloudEdgeBilling.API.Shared.NewDataRowForm
 @using CloudEdgeBilling.BL.Models.Enum
-@using Microsoft.EntityFrameworkCore
-@using System.Collections.Immutable
 @inherits EditableDataGridPage<LineItem>
 
 @{
@@ -18,8 +18,7 @@
     ReadOnly="@ReadOnly" EditMode="DataGridEditMode.Cell"
     CommittedItemChanges="@CommittedRowChanges"
     MultiSelection="true" SelectedItemsChanged="@SelectedRowsChanged"
-    Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 13.2rem)"
-    >
+    Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 13.2rem)">
     <Columns>
         <SelectColumn T="LineItem" ShowInFooter="false"/>
         <PropertyColumn Property="@(x => x.Id)" Title="ID" IsEditable="false"/>
@@ -48,12 +47,12 @@
             </EditTemplate>
         </PropertyColumn>
     </Columns>
-     <NoRecordsContent>
-         <MudText>No matching line items found</MudText>
-     </NoRecordsContent>
-     <LoadingContent>
-         <MudText>Loading Line Items...</MudText>
-     </LoadingContent>
+    <NoRecordsContent>
+        <MudText>No matching line items found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading Line Items...</MudText>
+    </LoadingContent>
     <PagerContent>
         <MudDataGridPager T="LineItem" PageSizeOptions="new[] { 25, 50, 100 }"/>
     </PagerContent>
@@ -65,11 +64,9 @@
     [Parameter]
     public string? Id { get; set; }
 
-    private AddNewLineItemForm _form = null!;
-
     private Customer? _customer;
 
-    protected ImmutableList<Account> Accounts;
+    protected ImmutableList<Account> Accounts = null!;
 
     protected override Task OnInitializedAsync()
     {
@@ -226,41 +223,41 @@
         Console.WriteLine("Customer Detail Row Clicked");
     }
 
-    protected override async Task<LineItem> BuildNewDefaultRow()
+    protected override Task<LineItem> BuildNewDefaultRow()
     {
         var customer = _customer ?? throw new ArgumentNullException(nameof(_customer), "Unable to add new line item to null customer.");
 
-        return new LineItem()
+        return Task.FromResult(new LineItem
         {
             CustomerId = customer.Id,
             Quantity = 1,
             AccountId = Guid.Parse("29592A50-15B1-4F5C-A0FC-87AB8FAA11FF"),
             BusinessId = BusinessId.None
-        };
+        });
     }
 
     protected override async Task OnAddButtonClicked()
     {
         var newDefaultLineItem = await BuildNewDefaultRow();
-        var parameters = new DialogParameters<AddNewLineItemForm>()
+        var parameters = new DialogParameters<AddNewLineItemForm>
         {
             { dialog => dialog.Validator, Validator },
             { dialog => dialog.Accounts, Accounts },
             { dialog => dialog.NewDataRow, newDefaultLineItem }
         };
 
-        var options = new DialogOptions()
+        var options = new DialogOptions
         {
             CloseButton = true,
             MaxWidth = MaxWidth.Large,
             FullWidth = true
         };
-        
+
         var dialog = await DialogService.ShowAsync<AddNewLineItemForm>("Add new line item", parameters, options);
         var result = await dialog.Result;
         if (!result.Canceled)
         {
-            await AddRow((LineItem) result.Data);
+            await AddRow((LineItem)result.Data);
         }
     }
 

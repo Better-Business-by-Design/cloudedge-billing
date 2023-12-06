@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Reflection.Emit;
 using CloudEdgeBilling.BL.Models.Enum;
 using MudBlazor;
 
@@ -11,49 +10,46 @@ namespace CloudEdgeBilling.BL.Models.Application;
 
 public class LineItem : IDataRow
 {
-    public static string TypeName => "Line Item";
-    
-    [Key]
-    [Column("id")]
-    public int Id { get; set; }
-    
+    [Key] [Column("id")] public int Id { get; set; }
+
     [ForeignKey(nameof(Customer))]
     [Column("customer_id")]
     public int CustomerId { get; set; }
 
     public virtual Customer Customer { get; set; } = null!;
 
-    [Column("description")] 
+    [Column("description")]
     [Label(nameof(Description))]
     public string Description { get; set; } = null!;
-    
+
     [Column("quantity")]
     [Label(nameof(Quantity))]
     public short Quantity { get; set; }
-    
+
     [Column("unit_price")]
     [Label("Unit Price")]
     public decimal UnitPrice { get; set; }
-    
+
     [Column("discount")]
     [Label(nameof(Discount))]
     public decimal Discount { get; set; }
 
     [ForeignKey(nameof(Account))]
-    [Column("account_id")] 
+    [Column("account_id")]
     [Label(nameof(Account))]
     [Required]
     public Guid AccountId { get; set; }
 
     public virtual Account Account { get; set; } = null!;
-    
+
     [ForeignKey(nameof(Business))]
     [Column("business_id")]
     [Label(nameof(Business))]
     public BusinessId BusinessId { get; set; }
 
     public virtual Business Business { get; set; } = null!;
-    
+    public static string TypeName => "Line Item";
+
 
     public override string ToString()
     {
@@ -65,14 +61,9 @@ public class LineItem : IDataRow
         if (obj is null) return false;
 
         if (obj.GetType() == GetType())
-        {
             return Id == ((LineItem)obj).Id;
-        }
-        else
-        {
-            // ReSharper disable once BaseObjectEqualsIsObjectEquals
-            return base.Equals(obj);
-        }
+        // ReSharper disable once BaseObjectEqualsIsObjectEquals
+        return base.Equals(obj);
     }
 
     public override int GetHashCode()

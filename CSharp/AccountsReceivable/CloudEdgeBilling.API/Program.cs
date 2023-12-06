@@ -18,28 +18,25 @@ public class Program
 
         // Azure AD Authentication
         builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme).AddMicrosoftIdentityWebApp(
-            options =>
-            { builder.Configuration.Bind("AzureAd", options);});
+            options => { builder.Configuration.Bind("AzureAd", options); });
         builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
-        builder.Services.AddAuthorization(options =>
-        {
-            options.FallbackPolicy = options.DefaultPolicy;
-        });
-        
+        builder.Services.AddAuthorization(options => { options.FallbackPolicy = options.DefaultPolicy; });
+
         builder.Services.AddMvc().AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         });
-        
+
         // Service Dependencies
         builder.Services.AddRazorPages();
         builder.Services.AddServerSideBlazor().AddMicrosoftIdentityConsentHandler();
         builder.Services.AddMudServices();
-        
+
         // Rest 
         var orchestratorConfig = builder.Configuration.GetSection("UiPathOrchestrator").Get<OrchestratorConfigDto>();
-        builder.Services.AddSingleton<IReadableConfiguration, Configuration>(sp => new Configuration(orchestratorConfig) );
-        
+        builder.Services.AddSingleton<IReadableConfiguration, Configuration>(
+            _ => new Configuration(orchestratorConfig));
+
         builder.Services.AddSingleton<JobsApi>();
         builder.Services.AddSingleton<ProcessesApi>();
         builder.Services.AddSingleton<ReleasesApi>();
@@ -51,7 +48,7 @@ public class Program
                 .UseSqlServer(builder.Configuration.GetConnectionString("Development") ?? string.Empty,
                     db => db.MigrationsAssembly("CloudEdgeBilling.BAL"));
         }, ServiceLifetime.Transient);
-        
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -60,7 +57,7 @@ public class Program
             app.UseExceptionHandler("/Error");
             app.UseHsts();
         }
-        
+
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseRouting();

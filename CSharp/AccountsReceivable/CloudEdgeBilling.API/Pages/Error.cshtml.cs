@@ -8,6 +8,7 @@ namespace CloudEdgeBilling.API.Pages;
 [IgnoreAntiforgeryToken]
 public class ErrorModel : PageModel
 {
+    // ReSharper disable once NotAccessedField.Local
     private readonly ILogger<ErrorModel> _logger;
 
     public ErrorModel(ILogger<ErrorModel> logger)

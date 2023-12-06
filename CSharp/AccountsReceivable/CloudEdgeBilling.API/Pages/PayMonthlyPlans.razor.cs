@@ -1,16 +1,14 @@
 ﻿using System.Linq.Expressions;
 using CloudEdgeBilling.API.Shared;
+using CloudEdgeBilling.API.Shared.FluidValidation;
 using CloudEdgeBilling.API.Shared.NewDataRowForm;
 using CloudEdgeBilling.BL.Models.Application;
-using Microsoft.EntityFrameworkCore;
 using MudBlazor;
-using CloudEdgeBilling.API.Shared.FluidValidation;
 
 namespace CloudEdgeBilling.API.Pages;
 
 partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
 {
-    
     protected override List<BreadcrumbItem> Breadcrumb { get; set; } = new()
     {
         new BreadcrumbItem("Home", ""),
@@ -27,58 +25,57 @@ partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
     {
         return DbContext.PayMonthlyPlans;
     }
-    
+
     protected override IQueryable<PayMonthlyPlan> FilterFullQuery(
-        IQueryable<PayMonthlyPlan> fullQuery, 
+        IQueryable<PayMonthlyPlan> fullQuery,
         IEnumerable<IFilterDefinition<PayMonthlyPlan>> filterDefinitions)
     {
         var filteredQuery = fullQuery;
         foreach (var filterDefinition in filterDefinitions)
         {
-            if (filterDefinition.Operator is null) { continue; }
+            if (filterDefinition.Operator is null) continue;
             var logicOperator = filterDefinition.Operator!;
-            
-            if (filterDefinition.Value is null && filterDefinition.Operator is not ("is empty" or "is not empty")) 
-            {
-                continue;
-            }
-            
+
+            if (filterDefinition.Value is null &&
+                filterDefinition.Operator is not ("is empty" or "is not empty")) continue;
+
             Expression<Func<PayMonthlyPlan, bool>> fullPredicate;
-            
+
             // Annoying that this can't be a switch
             if (filterDefinition.FieldType.IsString)
             {
                 var value = filterDefinition.Value?.ToString() ?? string.Empty;
-                
+
                 Expression<Func<PayMonthlyPlan, string>> selectPredicate = filterDefinition.Title switch
                 {
                     "Name" => plan => plan.PlanName,
-                    _ => throw new NotImplementedException($"{filterDefinition.Title} not implemented in String filters.")
+                    _ => throw new NotImplementedException(
+                        $"{filterDefinition.Title} not implemented in String filters.")
                 };
 
                 var logicPredicate = GenerateStringLogicPredicate(logicOperator, value);
 
                 fullPredicate = selectPredicate.Compose(logicPredicate);
-            } 
+            }
             else if (filterDefinition.FieldType.IsBoolean)
             {
                 throw new NotImplementedException(
                     $"No boolean filtering implemented for PayMonthlyPlans table, including not for {filterDefinition.Title}");
-            } 
+            }
             else if (filterDefinition.FieldType.IsEnum)
             {
                 throw new NotImplementedException(
                     $"No enum filtering implemented for PayMonthlyPlans table, including not for {filterDefinition.Title}");
-            } 
+            }
             else if (filterDefinition.FieldType.IsGuid)
             {
                 throw new NotImplementedException(
                     $"No guid filtering implemented for PayMonthlyPlans table, including not for {filterDefinition.Title}");
-            } 
+            }
             else if (filterDefinition.FieldType.IsNumber)
             {
                 var value = Convert.ToDecimal(filterDefinition.Value ?? 0);
-                
+
                 Expression<Func<PayMonthlyPlan, decimal>> selectPredicate = filterDefinition.Title switch
                 {
                     "ID" => plan => plan.PlanId,
@@ -95,7 +92,7 @@ partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
                 var logicPredicate = GenerateDecimalLogicPredicate(logicOperator, value);
 
                 fullPredicate = selectPredicate.Compose(logicPredicate);
-            } 
+            }
             else if (filterDefinition.FieldType.IsDateTime)
             {
                 throw new NotImplementedException(
@@ -106,6 +103,7 @@ partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
                 throw new NotImplementedException(
                     $"No {filterDefinition.FieldType} filtering implemented for PayMonthlyPlans table.");
             }
+
             filteredQuery = filteredQuery.Where(fullPredicate);
         }
 
@@ -113,7 +111,7 @@ partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
     }
 
     protected override IOrderedQueryable<PayMonthlyPlan> OrderFilteredQuery(
-        IQueryable<PayMonthlyPlan> filteredQuery, 
+        IQueryable<PayMonthlyPlan> filteredQuery,
         IEnumerable<SortDefinition<PayMonthlyPlan>> sortDefinitions)
     {
         var orderedQuery = filteredQuery.OrderBy(plan => true);
@@ -146,25 +144,22 @@ partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
     protected override async Task OnAddButtonClicked()
     {
         var newDefaultPayMonthlyPlan = await BuildNewDefaultRow();
-        var parameters = new DialogParameters<AddNewPayMonthlyPlanForm>()
+        var parameters = new DialogParameters<AddNewPayMonthlyPlanForm>
         {
             { dialog => dialog.Validator, Validator },
             { dialog => dialog.NewDataRow, newDefaultPayMonthlyPlan }
         };
 
-        var options = new DialogOptions()
+        var options = new DialogOptions
         {
             CloseButton = true,
             MaxWidth = MaxWidth.Large,
             FullWidth = true
         };
-        
+
         var dialog = await DialogService.ShowAsync<AddNewPayMonthlyPlanForm>("Add new plan", parameters, options);
         var result = await dialog.Result;
-        if (!result.Canceled)
-        {
-            await AddRow((PayMonthlyPlan) result.Data);
-        }
+        if (!result.Canceled) await AddRow((PayMonthlyPlan)result.Data);
     }
 
     protected override void ReadOnlyRowClicked(DataGridRowClickEventArgs<PayMonthlyPlan> args)

@@ -1,5 +1,4 @@
-﻿
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
@@ -7,10 +6,9 @@ namespace CloudEdgeBilling.API.Pages;
 
 partial class UserInfo
 {
-
     private string? authMessage;
-    private string? surname;
     private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
+    private string? surname;
     private ClaimsPrincipal? User;
 
     [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
@@ -31,7 +29,7 @@ partial class UserInfo
         {
             authMessage = "The user is NOT authenticated.";
         }
+
         StateHasChanged();
     }
-    
 }

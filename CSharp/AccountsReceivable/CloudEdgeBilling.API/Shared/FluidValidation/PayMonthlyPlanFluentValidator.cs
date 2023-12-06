@@ -1,11 +1,10 @@
 using CloudEdgeBilling.BAL.Data;
 using CloudEdgeBilling.BL.Models.Application;
-using CloudEdgeBilling.BL.Models.Enum;
 using FluentValidation;
 
 namespace CloudEdgeBilling.API.Shared.FluidValidation;
 
-public class PayMonthlyPlanFluentValidator: DataRowFluentValidator<PayMonthlyPlan>
+public class PayMonthlyPlanFluentValidator : DataRowFluentValidator<PayMonthlyPlan>
 {
     public PayMonthlyPlanFluentValidator(ApplicationDbContext dbContext) : base(dbContext)
     {

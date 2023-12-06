@@ -10,6 +10,7 @@ public class CloudEdgeBillingJobArgumentsFluidValidator : DataRowFluentValidator
     {
         RuleFor(a => a.in_StartRangeDateTime)
             .NotEmpty()
-            .LessThan(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1)).WithMessage("Invoice month must be in the past");
+            .LessThan(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1))
+            .WithMessage("Invoice month must be in the past");
     }
 }

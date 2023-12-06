@@ -5,12 +5,12 @@ namespace CloudEdgeBilling.API.Shared.DataRowChange;
 
 public class RemoveDataRowsChange : IDataRowChange
 {
-    private IEnumerable<IDataRow> DataRowChanges { get; }
-
     public RemoveDataRowsChange(IEnumerable<IDataRow> dataRowChanges)
     {
         DataRowChanges = dataRowChanges;
     }
+
+    private IEnumerable<IDataRow> DataRowChanges { get; }
 
     public async Task ApplyChange(ApplicationDbContext dbContext)
     {
@@ -21,6 +21,4 @@ public class RemoveDataRowsChange : IDataRowChange
     {
         await dbContext.AddValues(DataRowChanges, false);
     }
-    
-    
 }

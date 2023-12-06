@@ -5,12 +5,10 @@ namespace CloudEdgeBilling.API.Shared.DataRowChange;
 
 public class EditDataRowChange : IDataRowChange
 {
-
     public IDataRow OriginalDataRow { get; init; } = null!;
     public IDataRow DataRow { get; init; } = null!;
 
-    
-    
+
     public async Task ApplyChange(ApplicationDbContext dbContext)
     {
         await dbContext.SaveChangesAsync();

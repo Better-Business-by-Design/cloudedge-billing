@@ -4,5 +4,4 @@ namespace CloudEdgeBilling.API.Shared.NewDataRowForm;
 
 public partial class AddNewPayMonthlyPlanForm : AddNewDataRowForm<PayMonthlyPlan>
 {
-    
 }

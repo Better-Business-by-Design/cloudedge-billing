@@ -2,15 +2,15 @@
 
 <MudDialog>
     <TitleContent>
-       <MudText Typo="Typo.h6">
-           Add new plan?
-       </MudText> 
+        <MudText Typo="Typo.h6">
+            Add new plan?
+        </MudText>
     </TitleContent>
     <DialogContent>
         <MudForm Model="@NewDataRow" @ref="Form" Validation="@(Validator.ValidateValue)" ValidationDelay="0">
             <MudTextField
                 @bind-Value="NewDataRow.PlanName" For="@(() => NewDataRow.PlanName)"
-                Validation="@Validator.ValidateValue" Immediate="true" />
+                Validation="@Validator.ValidateValue" Immediate="true"/>
             <MudNumericField Step="1"
                              @bind-Value="NewDataRow.NationalSize" For="@(() => NewDataRow.NationalSize)"
                              Validation="@Validator.ValidateValue" Immediate="true" Min="0"
@@ -41,10 +41,10 @@
                              Validation="Validator.ValidateValue" Immediate="true" Min="0M" Format="N2"
                              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney"/>
             <MudNumericField Step="0.1M"
-                              @bind-Value="NewDataRow.MinPrice" For="@(() => NewDataRow.MinPrice)"
-                              Validation="Validator.ValidateValue" Immediate="true" Min="0M" Format="N2"
-                              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney"
-                              Clearable="true"/>
+                             @bind-Value="NewDataRow.MinPrice" For="@(() => NewDataRow.MinPrice)"
+                             Validation="Validator.ValidateValue" Immediate="true" Min="0M" Format="N2"
+                             Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney"
+                             Clearable="true"/>
         </MudForm>
     </DialogContent>
     <DialogActions>

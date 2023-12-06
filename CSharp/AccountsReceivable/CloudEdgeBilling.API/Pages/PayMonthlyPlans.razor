@@ -12,9 +12,8 @@
     ReadOnly="@ReadOnly" EditMode="DataGridEditMode.Cell"
     CommittedItemChanges="@CommittedRowChanges"
     MultiSelection="true" SelectedItemsChanged="@SelectedRowsChanged"
-    Dense="false" Hover="true" Striped="true" Bordered="true" 
-    FixedHeader="true" Height="calc(100vh - 13.2rem)"
-    >
+    Dense="false" Hover="true" Striped="true" Bordered="true"
+    FixedHeader="true" Height="calc(100vh - 13.2rem)">
     <Columns>
         <SelectColumn T="PayMonthlyPlan" ShowInFooter="false"/>
         <PropertyColumn Property="@(x => x.PlanName)" Title="Name"/>
@@ -68,12 +67,12 @@
             </EditTemplate>
         </PropertyColumn>
     </Columns>
-     <NoRecordsContent>
-         <MudText>No matching plans found</MudText>
-     </NoRecordsContent>
-     <LoadingContent>
-         <MudText>Loading plans...</MudText>
-     </LoadingContent>
+    <NoRecordsContent>
+        <MudText>No matching plans found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading plans...</MudText>
+    </LoadingContent>
     <PagerContent>
         <MudDataGridPager T="PayMonthlyPlan" PageSizeOptions="new[] { 25, 50, 100 }"/>
     </PagerContent>

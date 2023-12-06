@@ -6,22 +6,22 @@
 }
 
 <div class="@((Editable ? "d-flex" : "d-none") + " flex-row justify-center align-center pa-2 gap-2")">
-    <MudSwitch @bind-Checked="@ReadOnly" UnCheckedColor="Color.Primary" 
+    <MudSwitch @bind-Checked="@ReadOnly" UnCheckedColor="Color.Primary"
                Label="Toggle Edit Mode" LabelPosition="LabelPosition.End"/>
-    
+
     <div class="@(Insertable ? "d-flex" : "d-none")">
         <MudButton OnClick="@OnAddButtonClicked" Color="Color.Primary" Variant="Variant.Outlined">
             @($"Add {T.TypeName}")
         </MudButton>
     </div>
     <div class="@(Removable ? "d-flex" : "d-none")">
-        <MudButton OnClick="@RemoveRows" Color="Color.Secondary" Variant="Variant.Outlined" 
+        <MudButton OnClick="@RemoveRows" Color="Color.Secondary" Variant="Variant.Outlined"
                    Disabled="@(!DataGrid?.SelectedItems.Any() ?? true)">
             @($"Remove {T.TypeName}{(DataGrid?.SelectedItems.Count > 1 ? $"s ({DataGrid.SelectedItems.Count})" : string.Empty)}")
         </MudButton>
     </div>
     <MudSpacer/>
-    <MudAlert Severity="Severity.Error" Dense="true" Class="@((_errorMessage.Equals(string.Empty) ? "d-none" : "d-block"))">
+    <MudAlert Severity="Severity.Error" Dense="true" Class="@(_errorMessage.Equals(string.Empty) ? "d-none" : "d-block")">
         @(_errorMessage)
     </MudAlert>
     <div class="@(Revertable ? "d-flex" : "d-none")">

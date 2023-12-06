@@ -15,67 +15,68 @@ public partial class Invoices : DataGridPage<Invoice>
                     "DateTime",
                     true,
                     0,
-                    x => x.DateTime,
-                    null)
+                    x => x.DateTime)
             }
         };
-    
+
     protected override List<BreadcrumbItem> Breadcrumb { get; set; } = new()
     {
         new BreadcrumbItem("Home", ""),
         new BreadcrumbItem("Invoices", null, true)
     };
+
     protected override IQueryable<Invoice> BuildFullQuery()
     {
         return DbContext.Invoices;
     }
 
-    protected override IQueryable<Invoice> FilterFullQuery(IQueryable<Invoice> fullQuery, IEnumerable<IFilterDefinition<Invoice>> filterDefinitions)
+    protected override IQueryable<Invoice> FilterFullQuery(IQueryable<Invoice> fullQuery,
+        IEnumerable<IFilterDefinition<Invoice>> filterDefinitions)
     {
-         var filteredQuery = fullQuery;
+        var filteredQuery = fullQuery;
         foreach (var filterDefinition in filterDefinitions)
         {
-            if (filterDefinition.Operator is null) { continue; }
+            if (filterDefinition.Operator is null) continue;
             var logicOperator = filterDefinition.Operator!;
-            
-            if (filterDefinition.Value is null && filterDefinition.Operator is not ("is empty" or "is not empty")) 
-            {
-                continue;
-            }
-            
+
+            if (filterDefinition.Value is null &&
+                filterDefinition.Operator is not ("is empty" or "is not empty")) continue;
+
             Expression<Func<Invoice, bool>> fullPredicate;
-            
+
             // Annoying that this can't be a switch
             if (filterDefinition.FieldType.IsString)
             {
                 var value = filterDefinition.Value?.ToString() ?? string.Empty;
-                
+
                 Expression<Func<Invoice, string>> selectPredicate = filterDefinition.Title switch
                 {
                     "Customer" => invoice => invoice.CustomerName,
                     "Xero Contact Name" => invoice => invoice.XeroContactName,
                     "Plan" => invoice => invoice.PlanName ?? string.Empty,
-                    _ => throw new NotImplementedException($"{filterDefinition.Title} not implemented in String filters.")
+                    _ => throw new NotImplementedException(
+                        $"{filterDefinition.Title} not implemented in String filters.")
                 };
 
                 var logicPredicate = GenerateStringLogicPredicate(logicOperator, value);
 
                 fullPredicate = selectPredicate.Compose(logicPredicate);
-            } 
+            }
             else if (filterDefinition.FieldType.IsBoolean)
             {
                 throw new NotImplementedException(
                     $"No boolean filtering implemented for Invoices table, including not for {filterDefinition.Title}");
-            } 
+            }
             else if (filterDefinition.FieldType.IsEnum)
             {
                 throw new NotImplementedException(
                     $"No enum filtering implemented for Invoices table, including not for {filterDefinition.Title}");
-            } 
+            }
             else if (filterDefinition.FieldType.IsGuid)
             {
-                var value = Guid.Parse(filterDefinition.Value?.ToString() ?? throw new ArgumentNullException(nameof(filterDefinitions)));
-                
+                var value = Guid.Parse(filterDefinition.Value?.ToString() ??
+                                       throw new ArgumentNullException(nameof(filterDefinitions)));
+
                 Expression<Func<Invoice, Guid>> selectPredicate = filterDefinition.Title switch
                 {
                     "Domain UUID" => invoice => invoice.DomainUuid,
@@ -85,11 +86,11 @@ public partial class Invoices : DataGridPage<Invoice>
                 var logicPredicate = GenerateGuidLogicPredicate(logicOperator, value);
 
                 fullPredicate = selectPredicate.Compose(logicPredicate);
-            } 
+            }
             else if (filterDefinition.FieldType.IsNumber)
             {
                 var value = Convert.ToDecimal(filterDefinition.Value ?? 0);
-                
+
                 Expression<Func<Invoice, decimal>> selectPredicate = filterDefinition.Title switch
                 {
                     "Customer Id" => invoice => Convert.ToDecimal(invoice.CustomerId),
@@ -107,15 +108,16 @@ public partial class Invoices : DataGridPage<Invoice>
                 var logicPredicate = GenerateDecimalLogicPredicate(logicOperator, value);
 
                 fullPredicate = selectPredicate.Compose(logicPredicate);
-            } 
+            }
             else if (filterDefinition.FieldType.IsDateTime)
             {
                 var value = Convert.ToDateTime(filterDefinition.Value ?? new DateTime());
-                
+
                 Expression<Func<Invoice, DateTime>> selectPredicate = filterDefinition.Title switch
                 {
                     "Date" => invoice => invoice.DateTime,
-                    _ => throw new NotImplementedException($"{filterDefinition.Title} not implemented in String filters.")
+                    _ => throw new NotImplementedException(
+                        $"{filterDefinition.Title} not implemented in String filters.")
                 };
 
                 var logicPredicate = GenerateDateTimeLogicPredicate(logicOperator, value);
@@ -127,13 +129,15 @@ public partial class Invoices : DataGridPage<Invoice>
                 throw new NotImplementedException(
                     $"No {filterDefinition.FieldType} filtering implemented for Invoices table.");
             }
+
             filteredQuery = filteredQuery.Where(fullPredicate);
         }
 
         return filteredQuery;
     }
 
-    protected override IOrderedQueryable<Invoice> OrderFilteredQuery(IQueryable<Invoice> filteredQuery, IEnumerable<SortDefinition<Invoice>> sortDefinitions)
+    protected override IOrderedQueryable<Invoice> OrderFilteredQuery(IQueryable<Invoice> filteredQuery,
+        IEnumerable<SortDefinition<Invoice>> sortDefinitions)
     {
         var orderedQuery = filteredQuery.OrderBy(invoice => true);
         // ReSharper disable once LoopCanBeConvertedToQuery

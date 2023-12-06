@@ -1,6 +1,5 @@
 using CloudEdgeBilling.BAL.Data;
 using CloudEdgeBilling.BL.Models.Application;
-using CloudEdgeBilling.BL.Models.Enum;
 using FluentValidation;
 
 namespace CloudEdgeBilling.API.Shared.FluidValidation;
