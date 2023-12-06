@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.33808.371
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountsReceivable.API", "AccountsReceivable.API\AccountsReceivable.API.csproj", "{6A26AD6A-2AEE-4635-B3CD-66D28E26725E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudEdgeBilling.API", "CloudEdgeBilling.API\CloudEdgeBilling.API.csproj", "{6A26AD6A-2AEE-4635-B3CD-66D28E26725E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountsReceivable.BL", "AccountsReceivable.BL\AccountsReceivable.BL.csproj", "{1129448C-9ABC-485D-917D-6BADD4185040}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudEdgeBilling.BL", "CloudEdgeBilling.BL\CloudEdgeBilling.BL.csproj", "{1129448C-9ABC-485D-917D-6BADD4185040}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountsReceivable.BAL", "AccountsReceivable.BAL\AccountsReceivable.BAL.csproj", "{E3644EFE-32E3-4AC5-B765-7E43D0AD5524}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudEdgeBilling.BAL", "CloudEdgeBilling.BAL\CloudEdgeBilling.BAL.csproj", "{E3644EFE-32E3-4AC5-B765-7E43D0AD5524}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

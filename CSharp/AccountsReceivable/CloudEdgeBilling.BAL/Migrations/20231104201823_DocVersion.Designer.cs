@@ -25,7 +25,7 @@ namespace AccountsReceivable.BAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Account.Audit", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Account.Audit", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -45,7 +45,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("Audit", "account");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Account.User", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Account.User", b =>
                 {
                     b.Property<string>("EmailAddress")
                         .HasColumnType("nvarchar(450)");
@@ -64,7 +64,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("User", "account");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Animal", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Animal", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -201,7 +201,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("Animal", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.AnimalTypeSummary", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.AnimalTypeSummary", b =>
                 {
                     b.Property<string>("DocumentId")
                         .HasColumnType("nvarchar(450)");
@@ -227,7 +227,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("AnimalTypeSummary", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Comment", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Comment", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -259,7 +259,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("Comment", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.DeductionDetail", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.DeductionDetail", b =>
                 {
                     b.Property<long>("AnimalId")
                         .HasColumnType("bigint");
@@ -288,7 +288,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("DeductionDetail", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Document", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Document", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -433,7 +433,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("Document", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Farm", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Farm", b =>
                 {
                     b.Property<int>("CostCentre")
                         .ValueGeneratedOnAdd()
@@ -458,7 +458,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("Farm", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Meatwork", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Meatwork", b =>
                 {
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(450)");
@@ -468,7 +468,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("Meatwork", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Plant", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Plant", b =>
                 {
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(450)");
@@ -484,7 +484,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("Plant", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.PremiumDetail", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.PremiumDetail", b =>
                 {
                     b.Property<long>("AnimalId")
                         .HasColumnType("bigint");
@@ -513,7 +513,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("PremiumDetail", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Price", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Price", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -550,7 +550,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("Price", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Schedule", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Schedule", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -584,7 +584,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("Schedule", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Supplier", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Supplier", b =>
                 {
                     b.Property<int>("FarmCostCentre")
                         .HasColumnType("int");
@@ -603,7 +603,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("Supplier", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Transit", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Transit", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -628,7 +628,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("Transit", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Uplift", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Uplift", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -669,7 +669,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("Uplift", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Enum.AnimalType", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Enum.AnimalType", b =>
                 {
                     b.Property<byte>("Id")
                         .HasColumnType("tinyint");
@@ -778,7 +778,7 @@ namespace AccountsReceivable.BAL.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Enum.Grade", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Enum.Grade", b =>
                 {
                     b.Property<byte>("Id")
                         .HasColumnType("tinyint");
@@ -1453,7 +1453,7 @@ namespace AccountsReceivable.BAL.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Enum.Role", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Enum.Role", b =>
                 {
                     b.Property<byte>("Id")
                         .HasColumnType("tinyint");
@@ -1489,7 +1489,7 @@ namespace AccountsReceivable.BAL.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Enum.SpeciesType", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Enum.SpeciesType", b =>
                 {
                     b.Property<byte>("Id")
                         .HasColumnType("tinyint");
@@ -1539,7 +1539,7 @@ namespace AccountsReceivable.BAL.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Enum.Status", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Enum.Status", b =>
                 {
                     b.Property<byte>("Id")
                         .HasColumnType("tinyint");
@@ -1585,7 +1585,7 @@ namespace AccountsReceivable.BAL.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Enum.Validation", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Enum.Validation", b =>
                 {
                     b.Property<byte>("Id")
                         .HasColumnType("tinyint");
@@ -1626,9 +1626,9 @@ namespace AccountsReceivable.BAL.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Account.Audit", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Account.Audit", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Account.User", "User")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Account.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1637,9 +1637,9 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Account.User", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Account.User", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.Role", "Role")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Enum.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1648,21 +1648,21 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Animal", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Animal", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Document", "Document")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Document", "Document")
                         .WithMany("Animals")
                         .HasForeignKey("DocumentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.Grade", "Grade")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Enum.Grade", "Grade")
                         .WithMany()
                         .HasForeignKey("GradeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.Validation", "Validation")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Enum.Validation", "Validation")
                         .WithMany()
                         .HasForeignKey("ValidationId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1675,15 +1675,15 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("Validation");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.AnimalTypeSummary", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.AnimalTypeSummary", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.AnimalType", "AnimalType")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Enum.AnimalType", "AnimalType")
                         .WithMany()
                         .HasForeignKey("AnimalTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Document", "Document")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Document", "Document")
                         .WithMany("AnimalTypeSummaries")
                         .HasForeignKey("DocumentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1694,15 +1694,15 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("Document");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Comment", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Comment", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Document", "Document")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Document", "Document")
                         .WithMany("StaffComments")
                         .HasForeignKey("DocumentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AccountsReceivable.BL.Models.Account.User", "User")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Account.User", "User")
                         .WithMany()
                         .HasForeignKey("UserEmailAddress")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1713,9 +1713,9 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.DeductionDetail", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.DeductionDetail", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Animal", "Animal")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Animal", "Animal")
                         .WithMany("DeductionDetails")
                         .HasForeignKey("AnimalId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1724,41 +1724,41 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("Animal");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Document", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Document", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.Validation", "CalcValidation")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Enum.Validation", "CalcValidation")
                         .WithMany()
                         .HasForeignKey("CalcValidationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Farm", "Farm")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Farm", "Farm")
                         .WithMany()
                         .HasForeignKey("FarmCostCentre")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Plant", "Plant")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Plant", "Plant")
                         .WithMany()
                         .HasForeignKey("PlantName")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Document", "PreviousDocument")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Document", "PreviousDocument")
                         .WithMany()
                         .HasForeignKey("PreviousDocumentId");
 
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Schedule", "Schedule")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Schedule", "Schedule")
                         .WithMany()
                         .HasForeignKey("ScheduleId");
 
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.SpeciesType", "SpeciesType")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Enum.SpeciesType", "SpeciesType")
                         .WithMany()
                         .HasForeignKey("SpeciesTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.Status", "Status")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Enum.Status", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1779,9 +1779,9 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Plant", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Plant", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Meatwork", "Meatwork")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Meatwork", "Meatwork")
                         .WithMany("Plants")
                         .HasForeignKey("MeatworkName")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1790,9 +1790,9 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("Meatwork");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.PremiumDetail", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.PremiumDetail", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Animal", "Animal")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Animal", "Animal")
                         .WithMany("PremiumDetails")
                         .HasForeignKey("AnimalId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1801,15 +1801,15 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("Animal");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Price", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Price", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.Grade", "Grade")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Enum.Grade", "Grade")
                         .WithMany()
                         .HasForeignKey("GradeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Schedule", "Schedule")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Schedule", "Schedule")
                         .WithMany("Prices")
                         .HasForeignKey("ScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1820,15 +1820,15 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("Schedule");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Schedule", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Schedule", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Meatwork", "Meatwork")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Meatwork", "Meatwork")
                         .WithMany()
                         .HasForeignKey("MeatworkName")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.Status", "Status")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Enum.Status", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1839,15 +1839,15 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Supplier", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Supplier", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Farm", "Farm")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Farm", "Farm")
                         .WithMany()
                         .HasForeignKey("FarmCostCentre")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Meatwork", "Meatwork")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Meatwork", "Meatwork")
                         .WithMany("Suppliers")
                         .HasForeignKey("MeatworkName")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1858,9 +1858,9 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("Meatwork");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Transit", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Transit", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Document", "Document")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Document", "Document")
                         .WithMany("Transits")
                         .HasForeignKey("DocumentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1869,15 +1869,15 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("Document");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Uplift", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Uplift", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.AnimalType", "AnimalType")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Enum.AnimalType", "AnimalType")
                         .WithMany()
                         .HasForeignKey("AnimalTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Schedule", "Schedule")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Schedule", "Schedule")
                         .WithMany("Uplifts")
                         .HasForeignKey("ScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1888,9 +1888,9 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("Schedule");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Enum.AnimalType", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Enum.AnimalType", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.SpeciesType", "SpeciesType")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Enum.SpeciesType", "SpeciesType")
                         .WithMany()
                         .HasForeignKey("SpeciesTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1899,9 +1899,9 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("SpeciesType");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Enum.Grade", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Enum.Grade", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.AnimalType", "AnimalType")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Enum.AnimalType", "AnimalType")
                         .WithMany()
                         .HasForeignKey("AnimalTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1910,14 +1910,14 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("AnimalType");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Animal", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Animal", b =>
                 {
                     b.Navigation("DeductionDetails");
 
                     b.Navigation("PremiumDetails");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Document", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Document", b =>
                 {
                     b.Navigation("AnimalTypeSummaries");
 
@@ -1928,14 +1928,14 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("Transits");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Meatwork", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Meatwork", b =>
                 {
                     b.Navigation("Plants");
 
                     b.Navigation("Suppliers");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Schedule", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Schedule", b =>
                 {
                     b.Navigation("Prices");
 

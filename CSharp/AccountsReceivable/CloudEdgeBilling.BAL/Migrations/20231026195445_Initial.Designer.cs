@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccountsReceivable.BAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231104230251_NotIdentity")]
-    partial class NotIdentity
+    [Migration("20231026195445_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,7 +25,7 @@ namespace AccountsReceivable.BAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Account.Audit", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Account.Audit", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -45,7 +45,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("Audit", "account");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Account.User", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Account.User", b =>
                 {
                     b.Property<string>("EmailAddress")
                         .HasColumnType("nvarchar(450)");
@@ -64,7 +64,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("User", "account");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Animal", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Animal", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -179,9 +179,6 @@ namespace AccountsReceivable.BAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte>("ValidationId")
-                        .HasColumnType("tinyint");
-
                     b.Property<decimal>("Weight")
                         .HasPrecision(9, 2)
                         .HasColumnType("decimal(9,2)");
@@ -196,12 +193,10 @@ namespace AccountsReceivable.BAL.Migrations
 
                     b.HasIndex("GradeId");
 
-                    b.HasIndex("ValidationId");
-
                     b.ToTable("Animal", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.AnimalTypeSummary", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.AnimalTypeSummary", b =>
                 {
                     b.Property<string>("DocumentId")
                         .HasColumnType("nvarchar(450)");
@@ -227,39 +222,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("AnimalTypeSummary", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Comment", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DocumentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserEmailAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DocumentId");
-
-                    b.HasIndex("UserEmailAddress");
-
-                    b.ToTable("Comment", "application");
-                });
-
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.DeductionDetail", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.DeductionDetail", b =>
                 {
                     b.Property<long>("AnimalId")
                         .HasColumnType("bigint");
@@ -288,7 +251,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("DeductionDetail", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Document", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Document", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -310,9 +273,6 @@ namespace AccountsReceivable.BAL.Migrations
 
                     b.Property<DateTime?>("CalcTimestamp")
                         .HasColumnType("datetime2");
-
-                    b.Property<byte>("CalcValidationId")
-                        .HasColumnType("tinyint");
 
                     b.Property<decimal>("CalcWeightCostTotal")
                         .HasPrecision(9, 2)
@@ -338,9 +298,6 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Property<string>("DocumentType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte>("DocumentVersion")
-                        .HasColumnType("tinyint");
 
                     b.Property<int>("FarmCostCentre")
                         .HasColumnType("int");
@@ -390,20 +347,23 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Property<int?>("ScheduleId")
                         .HasColumnType("int");
 
-                    b.Property<byte>("SpeciesTypeId")
+                    b.Property<byte?>("SpeciesTypeId")
                         .HasColumnType("tinyint");
 
                     b.Property<byte>("StatusId")
                         .HasColumnType("tinyint");
 
-                    b.Property<int>("StockQuantity")
+                    b.Property<int>("StockCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("SupplierComments")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Terms")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TransitQuantity")
+                    b.Property<int?>("TransitId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("WeightCostTotal")
@@ -415,8 +375,6 @@ namespace AccountsReceivable.BAL.Migrations
                         .HasColumnType("decimal(9,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CalcValidationId");
 
                     b.HasIndex("FarmCostCentre");
 
@@ -430,10 +388,12 @@ namespace AccountsReceivable.BAL.Migrations
 
                     b.HasIndex("StatusId");
 
+                    b.HasIndex("TransitId");
+
                     b.ToTable("Document", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Farm", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Farm", b =>
                 {
                     b.Property<int>("CostCentre")
                         .ValueGeneratedOnAdd()
@@ -458,7 +418,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("Farm", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Meatwork", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Meatwork", b =>
                 {
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(450)");
@@ -468,7 +428,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("Meatwork", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Plant", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Plant", b =>
                 {
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(450)");
@@ -484,7 +444,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("Plant", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.PremiumDetail", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.PremiumDetail", b =>
                 {
                     b.Property<long>("AnimalId")
                         .HasColumnType("bigint");
@@ -513,7 +473,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("PremiumDetail", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Price", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Price", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -536,6 +496,10 @@ namespace AccountsReceivable.BAL.Migrations
                         .HasPrecision(9, 2)
                         .HasColumnType("decimal(9,2)");
 
+                    b.Property<decimal>("Modifier")
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
+
                     b.Property<int>("ScheduleId")
                         .HasColumnType("int");
 
@@ -550,7 +514,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("Price", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Schedule", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Schedule", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -584,7 +548,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("Schedule", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Supplier", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Supplier", b =>
                 {
                     b.Property<int>("FarmCostCentre")
                         .HasColumnType("int");
@@ -603,36 +567,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("Supplier", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Transit", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DocumentId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<byte>("SpeciesTypeId")
-                        .HasColumnType("tinyint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DocumentId");
-
-                    b.HasIndex("SpeciesTypeId");
-
-                    b.ToTable("Transit", "application");
-                });
-
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Uplift", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Uplift", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -673,7 +608,7 @@ namespace AccountsReceivable.BAL.Migrations
                     b.ToTable("Uplift", "application");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Enum.AnimalType", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Enum.AnimalType", b =>
                 {
                     b.Property<byte>("Id")
                         .HasColumnType("tinyint");
@@ -699,90 +634,83 @@ namespace AccountsReceivable.BAL.Migrations
                         new
                         {
                             Id = (byte)0,
-                            DisplayName = "None",
-                            Name = "None",
+                            DisplayName = "Bobby Calves",
+                            Name = "BOBBY",
                             SpeciesTypeId = (byte)0
                         },
                         new
                         {
                             Id = (byte)1,
-                            DisplayName = "Bobby Calves",
-                            Name = "BOBBY",
+                            DisplayName = "Bull",
+                            Name = "BULL",
                             SpeciesTypeId = (byte)1
                         },
                         new
                         {
                             Id = (byte)2,
-                            DisplayName = "Bull",
-                            Name = "BULL",
-                            SpeciesTypeId = (byte)2
+                            DisplayName = "Cow",
+                            Name = "COW",
+                            SpeciesTypeId = (byte)1
                         },
                         new
                         {
                             Id = (byte)3,
-                            DisplayName = "Cow",
-                            Name = "COW",
-                            SpeciesTypeId = (byte)2
+                            DisplayName = "Manufacturing Cow",
+                            Name = "MCOW",
+                            SpeciesTypeId = (byte)1
                         },
                         new
                         {
                             Id = (byte)4,
-                            DisplayName = "Manufacturing Cow",
-                            Name = "MCOW",
-                            SpeciesTypeId = (byte)2
+                            DisplayName = "Heifer",
+                            Name = "HEIFER",
+                            SpeciesTypeId = (byte)1
                         },
                         new
                         {
                             Id = (byte)5,
-                            DisplayName = "Heifer",
-                            Name = "HEIFER",
-                            SpeciesTypeId = (byte)2
+                            DisplayName = "Steer",
+                            Name = "STEER",
+                            SpeciesTypeId = (byte)1
                         },
                         new
                         {
                             Id = (byte)6,
-                            DisplayName = "Steer",
-                            Name = "STEER",
+                            DisplayName = "Lamb",
+                            Name = "LAMB",
                             SpeciesTypeId = (byte)2
                         },
                         new
                         {
                             Id = (byte)7,
-                            DisplayName = "Lamb",
-                            Name = "LAMB",
-                            SpeciesTypeId = (byte)3
+                            DisplayName = "Mutton",
+                            Name = "MUTTON",
+                            SpeciesTypeId = (byte)2
                         },
                         new
                         {
                             Id = (byte)8,
-                            DisplayName = "Mutton",
-                            Name = "MUTTON",
-                            SpeciesTypeId = (byte)3
+                            DisplayName = "Ram",
+                            Name = "RAM",
+                            SpeciesTypeId = (byte)2
                         },
                         new
                         {
                             Id = (byte)9,
-                            DisplayName = "Ram",
-                            Name = "RAM",
+                            DisplayName = "Hind",
+                            Name = "HIND",
                             SpeciesTypeId = (byte)3
                         },
                         new
                         {
                             Id = (byte)10,
-                            DisplayName = "Hind",
-                            Name = "HIND",
-                            SpeciesTypeId = (byte)4
-                        },
-                        new
-                        {
-                            Id = (byte)11,
                             DisplayName = "Stag",
                             Name = "STAG",
-                            SpeciesTypeId = (byte)4
+                            SpeciesTypeId = (byte)3
                         });
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Enum.Grade", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Enum.Grade", b =>
                 {
                     b.Property<byte>("Id")
                         .HasColumnType("tinyint");
@@ -805,659 +733,653 @@ namespace AccountsReceivable.BAL.Migrations
                         {
                             Id = (byte)0,
                             AnimalTypeId = (byte)0,
-                            Name = "None"
-                        },
-                        new
-                        {
-                            Id = (byte)1,
-                            AnimalTypeId = (byte)1,
                             Name = "BV"
                         },
                         new
                         {
-                            Id = (byte)2,
-                            AnimalTypeId = (byte)1,
+                            Id = (byte)1,
+                            AnimalTypeId = (byte)0,
                             Name = "COND"
+                        },
+                        new
+                        {
+                            Id = (byte)2,
+                            AnimalTypeId = (byte)0,
+                            Name = "DEAD"
                         },
                         new
                         {
                             Id = (byte)3,
                             AnimalTypeId = (byte)1,
-                            Name = "DEAD"
-                        },
-                        new
-                        {
-                            Id = (byte)4,
-                            AnimalTypeId = (byte)2,
                             Name = "M1"
                         },
                         new
                         {
-                            Id = (byte)5,
-                            AnimalTypeId = (byte)2,
+                            Id = (byte)4,
+                            AnimalTypeId = (byte)1,
                             Name = "M2"
                         },
                         new
                         {
-                            Id = (byte)6,
-                            AnimalTypeId = (byte)2,
+                            Id = (byte)5,
+                            AnimalTypeId = (byte)1,
                             Name = "M3"
                         },
                         new
                         {
-                            Id = (byte)7,
-                            AnimalTypeId = (byte)2,
+                            Id = (byte)6,
+                            AnimalTypeId = (byte)1,
                             Name = "TM1"
                         },
                         new
                         {
-                            Id = (byte)8,
-                            AnimalTypeId = (byte)2,
+                            Id = (byte)7,
+                            AnimalTypeId = (byte)1,
                             Name = "TM2"
                         },
                         new
                         {
-                            Id = (byte)9,
-                            AnimalTypeId = (byte)2,
+                            Id = (byte)8,
+                            AnimalTypeId = (byte)1,
                             Name = "TM3"
                         },
                         new
                         {
-                            Id = (byte)10,
-                            AnimalTypeId = (byte)2,
+                            Id = (byte)9,
+                            AnimalTypeId = (byte)1,
                             Name = "COND"
+                        },
+                        new
+                        {
+                            Id = (byte)10,
+                            AnimalTypeId = (byte)1,
+                            Name = "DEAD"
                         },
                         new
                         {
                             Id = (byte)11,
                             AnimalTypeId = (byte)2,
-                            Name = "DEAD"
-                        },
-                        new
-                        {
-                            Id = (byte)12,
-                            AnimalTypeId = (byte)3,
                             Name = "F1"
                         },
                         new
                         {
-                            Id = (byte)13,
-                            AnimalTypeId = (byte)3,
+                            Id = (byte)12,
+                            AnimalTypeId = (byte)2,
                             Name = "F2"
                         },
                         new
                         {
-                            Id = (byte)14,
-                            AnimalTypeId = (byte)3,
+                            Id = (byte)13,
+                            AnimalTypeId = (byte)2,
                             Name = "F3"
                         },
                         new
                         {
-                            Id = (byte)15,
-                            AnimalTypeId = (byte)3,
+                            Id = (byte)14,
+                            AnimalTypeId = (byte)2,
                             Name = "P1"
                         },
                         new
                         {
-                            Id = (byte)16,
-                            AnimalTypeId = (byte)3,
+                            Id = (byte)15,
+                            AnimalTypeId = (byte)2,
                             Name = "P2"
                         },
                         new
                         {
-                            Id = (byte)17,
-                            AnimalTypeId = (byte)3,
+                            Id = (byte)16,
+                            AnimalTypeId = (byte)2,
                             Name = "P3"
                         },
                         new
                         {
-                            Id = (byte)18,
-                            AnimalTypeId = (byte)3,
+                            Id = (byte)17,
+                            AnimalTypeId = (byte)2,
                             Name = "T1"
                         },
                         new
                         {
-                            Id = (byte)19,
-                            AnimalTypeId = (byte)3,
+                            Id = (byte)18,
+                            AnimalTypeId = (byte)2,
                             Name = "T2"
                         },
                         new
                         {
-                            Id = (byte)20,
-                            AnimalTypeId = (byte)3,
+                            Id = (byte)19,
+                            AnimalTypeId = (byte)2,
                             Name = "T3"
                         },
                         new
                         {
-                            Id = (byte)21,
-                            AnimalTypeId = (byte)3,
+                            Id = (byte)20,
+                            AnimalTypeId = (byte)2,
                             Name = "COND"
+                        },
+                        new
+                        {
+                            Id = (byte)21,
+                            AnimalTypeId = (byte)2,
+                            Name = "DEAD"
                         },
                         new
                         {
                             Id = (byte)22,
                             AnimalTypeId = (byte)3,
-                            Name = "DEAD"
-                        },
-                        new
-                        {
-                            Id = (byte)23,
-                            AnimalTypeId = (byte)4,
                             Name = "M"
                         },
                         new
                         {
-                            Id = (byte)24,
-                            AnimalTypeId = (byte)4,
+                            Id = (byte)23,
+                            AnimalTypeId = (byte)3,
                             Name = "COND"
+                        },
+                        new
+                        {
+                            Id = (byte)24,
+                            AnimalTypeId = (byte)3,
+                            Name = "DEAD"
                         },
                         new
                         {
                             Id = (byte)25,
                             AnimalTypeId = (byte)4,
-                            Name = "DEAD"
-                        },
-                        new
-                        {
-                            Id = (byte)26,
-                            AnimalTypeId = (byte)5,
                             Name = "A1"
                         },
                         new
                         {
-                            Id = (byte)27,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)26,
+                            AnimalTypeId = (byte)4,
                             Name = "A2"
                         },
                         new
                         {
-                            Id = (byte)28,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)27,
+                            AnimalTypeId = (byte)4,
                             Name = "A3"
                         },
                         new
                         {
-                            Id = (byte)29,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)28,
+                            AnimalTypeId = (byte)4,
                             Name = "F1"
                         },
                         new
                         {
-                            Id = (byte)30,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)29,
+                            AnimalTypeId = (byte)4,
                             Name = "F2"
                         },
                         new
                         {
-                            Id = (byte)31,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)30,
+                            AnimalTypeId = (byte)4,
                             Name = "F3"
                         },
                         new
                         {
-                            Id = (byte)32,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)31,
+                            AnimalTypeId = (byte)4,
                             Name = "L1"
                         },
                         new
                         {
-                            Id = (byte)33,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)32,
+                            AnimalTypeId = (byte)4,
                             Name = "L2"
                         },
                         new
                         {
-                            Id = (byte)34,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)33,
+                            AnimalTypeId = (byte)4,
                             Name = "L3"
                         },
                         new
                         {
-                            Id = (byte)35,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)34,
+                            AnimalTypeId = (byte)4,
                             Name = "M"
                         },
                         new
                         {
-                            Id = (byte)36,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)35,
+                            AnimalTypeId = (byte)4,
                             Name = "P1"
                         },
                         new
                         {
-                            Id = (byte)37,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)36,
+                            AnimalTypeId = (byte)4,
                             Name = "P2"
                         },
                         new
                         {
-                            Id = (byte)38,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)37,
+                            AnimalTypeId = (byte)4,
                             Name = "P3"
                         },
                         new
                         {
-                            Id = (byte)39,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)38,
+                            AnimalTypeId = (byte)4,
                             Name = "T1"
                         },
                         new
                         {
-                            Id = (byte)40,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)39,
+                            AnimalTypeId = (byte)4,
                             Name = "T2"
                         },
                         new
                         {
-                            Id = (byte)41,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)40,
+                            AnimalTypeId = (byte)4,
                             Name = "T3"
                         },
                         new
                         {
-                            Id = (byte)42,
-                            AnimalTypeId = (byte)5,
+                            Id = (byte)41,
+                            AnimalTypeId = (byte)4,
                             Name = "COND"
+                        },
+                        new
+                        {
+                            Id = (byte)42,
+                            AnimalTypeId = (byte)4,
+                            Name = "DEAD"
                         },
                         new
                         {
                             Id = (byte)43,
                             AnimalTypeId = (byte)5,
-                            Name = "DEAD"
-                        },
-                        new
-                        {
-                            Id = (byte)44,
-                            AnimalTypeId = (byte)6,
                             Name = "A1"
                         },
                         new
                         {
-                            Id = (byte)45,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)44,
+                            AnimalTypeId = (byte)5,
                             Name = "A2"
                         },
                         new
                         {
-                            Id = (byte)46,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)45,
+                            AnimalTypeId = (byte)5,
                             Name = "A3"
                         },
                         new
                         {
-                            Id = (byte)47,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)46,
+                            AnimalTypeId = (byte)5,
                             Name = "F1"
                         },
                         new
                         {
-                            Id = (byte)48,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)47,
+                            AnimalTypeId = (byte)5,
                             Name = "F2"
                         },
                         new
                         {
-                            Id = (byte)49,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)48,
+                            AnimalTypeId = (byte)5,
                             Name = "F3"
                         },
                         new
                         {
-                            Id = (byte)50,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)49,
+                            AnimalTypeId = (byte)5,
                             Name = "L1"
                         },
                         new
                         {
-                            Id = (byte)51,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)50,
+                            AnimalTypeId = (byte)5,
                             Name = "L2"
                         },
                         new
                         {
-                            Id = (byte)52,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)51,
+                            AnimalTypeId = (byte)5,
                             Name = "L3"
                         },
                         new
                         {
-                            Id = (byte)53,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)52,
+                            AnimalTypeId = (byte)5,
                             Name = "M"
                         },
                         new
                         {
-                            Id = (byte)54,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)53,
+                            AnimalTypeId = (byte)5,
                             Name = "P1"
                         },
                         new
                         {
-                            Id = (byte)55,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)54,
+                            AnimalTypeId = (byte)5,
                             Name = "P2"
                         },
                         new
                         {
-                            Id = (byte)56,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)55,
+                            AnimalTypeId = (byte)5,
                             Name = "P3"
                         },
                         new
                         {
-                            Id = (byte)57,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)56,
+                            AnimalTypeId = (byte)5,
                             Name = "T1"
                         },
                         new
                         {
-                            Id = (byte)58,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)57,
+                            AnimalTypeId = (byte)5,
                             Name = "T2"
                         },
                         new
                         {
-                            Id = (byte)59,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)58,
+                            AnimalTypeId = (byte)5,
                             Name = "T3"
                         },
                         new
                         {
-                            Id = (byte)60,
-                            AnimalTypeId = (byte)6,
+                            Id = (byte)59,
+                            AnimalTypeId = (byte)5,
                             Name = "COND"
+                        },
+                        new
+                        {
+                            Id = (byte)60,
+                            AnimalTypeId = (byte)5,
+                            Name = "DEAD"
                         },
                         new
                         {
                             Id = (byte)61,
                             AnimalTypeId = (byte)6,
-                            Name = "DEAD"
-                        },
-                        new
-                        {
-                            Id = (byte)62,
-                            AnimalTypeId = (byte)7,
                             Name = "A"
                         },
                         new
                         {
-                            Id = (byte)63,
-                            AnimalTypeId = (byte)7,
+                            Id = (byte)62,
+                            AnimalTypeId = (byte)6,
                             Name = "B"
                         },
                         new
                         {
-                            Id = (byte)64,
-                            AnimalTypeId = (byte)7,
+                            Id = (byte)63,
+                            AnimalTypeId = (byte)6,
                             Name = "C"
                         },
                         new
                         {
-                            Id = (byte)65,
-                            AnimalTypeId = (byte)7,
+                            Id = (byte)64,
+                            AnimalTypeId = (byte)6,
                             Name = "F"
                         },
                         new
                         {
-                            Id = (byte)66,
-                            AnimalTypeId = (byte)7,
+                            Id = (byte)65,
+                            AnimalTypeId = (byte)6,
                             Name = "M"
                         },
                         new
                         {
-                            Id = (byte)67,
-                            AnimalTypeId = (byte)7,
+                            Id = (byte)66,
+                            AnimalTypeId = (byte)6,
                             Name = "P"
                         },
                         new
                         {
-                            Id = (byte)68,
-                            AnimalTypeId = (byte)7,
+                            Id = (byte)67,
+                            AnimalTypeId = (byte)6,
                             Name = "T"
                         },
                         new
                         {
-                            Id = (byte)69,
-                            AnimalTypeId = (byte)7,
+                            Id = (byte)68,
+                            AnimalTypeId = (byte)6,
                             Name = "Y"
                         },
                         new
                         {
-                            Id = (byte)70,
-                            AnimalTypeId = (byte)7,
+                            Id = (byte)69,
+                            AnimalTypeId = (byte)6,
                             Name = "COND"
+                        },
+                        new
+                        {
+                            Id = (byte)70,
+                            AnimalTypeId = (byte)6,
+                            Name = "DEAD"
                         },
                         new
                         {
                             Id = (byte)71,
                             AnimalTypeId = (byte)7,
-                            Name = "DEAD"
-                        },
-                        new
-                        {
-                            Id = (byte)72,
-                            AnimalTypeId = (byte)8,
                             Name = "MF"
                         },
                         new
                         {
-                            Id = (byte)73,
-                            AnimalTypeId = (byte)8,
+                            Id = (byte)72,
+                            AnimalTypeId = (byte)7,
                             Name = "MH"
                         },
                         new
                         {
-                            Id = (byte)74,
-                            AnimalTypeId = (byte)8,
+                            Id = (byte)73,
+                            AnimalTypeId = (byte)7,
                             Name = "MM"
                         },
                         new
                         {
-                            Id = (byte)75,
-                            AnimalTypeId = (byte)8,
+                            Id = (byte)74,
+                            AnimalTypeId = (byte)7,
                             Name = "MP"
                         },
                         new
                         {
-                            Id = (byte)76,
-                            AnimalTypeId = (byte)8,
+                            Id = (byte)75,
+                            AnimalTypeId = (byte)7,
                             Name = "ML"
                         },
                         new
                         {
-                            Id = (byte)77,
-                            AnimalTypeId = (byte)8,
+                            Id = (byte)76,
+                            AnimalTypeId = (byte)7,
                             Name = "MX"
                         },
                         new
                         {
-                            Id = (byte)78,
-                            AnimalTypeId = (byte)8,
+                            Id = (byte)77,
+                            AnimalTypeId = (byte)7,
                             Name = "COND"
+                        },
+                        new
+                        {
+                            Id = (byte)78,
+                            AnimalTypeId = (byte)7,
+                            Name = "DEAD"
                         },
                         new
                         {
                             Id = (byte)79,
                             AnimalTypeId = (byte)8,
-                            Name = "DEAD"
-                        },
-                        new
-                        {
-                            Id = (byte)80,
-                            AnimalTypeId = (byte)9,
                             Name = "R"
                         },
                         new
                         {
-                            Id = (byte)81,
-                            AnimalTypeId = (byte)9,
+                            Id = (byte)80,
+                            AnimalTypeId = (byte)8,
                             Name = "COND"
+                        },
+                        new
+                        {
+                            Id = (byte)81,
+                            AnimalTypeId = (byte)8,
+                            Name = "DEAD"
                         },
                         new
                         {
                             Id = (byte)82,
                             AnimalTypeId = (byte)9,
-                            Name = "DEAD"
-                        },
-                        new
-                        {
-                            Id = (byte)83,
-                            AnimalTypeId = (byte)10,
                             Name = "AF1"
                         },
                         new
                         {
-                            Id = (byte)84,
-                            AnimalTypeId = (byte)10,
+                            Id = (byte)83,
+                            AnimalTypeId = (byte)9,
                             Name = "AF2"
                         },
                         new
                         {
-                            Id = (byte)85,
-                            AnimalTypeId = (byte)10,
+                            Id = (byte)84,
+                            AnimalTypeId = (byte)9,
                             Name = "AFH"
                         },
                         new
                         {
-                            Id = (byte)86,
-                            AnimalTypeId = (byte)10,
+                            Id = (byte)85,
+                            AnimalTypeId = (byte)9,
                             Name = "AP"
                         },
                         new
                         {
-                            Id = (byte)87,
-                            AnimalTypeId = (byte)10,
+                            Id = (byte)86,
+                            AnimalTypeId = (byte)9,
                             Name = "M1"
                         },
                         new
                         {
-                            Id = (byte)88,
-                            AnimalTypeId = (byte)10,
+                            Id = (byte)87,
+                            AnimalTypeId = (byte)9,
                             Name = "M2"
                         },
                         new
                         {
-                            Id = (byte)89,
-                            AnimalTypeId = (byte)10,
+                            Id = (byte)88,
+                            AnimalTypeId = (byte)9,
                             Name = "PD1"
                         },
                         new
                         {
-                            Id = (byte)90,
-                            AnimalTypeId = (byte)10,
+                            Id = (byte)89,
+                            AnimalTypeId = (byte)9,
                             Name = "PD2"
                         },
                         new
                         {
-                            Id = (byte)91,
-                            AnimalTypeId = (byte)10,
+                            Id = (byte)90,
+                            AnimalTypeId = (byte)9,
                             Name = "PLG"
                         },
                         new
                         {
-                            Id = (byte)92,
-                            AnimalTypeId = (byte)10,
+                            Id = (byte)91,
+                            AnimalTypeId = (byte)9,
                             Name = "PLG1"
                         },
                         new
                         {
-                            Id = (byte)93,
-                            AnimalTypeId = (byte)10,
+                            Id = (byte)92,
+                            AnimalTypeId = (byte)9,
                             Name = "PLG2"
                         },
                         new
                         {
-                            Id = (byte)94,
-                            AnimalTypeId = (byte)10,
+                            Id = (byte)93,
+                            AnimalTypeId = (byte)9,
                             Name = "COND"
+                        },
+                        new
+                        {
+                            Id = (byte)94,
+                            AnimalTypeId = (byte)9,
+                            Name = "DEAD"
                         },
                         new
                         {
                             Id = (byte)95,
                             AnimalTypeId = (byte)10,
-                            Name = "DEAD"
-                        },
-                        new
-                        {
-                            Id = (byte)96,
-                            AnimalTypeId = (byte)11,
                             Name = "AF1"
                         },
                         new
                         {
-                            Id = (byte)97,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)96,
+                            AnimalTypeId = (byte)10,
                             Name = "AF2"
                         },
                         new
                         {
-                            Id = (byte)98,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)97,
+                            AnimalTypeId = (byte)10,
                             Name = "AFH"
                         },
                         new
                         {
-                            Id = (byte)99,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)98,
+                            AnimalTypeId = (byte)10,
                             Name = "AP"
                         },
                         new
                         {
-                            Id = (byte)100,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)99,
+                            AnimalTypeId = (byte)10,
                             Name = "M1"
                         },
                         new
                         {
-                            Id = (byte)101,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)100,
+                            AnimalTypeId = (byte)10,
                             Name = "M2"
                         },
                         new
                         {
-                            Id = (byte)102,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)101,
+                            AnimalTypeId = (byte)10,
                             Name = "PF1"
                         },
                         new
                         {
-                            Id = (byte)103,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)102,
+                            AnimalTypeId = (byte)10,
                             Name = "PF2"
                         },
                         new
                         {
-                            Id = (byte)104,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)103,
+                            AnimalTypeId = (byte)10,
                             Name = "PLG"
                         },
                         new
                         {
-                            Id = (byte)105,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)104,
+                            AnimalTypeId = (byte)10,
                             Name = "PLG1"
                         },
                         new
                         {
-                            Id = (byte)106,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)105,
+                            AnimalTypeId = (byte)10,
                             Name = "PLG2"
                         },
                         new
                         {
-                            Id = (byte)107,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)106,
+                            AnimalTypeId = (byte)10,
                             Name = "COND"
                         },
                         new
                         {
-                            Id = (byte)108,
-                            AnimalTypeId = (byte)11,
+                            Id = (byte)107,
+                            AnimalTypeId = (byte)10,
                             Name = "DEAD"
                         });
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Enum.Role", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Enum.Role", b =>
                 {
                     b.Property<byte>("Id")
                         .HasColumnType("tinyint");
@@ -1474,26 +1396,26 @@ namespace AccountsReceivable.BAL.Migrations
                         new
                         {
                             Id = (byte)0,
-                            Name = "None"
-                        },
-                        new
-                        {
-                            Id = (byte)1,
                             Name = "Read"
                         },
                         new
                         {
-                            Id = (byte)2,
+                            Id = (byte)1,
                             Name = "Read/Write"
                         },
                         new
                         {
-                            Id = (byte)3,
+                            Id = (byte)2,
                             Name = "Administrator"
+                        },
+                        new
+                        {
+                            Id = (byte)3,
+                            Name = "None"
                         });
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Enum.SpeciesType", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Enum.SpeciesType", b =>
                 {
                     b.Property<byte>("Id")
                         .HasColumnType("tinyint");
@@ -1514,36 +1436,30 @@ namespace AccountsReceivable.BAL.Migrations
                         new
                         {
                             Id = (byte)0,
-                            DisplayName = "None",
-                            Name = "NONE"
-                        },
-                        new
-                        {
-                            Id = (byte)1,
                             DisplayName = "Bobby",
                             Name = "BOBBY"
                         },
                         new
                         {
-                            Id = (byte)2,
+                            Id = (byte)1,
                             DisplayName = "Cattle",
                             Name = "BOVINE"
                         },
                         new
                         {
-                            Id = (byte)3,
+                            Id = (byte)2,
                             DisplayName = "Sheep",
                             Name = "OVINE"
                         },
                         new
                         {
-                            Id = (byte)4,
+                            Id = (byte)3,
                             DisplayName = "Deer",
                             Name = "DEER"
                         });
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Enum.Status", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Enum.Status", b =>
                 {
                     b.Property<byte>("Id")
                         .HasColumnType("tinyint");
@@ -1560,36 +1476,36 @@ namespace AccountsReceivable.BAL.Migrations
                         new
                         {
                             Id = (byte)0,
-                            Name = "None"
-                        },
-                        new
-                        {
-                            Id = (byte)1,
                             Name = "Pending"
                         },
                         new
                         {
-                            Id = (byte)2,
+                            Id = (byte)1,
                             Name = "Approved"
                         },
                         new
                         {
-                            Id = (byte)3,
+                            Id = (byte)2,
                             Name = "Declined"
                         },
                         new
                         {
-                            Id = (byte)4,
+                            Id = (byte)3,
                             Name = "Overridden"
                         },
                         new
                         {
-                            Id = (byte)5,
+                            Id = (byte)4,
                             Name = "Superseded"
+                        },
+                        new
+                        {
+                            Id = (byte)5,
+                            Name = "None"
                         });
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Enum.Validation", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Enum.Validation", b =>
                 {
                     b.Property<byte>("Id")
                         .HasColumnType("tinyint");
@@ -1606,33 +1522,93 @@ namespace AccountsReceivable.BAL.Migrations
                         new
                         {
                             Id = (byte)0,
-                            Name = "None"
-                        },
-                        new
-                        {
-                            Id = (byte)1,
                             Name = "Pending"
                         },
                         new
                         {
-                            Id = (byte)2,
+                            Id = (byte)1,
                             Name = "Low"
+                        },
+                        new
+                        {
+                            Id = (byte)2,
+                            Name = "Valid"
                         },
                         new
                         {
                             Id = (byte)3,
                             Name = "High"
-                        },
-                        new
-                        {
-                            Id = (byte)4,
-                            Name = "Valid"
                         });
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Account.Audit", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Source.DeductionDto", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Account.User", "User")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Meatworks")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Rate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Species")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Uom")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DeductionDto", "source");
+                });
+
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Source.TransitDto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AnimalType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CostCentre")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PlantName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TransitDto", "source");
+                });
+
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Account.Audit", b =>
+                {
+                    b.HasOne("CloudEdgeBilling.BL.Models.Account.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1641,53 +1617,45 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Account.User", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Account.User", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.Role", "Role")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Enum.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Animal", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Animal", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Document", "Document")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Document", "Document")
                         .WithMany("Animals")
                         .HasForeignKey("DocumentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.Grade", "Grade")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Enum.Grade", "Grade")
                         .WithMany()
                         .HasForeignKey("GradeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.Validation", "Validation")
-                        .WithMany()
-                        .HasForeignKey("ValidationId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Document");
 
                     b.Navigation("Grade");
-
-                    b.Navigation("Validation");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.AnimalTypeSummary", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.AnimalTypeSummary", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.AnimalType", "AnimalType")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Enum.AnimalType", "AnimalType")
                         .WithMany()
                         .HasForeignKey("AnimalTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Document", "Document")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Document", "Document")
                         .WithMany("AnimalTypeSummaries")
                         .HasForeignKey("DocumentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1698,28 +1666,9 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("Document");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Comment", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.DeductionDetail", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Document", "Document")
-                        .WithMany("StaffComments")
-                        .HasForeignKey("DocumentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AccountsReceivable.BL.Models.Account.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserEmailAddress")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Document");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.DeductionDetail", b =>
-                {
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Animal", "Animal")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Animal", "Animal")
                         .WithMany("DeductionDetails")
                         .HasForeignKey("AnimalId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1728,47 +1677,41 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("Animal");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Document", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Document", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.Validation", "CalcValidation")
-                        .WithMany()
-                        .HasForeignKey("CalcValidationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Farm", "Farm")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Farm", "Farm")
                         .WithMany()
                         .HasForeignKey("FarmCostCentre")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Plant", "Plant")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Plant", "Plant")
                         .WithMany()
                         .HasForeignKey("PlantName")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Document", "PreviousDocument")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Document", "PreviousDocument")
                         .WithMany()
                         .HasForeignKey("PreviousDocumentId");
 
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Schedule", "Schedule")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Schedule", "Schedule")
                         .WithMany()
                         .HasForeignKey("ScheduleId");
 
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.SpeciesType", "SpeciesType")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Enum.SpeciesType", "SpeciesType")
                         .WithMany()
-                        .HasForeignKey("SpeciesTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("SpeciesTypeId");
 
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.Status", "Status")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Enum.Status", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CalcValidation");
+                    b.HasOne("CloudEdgeBilling.BL.Models.Source.TransitDto", "Transit")
+                        .WithMany()
+                        .HasForeignKey("TransitId");
 
                     b.Navigation("Farm");
 
@@ -1781,11 +1724,13 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("SpeciesType");
 
                     b.Navigation("Status");
+
+                    b.Navigation("Transit");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Plant", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Plant", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Meatwork", "Meatwork")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Meatwork", "Meatwork")
                         .WithMany("Plants")
                         .HasForeignKey("MeatworkName")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1794,9 +1739,9 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("Meatwork");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.PremiumDetail", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.PremiumDetail", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Animal", "Animal")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Animal", "Animal")
                         .WithMany("PremiumDetails")
                         .HasForeignKey("AnimalId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1805,15 +1750,15 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("Animal");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Price", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Price", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.Grade", "Grade")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Enum.Grade", "Grade")
                         .WithMany()
                         .HasForeignKey("GradeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Schedule", "Schedule")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Schedule", "Schedule")
                         .WithMany("Prices")
                         .HasForeignKey("ScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1824,18 +1769,18 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("Schedule");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Schedule", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Schedule", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Meatwork", "Meatwork")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Meatwork", "Meatwork")
                         .WithMany()
                         .HasForeignKey("MeatworkName")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.Status", "Status")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Enum.Status", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Meatwork");
@@ -1843,15 +1788,15 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Supplier", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Supplier", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Farm", "Farm")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Farm", "Farm")
                         .WithMany()
                         .HasForeignKey("FarmCostCentre")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Meatwork", "Meatwork")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Meatwork", "Meatwork")
                         .WithMany("Suppliers")
                         .HasForeignKey("MeatworkName")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1862,33 +1807,15 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("Meatwork");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Transit", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Uplift", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Document", "Document")
-                        .WithMany("Transits")
-                        .HasForeignKey("DocumentId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.SpeciesType", "SpeciesType")
-                        .WithMany()
-                        .HasForeignKey("SpeciesTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Document");
-
-                    b.Navigation("SpeciesType");
-                });
-
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Uplift", b =>
-                {
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.AnimalType", "AnimalType")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Enum.AnimalType", "AnimalType")
                         .WithMany()
                         .HasForeignKey("AnimalTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AccountsReceivable.BL.Models.Application.Schedule", "Schedule")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Application.Schedule", "Schedule")
                         .WithMany("Uplifts")
                         .HasForeignKey("ScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1899,54 +1826,50 @@ namespace AccountsReceivable.BAL.Migrations
                     b.Navigation("Schedule");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Enum.AnimalType", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Enum.AnimalType", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.SpeciesType", "SpeciesType")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Enum.SpeciesType", "SpeciesType")
                         .WithMany()
                         .HasForeignKey("SpeciesTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("SpeciesType");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Enum.Grade", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Enum.Grade", b =>
                 {
-                    b.HasOne("AccountsReceivable.BL.Models.Enum.AnimalType", "AnimalType")
+                    b.HasOne("CloudEdgeBilling.BL.Models.Enum.AnimalType", "AnimalType")
                         .WithMany()
                         .HasForeignKey("AnimalTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AnimalType");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Animal", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Animal", b =>
                 {
                     b.Navigation("DeductionDetails");
 
                     b.Navigation("PremiumDetails");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Document", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Document", b =>
                 {
                     b.Navigation("AnimalTypeSummaries");
 
                     b.Navigation("Animals");
-
-                    b.Navigation("StaffComments");
-
-                    b.Navigation("Transits");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Meatwork", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Meatwork", b =>
                 {
                     b.Navigation("Plants");
 
                     b.Navigation("Suppliers");
                 });
 
-            modelBuilder.Entity("AccountsReceivable.BL.Models.Application.Schedule", b =>
+            modelBuilder.Entity("CloudEdgeBilling.BL.Models.Application.Schedule", b =>
                 {
                     b.Navigation("Prices");
 

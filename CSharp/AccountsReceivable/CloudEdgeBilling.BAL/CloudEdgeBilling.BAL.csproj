@@ -7,10 +7,11 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Version>$([System.DateTime]::Now.ToString(yyyy.MM.dd.HHmm))</Version>
         <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+        <RootNamespace>AccountsReceivable.BAL</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\AccountsReceivable.BL\AccountsReceivable.BL.csproj" PrivateAssets="all"/>
+        <ProjectReference Include="..\CloudEdgeBilling.BL\CloudEdgeBilling.BL.csproj" PrivateAssets="all" />
     </ItemGroup>
 
     <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="BuildOnlySettings;ResolveReferences">

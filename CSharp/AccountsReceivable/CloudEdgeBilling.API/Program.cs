@@ -49,7 +49,7 @@ public class Program
         {
             options
                 .UseSqlServer(builder.Configuration.GetConnectionString("Development") ?? string.Empty,
-                    db => db.MigrationsAssembly("AccountsReceivable.BAL"));
+                    db => db.MigrationsAssembly("CloudEdgeBilling.BAL"));
         }, ServiceLifetime.Transient);
         
         var app = builder.Build();

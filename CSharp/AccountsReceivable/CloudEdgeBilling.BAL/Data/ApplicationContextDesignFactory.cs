@@ -4,7 +4,7 @@ namespace AccountsReceivable.BAL.Data;
 
 public class ApplicationContextDesignFactory : DesignTimeDbContextFactoryBase<ApplicationDbContext>
 {
-    public ApplicationContextDesignFactory() : base("Development", "AccountsReceivable.BAL")
+    public ApplicationContextDesignFactory() : base("Development", "CloudEdgeBilling.BAL")
     {
     }
 
