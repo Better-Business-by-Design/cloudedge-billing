@@ -2,8 +2,10 @@ using System.Linq.Expressions;
 using CloudEdgeBilling.BAL.Data;
 using CloudEdgeBilling.BL.Models.Application;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
+using Newtonsoft.Json;
 
 namespace CloudEdgeBilling.API.Shared;
 
@@ -19,6 +21,8 @@ namespace CloudEdgeBilling.API.Shared;
 /// </typeparam>
 public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
 {
+    private const string StateKey = "PageState";
+    
     protected MudDataGrid<T>? DataGrid;
 
     /// <value>
@@ -69,6 +73,33 @@ public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
 
     [Inject] protected virtual NavigationManager Navigation { get; set; } = default!;
 
+    [Inject] protected virtual ProtectedSessionStorage ProtectedSessionStore { get; set; } = default!;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var result = await ProtectedSessionStore.GetAsync<DataGridPageState<T>>(StateKey);
+            if (result.Success)
+            {
+                Console.WriteLine($"Read page state {result.Value}");
+                foreach (var simplifiedFilterDefinition in result.Value!.SimplifiedFilterDefinitions)
+                {
+                    await DataGrid!.AddFilterAsync(simplifiedFilterDefinition.GetFullFilterDefinition(DataGrid));
+                }
+                
+                foreach (var sortDefinition in result.Value!.SimplifiedSortDefinitions)
+                {
+                    await DataGrid!.SetSortAsync(
+                        sortDefinition.SortBy,
+                        sortDefinition.Descending ? SortDirection.Descending : SortDirection.Ascending,
+                        null);
+                }
+            }
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
     /// <summary>
     ///     Implementation of MudDataGrid's <c>ServerData</c> property.
     ///     Calls hook methods to load data from the database, filter it, and sort it.
@@ -83,6 +114,13 @@ public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
     /// <returns>A Task for the MudDataGrid to use to update its state.</returns>
     protected async Task<GridData<T>> GridServerReload(GridState<T> state)
     {
+        var pageState = new DataGridPageState<T>(
+            state.SortDefinitions.Select(SimplifiedSortDefinition<T>.Simplify),
+            state.FilterDefinitions.Select(SimplifiedFilterDefinition<T>.Simplify)
+        );
+        Console.WriteLine($"Saving page state {pageState}");
+        await ProtectedSessionStore.SetAsync(StateKey, pageState);
+        
         var fullQuery = BuildFullQuery();
         var initialFilteredQuery = StaticFilter?.Invoke(fullQuery) ?? fullQuery;
         var filteredQuery = FilterFullQuery(initialFilteredQuery, state.FilterDefinitions);
@@ -317,5 +355,78 @@ public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
             _ => throw new NotImplementedException(
                 $"'{logicOperator}' is not implemented in Guid logic predicate building.")
         };
+    }
+}
+
+public record DataGridPageState<T>(
+    IEnumerable<SimplifiedSortDefinition<T>> SimplifiedSortDefinitions,
+    IEnumerable<SimplifiedFilterDefinition<T>> SimplifiedFilterDefinitions) where T : IDataRow
+{
+    public override string ToString()
+    {
+        return $"SimplifiedSortDefinitions: {string.Join(", ", SimplifiedSortDefinitions)} SimplifiedFilterDefinitions: {string.Join(",", SimplifiedFilterDefinitions)}";
+    }
+}
+
+public record SimplifiedSortDefinition<T> (
+    string SortBy,
+    bool Descending
+    ) where T : IDataRow
+{
+    public static SimplifiedSortDefinition<T> Simplify(SortDefinition<T> sortDefinition) => new SimplifiedSortDefinition<T>(
+        sortDefinition.SortBy,
+        sortDefinition.Descending
+    );
+}
+
+public record SimplifiedFilterDefinition<T> (
+    string Title,
+    SimplifiedFieldType SimplifiedFieldType,
+    string Operator
+    ) where T : IDataRow
+{
+    public static SimplifiedFilterDefinition<T> Simplify(IFilterDefinition<T> filterDefinition)
+    {
+        return new SimplifiedFilterDefinition<T>(
+            filterDefinition.Title ?? throw new ArgumentNullException(nameof(filterDefinition),
+                "Unable to save filter definition with no title."),
+                new SimplifiedFieldType(filterDefinition.FieldType),
+                filterDefinition.Operator ?? throw new ArgumentNullException(nameof(filterDefinition),
+                    "Unable to save filter definition with no operator."));
+    }
+
+    public IFilterDefinition<T> GetFullFilterDefinition(MudDataGrid<T> dataGrid)
+    {
+        var column = dataGrid.RenderedColumns.First(c => c.Title.Equals(Title));
+
+        return new FilterDefinition<T>()
+        {
+            Column = column,
+            FilterFunction = null,
+            Id = new Guid(),
+            Title = Title,
+            Operator = Operator,
+            Value = column.Value
+        };
+    }
+}
+
+public record SimplifiedFieldType
+{
+    public string TypeName { get; set; }
+
+    public SimplifiedFieldType(FieldType fieldType)
+    {
+        TypeName = fieldType.InnerType!.FullName!;
+    }
+
+    [JsonConstructor]
+    public SimplifiedFieldType()
+    {
+    }
+
+    public FieldType GetFullFieldType()
+    {
+        return FieldType.Identify(System.Type.GetType(TypeName));
     }
 }

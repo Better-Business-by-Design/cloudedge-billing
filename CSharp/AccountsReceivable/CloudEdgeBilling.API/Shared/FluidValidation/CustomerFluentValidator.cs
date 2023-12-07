@@ -19,8 +19,7 @@ public class CustomerFluentValidator : DataRowFluentValidator<Customer>
             .NotEmpty()
             .Length(1, 100);
 
-        RuleFor(c => c.IsActive)
-            .NotEmpty();
+        //RuleFor(c => c.IsActive);
 
         RuleFor(c => c.Location)
             .Length(0, 100);
