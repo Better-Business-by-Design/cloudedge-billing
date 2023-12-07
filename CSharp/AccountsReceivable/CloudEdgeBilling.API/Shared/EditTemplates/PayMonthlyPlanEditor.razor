@@ -1,26 +1,21 @@
-<MudSelect T="@(PayMonthlyPlan?)" Value="Plan" ValueChanged="HandleValueChanged" Clearable="true" Dense="true">
-    @foreach (var plan in PayMonthlyPlans)
-    {
-        <MudSelectItem Value="@plan">@plan.PlanName</MudSelectItem>
-    }
-</MudSelect>
+@inherits DataRowEditor<Customer, PayMonthlyPlan>
+
+@{
+    base.BuildRenderTree(__builder);
+}
 
 @code{
-    [Parameter]
-    [EditorRequired]
-    public CellContext<Customer> Context { get; set; } = default!;
 
-    [Parameter]
-    public List<PayMonthlyPlan> PayMonthlyPlans { get; set; } = default!;
+    protected override PayMonthlyPlan? Value => Context.Item.PayMonthlyPlan;
 
-    [CascadingParameter]
-    public MudDataGrid<Customer> DataGrid { get; set; } = default!;
-
-    private PayMonthlyPlan? Plan => Context.Item.PayMonthlyPlan;
-
-    private async Task HandleValueChanged(PayMonthlyPlan? newPlan)
+    protected override async Task HandleValueChanged(PayMonthlyPlan? newPlan)
     {
         Context.Item.PayMonthlyPlan = newPlan;
         await DataGrid.CommittedItemChanges.InvokeAsync(Context.Item);
+    }
+
+    protected override string GetPrintValue(PayMonthlyPlan? plan)
+    {
+        return plan?.PlanName ?? string.Empty;
     }
 }

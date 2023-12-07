@@ -1,26 +1,23 @@
-<MudSelect T="@(Account)" Value="Account" ValueChanged="HandleValueChanged" Dense="true">
-    @foreach (var account in Accounts)
-    {
-        <MudSelectItem Value="@account">@account.Name</MudSelectItem>
-    }
-</MudSelect>
+@inherits DataRowEditor<LineItem, Account>
+
+@{
+    base.BuildRenderTree(__builder);
+}
 
 @code{
-    [Parameter]
-    [EditorRequired]
-    public CellContext<LineItem> Context { get; set; } = default!;
 
-    [Parameter]
-    public IEnumerable<Account> Accounts { get; set; } = default!;
+    protected override Account Value => Context.Item.Account;
 
-    [CascadingParameter]
-    public MudDataGrid<LineItem> DataGrid { get; set; } = default!;
-
-    private Account Account => Context.Item.Account;
-
-    private async Task HandleValueChanged(Account newAccount)
+    protected override async Task HandleValueChanged(Account? newAccount)
     {
-        Context.Item.Account = newAccount;
+        Context.Item.Account = newAccount ?? throw new ArgumentNullException(nameof(newAccount), 
+            "Account field on Line Item is not nullable but received nullable value in account editor.");
         await DataGrid.CommittedItemChanges.InvokeAsync(Context.Item);
+    }
+
+    protected override string GetPrintValue(Account? value)
+    {
+        return value?.Name ?? throw new ArgumentNullException(nameof(value), 
+            "Unable to get print value for non-nullable field Account on DTO LineItem.");
     }
 }
