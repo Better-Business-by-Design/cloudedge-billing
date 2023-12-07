@@ -21,8 +21,8 @@
         </MudButton>
     </div>
     <MudSpacer/>
-    <MudAlert Severity="Severity.Error" Dense="true" Class="@(_errorMessage.Equals(string.Empty) ? "d-none" : "d-block")">
-        @(_errorMessage)
+    <MudAlert Severity="Severity.Error" Dense="true" Class="@(ErrorMessage.Equals(string.Empty) ? "d-none" : "d-block")">
+        @(ErrorMessage)
     </MudAlert>
     <div class="@(Revertable ? "d-flex" : "d-none")">
         <MudButton OnClick="@UndoLastRowChange" Color="Color.Tertiary" Variant="Variant.Outlined"

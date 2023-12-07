@@ -1,4 +1,5 @@
 ﻿@page "/customers"
+@using CloudEdgeBilling.API.Shared.EditTemplates
 @inherits EditableDataGridPage<Customer>
 
 @{
@@ -23,13 +24,7 @@
         <PropertyColumn Property="@(x => x.XeroContactName)" Title="Xero Contact Name" Required="false" IsEditable="false"/>
         <PropertyColumn Property="@(x => x.PayMonthlyPlan)" Title="Plan Name" Required="false">
             <EditTemplate>
-                <MudSelect T="@(PayMonthlyPlan?)" @bind-Value="@(context.Item.PayMonthlyPlan)"
-                           Clearable="true" Dense="true">
-                    @foreach (var plan in _payMonthlyPlans)
-                    {
-                        <MudSelectItem Value="@plan">@plan.PlanName</MudSelectItem>
-                    }
-                </MudSelect>
+                <PayMonthlyPlanEditor Context="@context" PayMonthlyPlans="_payMonthlyPlans"/>
             </EditTemplate>
         </PropertyColumn>
         @if (ShowIsActive)

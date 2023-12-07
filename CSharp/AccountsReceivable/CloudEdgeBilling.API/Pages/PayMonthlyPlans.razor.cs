@@ -1,8 +1,10 @@
-﻿using System.Linq.Expressions;
+﻿using System.Collections.Immutable;
+using System.Linq.Expressions;
 using CloudEdgeBilling.API.Shared;
 using CloudEdgeBilling.API.Shared.FluidValidation;
 using CloudEdgeBilling.API.Shared.NewDataRowForm;
 using CloudEdgeBilling.BL.Models.Application;
+using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 
 namespace CloudEdgeBilling.API.Pages;
@@ -171,4 +173,23 @@ partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
     {
         return new PayMonthlyPlan();
     }
+
+    protected override async Task RemoveRows()
+    {
+        foreach (var plan in DataGrid!.SelectedItems)
+        {
+            foreach (var customer in DbContext.Customers.Include(customer => customer.PayMonthlyPlan).ToImmutableList())
+            {
+                if (customer.PayMonthlyPlan?.Equals(plan) ?? false)
+                {
+                    ErrorMessage =
+                        $"Unable to remove plan {plan.PlanName} as it is in use by customer {customer.CustomerName}";
+                    return;
+                }
+            }
+        }
+
+        await base.RemoveRows();
+    }
+    
 }
