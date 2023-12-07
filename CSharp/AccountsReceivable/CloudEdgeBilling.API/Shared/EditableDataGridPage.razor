@@ -6,8 +6,8 @@
 }
 
 <div class="@((Editable ? "d-flex" : "d-none") + " flex-row justify-center align-center pa-2 gap-2")">
-    <MudSwitch @bind-Checked="@ReadOnly" UnCheckedColor="Color.Primary"
-               Label="Toggle Edit Mode" LabelPosition="LabelPosition.End"/>
+    <MudSwitch T="bool" Checked="@ReadOnly" UnCheckedColor="Color.Primary"
+               Label="Toggle Edit Mode" LabelPosition="LabelPosition.End" CheckedChanged="@(async (b) => await EditModeChanged(b))"/>
 
     <div class="@(Insertable ? "d-flex" : "d-none")">
         <MudButton OnClick="@OnAddButtonClicked" Color="Color.Primary" Variant="Variant.Outlined">
