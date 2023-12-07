@@ -1,0 +1,27 @@
+@using CloudEdgeBilling.BL.Models.Enum
+<MudSelect T="@(Business)" Value="Business" ValueChanged="HandleValueChanged" Dense="true">
+    @foreach (var business in Businesses)
+    {
+        <MudSelectItem Value="@business">@business.Name</MudSelectItem>
+    }
+</MudSelect>
+
+@code{
+    [Parameter]
+    [EditorRequired]
+    public CellContext<LineItem> Context { get; set; } = default!;
+
+    [Parameter]
+    public IEnumerable<Business> Businesses { get; set; } = default!;
+
+    [CascadingParameter]
+    public MudDataGrid<LineItem> DataGrid { get; set; } = default!;
+
+    private Business Business => Context.Item.Business;
+
+    private async Task HandleValueChanged(Business newBusiness)
+    {
+        Context.Item.Business = newBusiness;
+        await DataGrid.CommittedItemChanges.InvokeAsync(Context.Item);
+    }
+}

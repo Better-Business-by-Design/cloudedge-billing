@@ -24,6 +24,26 @@ public class Business : IDataRow
 
     public virtual Branding Branding { get; set; } = null!;
     public static string TypeName => "Business";
+
+    public override string ToString()
+    {
+        return Name;
+    }
+
+    public override bool Equals(object? otherObj)
+    {
+        return otherObj switch
+        {
+            null => false,
+            Business otherBusiness => BusinessId == otherBusiness.BusinessId,
+            _ => false
+        };
+    }
+
+    public override int GetHashCode()
+    {
+        return Convert.ToInt32(BusinessId);
+    }
 }
 
 public static class BusinessHelper
@@ -67,10 +87,5 @@ public static class BusinessHelper
     public static Business GetInfo(BusinessId id)
     {
         return (Dictionary.TryGetValue(id, out var value) ? value : null) ?? throw new InvalidOperationException();
-    }
-
-    public static ICollection<Business> GetAll()
-    {
-        return Dictionary.Values;
     }
 }

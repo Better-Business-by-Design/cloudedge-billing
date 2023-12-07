@@ -17,6 +17,8 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<Account> Accounts { get; set; } = null!;
 
+    public DbSet<Business> Businesses { get; set; } = null!;
+
     public DbSet<Branding> BrandingThemes { get; set; } = null!;
 
     public DbSet<Invoice> Invoices { get; set; } = null!;

@@ -5,6 +5,7 @@
 @using CloudEdgeBilling.API.Shared.FluidValidation
 @using CloudEdgeBilling.API.Shared.NewDataRowForm
 @using CloudEdgeBilling.BL.Models.Enum
+@using CloudEdgeBilling.API.Shared.EditTemplates
 @inherits EditableDataGridPage<LineItem>
 
 @{
@@ -28,22 +29,12 @@
         <PropertyColumn Property="@(x => x.Discount)" Title="Discount" Required="false"/>
         <PropertyColumn Property="@(x => x.Account.Name)" Title="Account" Required="false">
             <EditTemplate>
-                <MudSelect T="Guid" @bind-Value="@context.Item.AccountId">
-                    @foreach (var account in Accounts)
-                    {
-                        <MudSelectItem Value="@account.AccountId">@account.Name</MudSelectItem>
-                    }
-                </MudSelect>
+                <AccountEditor Context="@context" Accounts="Accounts" />
             </EditTemplate>
         </PropertyColumn>
-        <PropertyColumn Property="@(x => x.Business.Name)" Title="Business" Required="false">
+        <PropertyColumn Property="@(x => x.Business.Name)" Title="Business" Required="true">
             <EditTemplate>
-                <MudSelect T="BusinessId" @bind-Value="@context.Item.BusinessId">
-                    @foreach (var business in BusinessHelper.GetAll())
-                    {
-                        <MudSelectItem Value="@business.BusinessId">@business.Name</MudSelectItem>
-                    }
-                </MudSelect>
+                <BusinessEditor Context="@context" Businesses="Businesses"/>
             </EditTemplate>
         </PropertyColumn>
     </Columns>
@@ -67,12 +58,14 @@
     private Customer? _customer;
 
     protected ImmutableList<Account> Accounts = null!;
+    protected ImmutableList<Business> Businesses = null!;
 
     protected override Task OnInitializedAsync()
     {
         Validator = new LineItemFluentValidator(DbContext);
         _customer ??= DbContext.Customers.FirstOrDefault(customer => customer.Id == Convert.ToInt32(Id ?? "0"));
         Accounts = DbContext.Accounts.ToImmutableList();
+        Businesses = DbContext.Businesses.ToImmutableList();
         return base.OnInitializedAsync();
     }
 
@@ -243,6 +236,7 @@
         {
             { dialog => dialog.Validator, Validator },
             { dialog => dialog.Accounts, Accounts },
+            { dialog => dialog.Businesses, Businesses},
             { dialog => dialog.NewDataRow, newDefaultLineItem }
         };
 

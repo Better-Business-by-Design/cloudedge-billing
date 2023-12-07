@@ -32,7 +32,7 @@
             <MudSelect
                 @bind-Value="NewDataRow.BusinessId" For="@(() => NewDataRow.BusinessId)"
                 Validation="@Validator.ValidateValue" Immediate="true">
-                @foreach (var business in BusinessHelper.GetAll())
+                @foreach (var business in Businesses)
                 {
                     <MudSelectItem Value="@business.BusinessId">@business.Name</MudSelectItem>
                 }
