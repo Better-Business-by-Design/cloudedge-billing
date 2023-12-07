@@ -7,7 +7,7 @@ namespace CloudEdgeBilling.API.Pages;
 
 public partial class Invoices : DataGridPage<Invoice>
 {
-    private Dictionary<string, SortDefinition<Invoice>> SortDefinitions =
+    private readonly Dictionary<string, SortDefinition<Invoice>> _sortDefinitions =
         new()
         {
             {
