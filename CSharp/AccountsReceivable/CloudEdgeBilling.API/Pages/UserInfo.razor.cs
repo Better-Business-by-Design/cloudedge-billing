@@ -6,28 +6,28 @@ namespace CloudEdgeBilling.API.Pages;
 
 partial class UserInfo
 {
-    private string? authMessage;
-    private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
-    private string? surname;
-    private ClaimsPrincipal? User;
+    private string? _authMessage;
+    private IEnumerable<Claim> _claims = Enumerable.Empty<Claim>();
+    private string? _surname;
+    private ClaimsPrincipal? _user;
 
-    [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+    [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
 
     private async Task GetClaimsPrincipalData()
     {
         var authState = await AuthenticationStateProvider
             .GetAuthenticationStateAsync();
-        User = authState.User;
+        _user = authState.User;
 
-        if (User.Identity is not null && User.Identity.IsAuthenticated)
+        if (_user.Identity is not null && _user.Identity.IsAuthenticated)
         {
-            authMessage = $"{User.Identity.Name} is authenticated.";
-            claims = User.Claims;
-            surname = User.FindFirst(c => c.Type == ClaimTypes.Surname)?.Value;
+            _authMessage = $"{_user.Identity.Name} is authenticated.";
+            _claims = _user.Claims;
+            _surname = _user.FindFirst(c => c.Type == ClaimTypes.Surname)?.Value;
         }
         else
         {
-            authMessage = "The user is NOT authenticated.";
+            _authMessage = "The user is NOT authenticated.";
         }
 
         StateHasChanged();

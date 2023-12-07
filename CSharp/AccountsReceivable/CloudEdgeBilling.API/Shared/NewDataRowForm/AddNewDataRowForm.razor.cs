@@ -1,5 +1,4 @@
 using CloudEdgeBilling.API.Shared.FluidValidation;
-using CloudEdgeBilling.BAL.Data;
 using CloudEdgeBilling.BL.Models.Application;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -19,8 +18,8 @@ namespace CloudEdgeBilling.API.Shared.NewDataRowForm;
 /// </typeparam>
 public abstract partial class AddNewDataRowForm<T> : ComponentBase where T : IDataRow, new()
 {
-    [CascadingParameter] public IDialogService DialogService { get; set; }
-    [CascadingParameter] protected MudDialogInstance MudDialog { get; set; }
+    [CascadingParameter] public required IDialogService DialogService { get; set; }
+    [CascadingParameter] public required MudDialogInstance MudDialog { get; set; }
 
     /// <value>
     ///     Cascading parameter <c>Validator</c> passes down a <c>FluentValidator</c> that the MudForm can use for validation.
@@ -33,12 +32,10 @@ public abstract partial class AddNewDataRowForm<T> : ComponentBase where T : IDa
     public DataRowFluentValidator<T> Validator { get; set; } = null!;
 
     // The new data row backing the MudForm.
-    [Parameter] public T NewDataRow { get; set; }
+    [Parameter] public required T NewDataRow { get; set; }
 
     // The MudForm this class represents.
     protected MudForm Form { get; set; } = default!;
-
-    [Inject] protected virtual ApplicationDbContext DbContext { get; set; } = default!;
 
     protected void OnCancel()
     {
@@ -53,6 +50,7 @@ public abstract partial class AddNewDataRowForm<T> : ComponentBase where T : IDa
     ///     A better implementation might be to simply bind <c>Form.IsValid</c> to a variable and then use it to disable
     ///     the submit button.
     /// </remarks>
+    // ReSharper disable once VirtualMemberNeverOverridden.Global
     protected virtual async Task OnSubmit()
     {
         await Form.Validate();

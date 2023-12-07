@@ -3,19 +3,3 @@
 @{
     base.BuildRenderTree(__builder);
 }
-
-@code{
-
-    protected override PayMonthlyPlan? Value => Context.Item.PayMonthlyPlan;
-
-    protected override async Task HandleValueChanged(PayMonthlyPlan? newPlan)
-    {
-        Context.Item.PayMonthlyPlan = newPlan;
-        await DataGrid.CommittedItemChanges.InvokeAsync(Context.Item);
-    }
-
-    protected override string GetPrintValue(PayMonthlyPlan? plan)
-    {
-        return plan?.PlanName ?? string.Empty;
-    }
-}

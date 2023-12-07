@@ -24,7 +24,7 @@
         <PropertyColumn Property="@(x => x.XeroContactName)" Title="Xero Contact Name" Required="false" IsEditable="false"/>
         <PropertyColumn Property="@(x => x.PayMonthlyPlan)" Title="Plan Name" Required="false">
             <EditTemplate>
-                <PayMonthlyPlanEditor Context="@context" PayMonthlyPlans="_payMonthlyPlans"/>
+                <PayMonthlyPlanEditor Context="@context" Values="_payMonthlyPlans"/>
             </EditTemplate>
         </PropertyColumn>
         @if (ShowIsActive)

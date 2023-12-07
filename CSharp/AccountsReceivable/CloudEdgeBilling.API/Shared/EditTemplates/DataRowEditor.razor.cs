@@ -1,7 +1,6 @@
 using CloudEdgeBilling.BL.Models.Application;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-
 namespace CloudEdgeBilling.API.Shared.EditTemplates;
 
 /// <summary>

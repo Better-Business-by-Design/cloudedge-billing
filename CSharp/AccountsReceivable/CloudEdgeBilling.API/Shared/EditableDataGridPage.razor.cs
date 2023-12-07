@@ -112,19 +112,20 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
     /// <param name="row">Optional row with prefilled values if the default values aren't sufficient.</param>
     protected virtual async Task AddRow(IDataRow? row)
     {
-        row ??= await BuildNewDefaultRow();
+        row ??= BuildNewDefaultRow();
         Console.WriteLine($"Row added: {JsonSerializer.Serialize(row)}");
         var change = new AddDataRowChange(row);
         await change.ApplyChange(DbContext);
         CompletedChanges.Push(change);
-        await DataGrid.ReloadServerData();
+        await DataGrid!.ReloadServerData();
     }
 
     /// <summary>
-    ///     Abstract task <c>BuildNewDefaultRow</c> ensures inheritors present a method for generating valid default rows.
+    ///     Abstract method <c>BuildNewDefaultRow</c> ensures inheritors present a method for generating valid default
+    ///     rows.
     /// </summary>
     /// <returns>A new row with valid default values.</returns>
-    protected abstract Task<T> BuildNewDefaultRow();
+    protected abstract T BuildNewDefaultRow();
 
     /// <summary>
     ///     Virtual task <c>RemoveRows</c> provides a hook method for asynchronously removing selected rows from the
@@ -199,7 +200,7 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
         {
             Console.WriteLine($"Reverting last change: {result}");
             await result.RevertChange(DbContext);
-            await DataGrid.ReloadServerData();
+            await DataGrid!.ReloadServerData();
         }
     }
 

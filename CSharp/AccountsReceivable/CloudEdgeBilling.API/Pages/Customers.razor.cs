@@ -167,7 +167,7 @@ partial class Customers : EditableDataGridPage<Customer>
 
     protected override async Task OnAddButtonClicked()
     {
-        var newDefaultCustomer = await BuildNewDefaultRow();
+        var newDefaultCustomer = BuildNewDefaultRow();
         var parameters = new DialogParameters<AddNewCustomerForm>
         {
             { dialog => dialog.Validator, Validator },
@@ -192,8 +192,8 @@ partial class Customers : EditableDataGridPage<Customer>
         Navigation.NavigateTo($"customers/{args.Item.Id}");
     }
 
-    protected override Task<Customer> BuildNewDefaultRow()
+    protected override Customer BuildNewDefaultRow()
     {
-        return Task.FromResult(new Customer());
+        return new Customer();
     }
 }

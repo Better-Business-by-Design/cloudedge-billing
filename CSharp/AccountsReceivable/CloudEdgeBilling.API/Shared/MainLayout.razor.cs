@@ -7,7 +7,7 @@ namespace CloudEdgeBilling.API.Shared;
 
 partial class MainLayout
 {
-    private ClaimsPrincipal User;
+    private ClaimsPrincipal _user = null!;
 
     [Inject] protected virtual ApplicationDbContext DbContext { get; set; } = default!;
 
@@ -16,7 +16,7 @@ partial class MainLayout
     protected override async Task OnInitializedAsync()
     {
         var authenticationState = await Authentication.GetAuthenticationStateAsync();
-        User = authenticationState.User;
+        _user = authenticationState.User;
         await base.OnInitializedAsync();
     }
 }

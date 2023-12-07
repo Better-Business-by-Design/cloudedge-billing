@@ -9,7 +9,7 @@
         <CardHeaderContent>
             <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
                 <MudText Typo="Typo.h6">@Job?.ReleaseName</MudText>
-                <MudAlert Severity="@(Severity.Info)" Class="@(Job?.State is null ? "invisible" : "visible")">Job state: @Job?.State</MudAlert>
+                <MudAlert Severity="@(_severity)" Class="@(Job?.State is null ? "invisible" : "visible")">Job state: @Job?.State</MudAlert>
             </MudStack>
         </CardHeaderContent>
     </MudCardHeader>
@@ -41,7 +41,7 @@
 
     private Timer _timer = null!;
     private TimeSpan? _jobLength;
-    private Severity _severity;
+    private Severity _severity = Severity.Info;
 
     [Parameter]
     public double Interval { get; set; } = 1000;

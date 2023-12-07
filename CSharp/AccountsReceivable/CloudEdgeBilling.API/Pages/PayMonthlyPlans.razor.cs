@@ -145,7 +145,7 @@ partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
 
     protected override async Task OnAddButtonClicked()
     {
-        var newDefaultPayMonthlyPlan = await BuildNewDefaultRow();
+        var newDefaultPayMonthlyPlan = BuildNewDefaultRow();
         var parameters = new DialogParameters<AddNewPayMonthlyPlanForm>
         {
             { dialog => dialog.Validator, Validator },
@@ -169,7 +169,7 @@ partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
         Console.WriteLine("Pay Monthly Plan row clicked!");
     }
 
-    protected override async Task<PayMonthlyPlan> BuildNewDefaultRow()
+    protected override PayMonthlyPlan BuildNewDefaultRow()
     {
         return new PayMonthlyPlan();
     }

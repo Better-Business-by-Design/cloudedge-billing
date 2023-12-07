@@ -6,5 +6,5 @@ namespace CloudEdgeBilling.API.Shared.NewDataRowForm;
 
 public partial class AddNewCustomerForm : AddNewDataRowForm<Customer>
 {
-    [Parameter] public ImmutableList<PayMonthlyPlan> PayMonthlyPlans { get; set; }
+    [Parameter] public required ImmutableList<PayMonthlyPlan> PayMonthlyPlans { get; set; }
 }

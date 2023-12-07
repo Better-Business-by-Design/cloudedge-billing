@@ -29,12 +29,12 @@
         <PropertyColumn Property="@(x => x.Discount)" Title="Discount" Required="false"/>
         <PropertyColumn Property="@(x => x.Account.Name)" Title="Account" Required="false">
             <EditTemplate>
-                <AccountEditor Context="@context" Accounts="Accounts" />
+                <AccountEditor Context="@context" Values="_accounts" />
             </EditTemplate>
         </PropertyColumn>
         <PropertyColumn Property="@(x => x.Business.Name)" Title="Business" Required="true">
             <EditTemplate>
-                <BusinessEditor Context="@context" Businesses="Businesses"/>
+                <BusinessEditor Context="@context" Values="_businesses"/>
             </EditTemplate>
         </PropertyColumn>
     </Columns>
@@ -57,15 +57,15 @@
 
     private Customer? _customer;
 
-    protected ImmutableList<Account> Accounts = null!;
-    protected ImmutableList<Business> Businesses = null!;
+    private ImmutableList<Account> _accounts = null!;
+    private ImmutableList<Business> _businesses = null!;
 
     protected override Task OnInitializedAsync()
     {
         Validator = new LineItemFluentValidator(DbContext);
         _customer ??= DbContext.Customers.FirstOrDefault(customer => customer.Id == Convert.ToInt32(Id ?? "0"));
-        Accounts = DbContext.Accounts.ToImmutableList();
-        Businesses = DbContext.Businesses.ToImmutableList();
+        _accounts = DbContext.Accounts.ToImmutableList();
+        _businesses = DbContext.Businesses.ToImmutableList();
         return base.OnInitializedAsync();
     }
 
@@ -216,27 +216,27 @@
         Console.WriteLine("Customer Detail Row Clicked");
     }
 
-    protected override Task<LineItem> BuildNewDefaultRow()
+    protected override LineItem BuildNewDefaultRow()
     {
         var customer = _customer ?? throw new ArgumentNullException(nameof(_customer), "Unable to add new line item to null customer.");
 
-        return Task.FromResult(new LineItem
+        return new LineItem
         {
             CustomerId = customer.Id,
             Quantity = 1,
             AccountId = Guid.Parse("29592A50-15B1-4F5C-A0FC-87AB8FAA11FF"),
             BusinessId = BusinessId.None
-        });
+        };
     }
 
     protected override async Task OnAddButtonClicked()
     {
-        var newDefaultLineItem = await BuildNewDefaultRow();
+        var newDefaultLineItem = BuildNewDefaultRow();
         var parameters = new DialogParameters<AddNewLineItemForm>
         {
             { dialog => dialog.Validator, Validator },
-            { dialog => dialog.Accounts, Accounts },
-            { dialog => dialog.Businesses, Businesses},
+            { dialog => dialog.Accounts, _accounts },
+            { dialog => dialog.Businesses, _businesses},
             { dialog => dialog.NewDataRow, newDefaultLineItem }
         };
 
