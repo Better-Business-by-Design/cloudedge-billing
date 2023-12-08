@@ -6,7 +6,7 @@ namespace CloudEdgeBilling.API.Shared.FluidValidation;
 
 public class PayMonthlyPlanFluentValidator : DataRowFluentValidator<PayMonthlyPlan>
 {
-    public PayMonthlyPlanFluentValidator(ApplicationDbContext dbContext) : base(dbContext)
+    public PayMonthlyPlanFluentValidator() : base()
     {
         RuleFor(p => p.PlanName)
             .NotEmpty()

@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using CloudEdgeBilling.API.Shared;
+using CloudEdgeBilling.BAL.Data;
 using CloudEdgeBilling.BL.Models.Application;
 using MudBlazor;
 
@@ -25,9 +26,9 @@ public partial class Invoices : DataGridPage<Invoice>
         new BreadcrumbItem("Invoices", null, true)
     };
 
-    protected override IQueryable<Invoice> BuildFullQuery()
+    protected override IQueryable<Invoice> BuildFullQuery(ApplicationDbContext dbContext)
     {
-        return DbContext.Invoices;
+        return dbContext.Invoices;
     }
 
     protected override IQueryable<Invoice> FilterFullQuery(IQueryable<Invoice> fullQuery,

@@ -6,7 +6,7 @@ namespace CloudEdgeBilling.API.Shared.FluidValidation;
 
 public class CustomerFluentValidator : DataRowFluentValidator<Customer>
 {
-    public CustomerFluentValidator(ApplicationDbContext dbContext) : base(dbContext)
+    public CustomerFluentValidator() : base()
     {
         RuleFor(c => c.CustomerName)
             .NotEmpty()

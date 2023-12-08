@@ -6,7 +6,7 @@ namespace CloudEdgeBilling.API.Shared.FluidValidation;
 
 public class CloudEdgeBillingJobArgumentsFluidValidator : DataRowFluentValidator<Robot.CloudEdgeBillingJobArguments>
 {
-    public CloudEdgeBillingJobArgumentsFluidValidator(ApplicationDbContext dbContext) : base(dbContext)
+    public CloudEdgeBillingJobArgumentsFluidValidator() : base()
     {
         RuleFor(a => a.in_StartRangeDateTime)
             .NotEmpty()

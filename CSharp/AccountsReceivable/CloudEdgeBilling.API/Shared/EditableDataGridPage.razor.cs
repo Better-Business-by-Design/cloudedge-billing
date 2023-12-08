@@ -124,10 +124,11 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
     /// <param name="row">Optional row with prefilled values if the default values aren't sufficient.</param>
     protected virtual async Task AddRow(IDataRow? row)
     {
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         row ??= BuildNewDefaultRow();
         Console.WriteLine($"Row added: {JsonSerializer.Serialize(row)}");
         var change = new AddDataRowChange(row);
-        await change.ApplyChange(DbContext);
+        await change.ApplyChange(dbContext);
         CompletedChanges.Push(change);
         await DataGrid!.ReloadServerData();
     }
@@ -145,10 +146,11 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
     /// </summary>
     protected virtual async Task RemoveRows()
     {
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         Console.WriteLine(
             $"Rows removed:\n {string.Join("\n", DataGrid!.SelectedItems.Select(row => JsonSerializer.Serialize(row)))}");
         var change = new RemoveDataRowsChange(DataGrid.SelectedItems.ToImmutableList());
-        await change.ApplyChange(DbContext);
+        await change.ApplyChange(dbContext);
         CompletedChanges.Push(change);
         DataGrid.SelectedItems.Clear();
         await DataGrid.ReloadServerData();
@@ -172,6 +174,7 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
         var result = await Validator.ValidateAsync(row);
         if (result.IsValid)
         {
+            await using var dbContext = await DbContextFactory.CreateDbContextAsync();
             Console.WriteLine($"Row edit committed: {JsonSerializer.Serialize(row)}");
             var entry = GetEntityEntry(row);
 
@@ -180,8 +183,7 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
                 OriginalDataRow = (IDataRow)entry.OriginalValues.Clone().ToObject(),
                 DataRow = row
             };
-
-            await change.ApplyChange(DbContext);
+            await change.ApplyChange(dbContext);
             CompletedChanges.Push(change);
             await DataGrid!.ReloadServerData();
         }
@@ -210,8 +212,9 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
 
         if (CompletedChanges.TryPop(out var result))
         {
+            await using var dbContext = await DbContextFactory.CreateDbContextAsync();
             Console.WriteLine($"Reverting last change: {result}");
-            await result.RevertChange(DbContext);
+            await result.RevertChange(dbContext);
             await DataGrid!.ReloadServerData();
         }
     }
@@ -244,12 +247,13 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
     /// </exception>
     private EntityEntry<T> GetEntityEntry(T row)
     {
+        using var dbContext = DbContextFactory.CreateDbContext();
         EntityEntry<T>? entityEntry = null;
         InvalidOperationException? invalidOperationException = null;
         for (var i = 0; i < 2; i++)
             try
             {
-                entityEntry = DbContext.Entry(row);
+                entityEntry = dbContext.Entry(row);
             }
             catch (InvalidOperationException e)
             {

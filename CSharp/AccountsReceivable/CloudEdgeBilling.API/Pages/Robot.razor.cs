@@ -28,7 +28,7 @@ public partial class Robot : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        _validator = new CloudEdgeBillingJobArgumentsFluidValidator(DbContext);
+        _validator = new CloudEdgeBillingJobArgumentsFluidValidator();
         _releaseDto = await ReleasesApi.ReleasesGetByIdAsync(ProcessId);
         await base.OnInitializedAsync();
     }

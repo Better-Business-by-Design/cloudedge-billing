@@ -42,12 +42,13 @@ public class Program
         builder.Services.AddSingleton<ReleasesApi>();
 
         // Database Services
-        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
         {
             options
                 .UseSqlServer(builder.Configuration.GetConnectionString("Development") ?? string.Empty,
                     db => db.MigrationsAssembly("CloudEdgeBilling.BAL"));
-        }, ServiceLifetime.Transient);
+        });
+        
 
         var app = builder.Build();
 

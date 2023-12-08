@@ -16,12 +16,10 @@ namespace CloudEdgeBilling.API.Shared.FluidValidation;
 /// <typeparam name="TDataRow">The type representing the database table row that the validator is made to validate.</typeparam>
 public abstract class DataRowFluentValidator<TDataRow> : AbstractValidator<TDataRow> where TDataRow : IDataRow
 {
-    protected readonly ApplicationDbContext DbContext;
     // ReSharper disable once MemberCanBePrivate.Global
 
-    protected DataRowFluentValidator(ApplicationDbContext dbContext)
+    protected DataRowFluentValidator()
     {
-        DbContext = dbContext;
     }
 
 

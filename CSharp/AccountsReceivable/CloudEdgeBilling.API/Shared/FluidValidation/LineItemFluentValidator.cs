@@ -6,7 +6,7 @@ namespace CloudEdgeBilling.API.Shared.FluidValidation;
 
 public class LineItemFluentValidator : DataRowFluentValidator<LineItem>
 {
-    public LineItemFluentValidator(ApplicationDbContext dbContext) : base(dbContext)
+    public LineItemFluentValidator() : base()
     {
         RuleFor(l => l.Description)
             .NotEmpty()

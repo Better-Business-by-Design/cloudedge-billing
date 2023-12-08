@@ -5,6 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <WebProject_DirectoryAccessLevelKey>0</WebProject_DirectoryAccessLevelKey>
         <RootNamespace>CloudEdgeBilling.API</RootNamespace>
+        <WarningsAsErrors>CS4014</WarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup>

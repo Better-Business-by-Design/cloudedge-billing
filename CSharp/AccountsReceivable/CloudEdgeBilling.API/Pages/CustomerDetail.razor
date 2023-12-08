@@ -6,6 +6,7 @@
 @using CloudEdgeBilling.API.Shared.NewDataRowForm
 @using CloudEdgeBilling.BL.Models.Enum
 @using CloudEdgeBilling.API.Shared.EditTemplates.Select
+@using CloudEdgeBilling.BAL.Data
 @using AccountEditor = CloudEdgeBilling.API.Shared.EditTemplates.Select.AccountEditor
 @inherits EditableDataGridPage<LineItem>
 
@@ -61,13 +62,21 @@
     private ImmutableList<Account> _accounts = null!;
     private ImmutableList<Business> _businesses = null!;
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        Validator = new LineItemFluentValidator(DbContext);
-        _customer ??= DbContext.Customers.FirstOrDefault(customer => customer.Id == Convert.ToInt32(Id ?? "0"));
-        _accounts = DbContext.Accounts.ToImmutableList();
-        _businesses = DbContext.Businesses.ToImmutableList();
-        return base.OnInitializedAsync();
+        if (Id is null)
+        {
+            Navigation.NavigateTo("/customers");
+        }
+        else
+        {
+            Validator = new LineItemFluentValidator();
+            await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+            _customer ??= dbContext.Customers.FirstOrDefault(customer => customer.Id == Convert.ToInt32(Id ?? "0"));
+            _accounts = dbContext.Accounts.ToImmutableList();
+            _businesses = dbContext.Businesses.ToImmutableList();
+        }
+        await base.OnInitializedAsync();
     }
 
 
@@ -78,14 +87,9 @@
         new BreadcrumbItem("Line Items", null, true)
     };
 
-    protected override IQueryable<LineItem> BuildFullQuery()
+    protected override IQueryable<LineItem> BuildFullQuery(ApplicationDbContext dbContext)
     {
-        if (_customer is null)
-        {
-            Navigation.NavigateTo("customers");
-        }
-
-        return DbContext.LineItems
+        return dbContext.LineItems
             .Where(item => item.CustomerId == Convert.ToInt32(Id))
             .Include(item => item.Business)
             .Include(item => item.Account);

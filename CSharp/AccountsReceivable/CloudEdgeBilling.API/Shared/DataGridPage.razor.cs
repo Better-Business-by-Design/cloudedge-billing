@@ -22,6 +22,8 @@ namespace CloudEdgeBilling.API.Shared;
 public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
 {
     private const string StateKey = "PageState";
+
+    private DataGridPageState<T>? _pageState;
     
     protected MudDataGrid<T>? DataGrid;
 
@@ -69,7 +71,7 @@ public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
     [Parameter]
     public Func<IQueryable<T>, IQueryable<T>>? StaticFilter { get; set; }
 
-    [Inject] protected virtual ApplicationDbContext DbContext { get; set; } = default!;
+    [Inject] protected virtual IDbContextFactory<ApplicationDbContext> DbContextFactory { get; set; } = default!;
 
     [Inject] protected virtual NavigationManager Navigation { get; set; } = default!;
 
@@ -82,15 +84,19 @@ public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
             var result = await ProtectedSessionStore.GetAsync<DataGridPageState<T>>(StateKey);
             if (result.Success)
             {
-                Console.WriteLine($"Read page state {result.Value}");
-                foreach (var simplifiedFilterDefinition in result.Value!.SimplifiedFilterDefinitions)
+                _pageState = result.Value;
+                Console.WriteLine($"Read page state {_pageState}");
+                await DataGrid!.ClearFiltersAsync();
+                foreach (var simplifiedFilterDefinition in _pageState!.SimplifiedFilterDefinitions)
                 {
+                    Console.WriteLine($"Added Filter: {simplifiedFilterDefinition}");
                     await DataGrid!.AddFilterAsync(simplifiedFilterDefinition.GetFullFilterDefinition(DataGrid));
                 }
+                DataGrid!.ToggleFiltersMenu();
                 
-                foreach (var sortDefinition in result.Value!.SimplifiedSortDefinitions)
+                foreach (var sortDefinition in _pageState!.SimplifiedSortDefinitions)
                 {
-                    await DataGrid!.SetSortAsync(
+                    await DataGrid!.ExtendSortAsync(
                         sortDefinition.SortBy,
                         sortDefinition.Descending ? SortDirection.Descending : SortDirection.Ascending,
                         null);
@@ -118,15 +124,20 @@ public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
             state.SortDefinitions.Select(SimplifiedSortDefinition<T>.Simplify),
             state.FilterDefinitions.Select(SimplifiedFilterDefinition<T>.Simplify)
         );
-        Console.WriteLine($"Saving page state {pageState}");
-        await ProtectedSessionStore.SetAsync(StateKey, pageState);
-        
-        var fullQuery = BuildFullQuery();
+        if (!pageState.IsEmpty() && !pageState.Equals(_pageState))
+        {
+            Console.WriteLine($"Saving page state {pageState}");
+            _pageState = pageState;
+            await ProtectedSessionStore.SetAsync(StateKey, pageState);
+        }
+
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync(); 
+        var fullQuery = BuildFullQuery(dbContext);
         var initialFilteredQuery = StaticFilter?.Invoke(fullQuery) ?? fullQuery;
         var filteredQuery = FilterFullQuery(initialFilteredQuery, state.FilterDefinitions);
         var orderedQuery = OrderFilteredQuery(filteredQuery, state.SortDefinitions);
 
-        var totalItems = orderedQuery.Count();
+        var totalItems = await orderedQuery.CountAsync();
         await OnGridServerReload.InvokeAsync(totalItems);
         return new GridData<T>
         {
@@ -140,7 +151,7 @@ public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
     ///     <typeparamref name="T" />.
     /// </summary>
     /// <typeparam name="T">The type representing a single row in the related database table.</typeparam>
-    protected abstract IQueryable<T> BuildFullQuery();
+    protected abstract IQueryable<T> BuildFullQuery(ApplicationDbContext dbContext);
 
     /// <summary>
     ///     Abstract method <c>FilterFullQuery</c> returns the contents of the related database table after the currently
@@ -362,9 +373,31 @@ public record DataGridPageState<T>(
     IEnumerable<SimplifiedSortDefinition<T>> SimplifiedSortDefinitions,
     IEnumerable<SimplifiedFilterDefinition<T>> SimplifiedFilterDefinitions) where T : IDataRow
 {
+    public bool IsEmpty()
+    {
+        return !SimplifiedSortDefinitions.Any() && !SimplifiedFilterDefinitions.Any();
+    }
+
     public override string ToString()
     {
         return $"SimplifiedSortDefinitions: {string.Join(", ", SimplifiedSortDefinitions)} SimplifiedFilterDefinitions: {string.Join(",", SimplifiedFilterDefinitions)}";
+    }
+
+    public virtual bool Equals(DataGridPageState<T>? other)
+    {
+        if (other is null) return false;
+        if (SimplifiedSortDefinitions.Count() != other.SimplifiedSortDefinitions.Count()) return false;
+        if (SimplifiedFilterDefinitions.Count() != other.SimplifiedFilterDefinitions.Count()) return false;
+        if (SimplifiedSortDefinitions.Zip(other.SimplifiedSortDefinitions, (a, b) => new { a, b }).Any(item => item.a != item.b))
+        {
+            return false;
+        }
+        if (SimplifiedFilterDefinitions.Zip(other.SimplifiedFilterDefinitions, (a, b) => new { a, b }).Any(item => item.a != item.b))
+        {
+            return false;
+        }
+
+        return true;
     }
 }
 
@@ -373,7 +406,7 @@ public record SimplifiedSortDefinition<T> (
     bool Descending
     ) where T : IDataRow
 {
-    public static SimplifiedSortDefinition<T> Simplify(SortDefinition<T> sortDefinition) => new SimplifiedSortDefinition<T>(
+    public static SimplifiedSortDefinition<T> Simplify(SortDefinition<T> sortDefinition) => new(
         sortDefinition.SortBy,
         sortDefinition.Descending
     );
@@ -382,51 +415,41 @@ public record SimplifiedSortDefinition<T> (
 public record SimplifiedFilterDefinition<T> (
     string Title,
     SimplifiedFieldType SimplifiedFieldType,
-    string Operator
+    string Operator,
+    object? Value
     ) where T : IDataRow
 {
-    public static SimplifiedFilterDefinition<T> Simplify(IFilterDefinition<T> filterDefinition)
-    {
-        return new SimplifiedFilterDefinition<T>(
-            filterDefinition.Title ?? throw new ArgumentNullException(nameof(filterDefinition),
-                "Unable to save filter definition with no title."),
-                new SimplifiedFieldType(filterDefinition.FieldType),
-                filterDefinition.Operator ?? throw new ArgumentNullException(nameof(filterDefinition),
-                    "Unable to save filter definition with no operator."));
-    }
+    public static SimplifiedFilterDefinition<T> Simplify(IFilterDefinition<T> filterDefinition) => new(
+        filterDefinition.Title ?? throw new ArgumentNullException(nameof(filterDefinition), "Unable to save filter definition with no title."),
+        SimplifiedFieldType.Simplify(filterDefinition.FieldType), 
+        filterDefinition.Operator ?? throw new ArgumentNullException(nameof(filterDefinition), "Unable to save filter definition with no operator."),
+        filterDefinition.Value
+    );
 
     public IFilterDefinition<T> GetFullFilterDefinition(MudDataGrid<T> dataGrid)
     {
-        var column = dataGrid.RenderedColumns.First(c => c.Title.Equals(Title));
 
         return new FilterDefinition<T>()
         {
-            Column = column,
-            FilterFunction = null,
             Id = new Guid(),
             Title = Title,
+            Column = dataGrid.RenderedColumns.Find(c => c.Title?.Equals(Title) ?? false),
             Operator = Operator,
-            Value = column.Value
+            Value = Value
         };
     }
 }
 
-public record SimplifiedFieldType
+public record SimplifiedFieldType (
+    string TypeName)
 {
-    public string TypeName { get; set; }
-
-    public SimplifiedFieldType(FieldType fieldType)
+    public static SimplifiedFieldType Simplify(FieldType fieldType)
     {
-        TypeName = fieldType.InnerType!.FullName!;
+        return new SimplifiedFieldType(fieldType.InnerType!.FullName!);
     }
 
-    [JsonConstructor]
-    public SimplifiedFieldType()
+    public FieldType GetFieldType()
     {
-    }
-
-    public FieldType GetFullFieldType()
-    {
-        return FieldType.Identify(System.Type.GetType(TypeName));
+        return FieldType.Identify(Type.GetType(TypeName));
     }
 }

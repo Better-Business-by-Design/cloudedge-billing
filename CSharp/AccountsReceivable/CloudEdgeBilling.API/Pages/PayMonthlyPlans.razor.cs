@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using CloudEdgeBilling.API.Shared;
 using CloudEdgeBilling.API.Shared.FluidValidation;
 using CloudEdgeBilling.API.Shared.NewDataRowForm;
+using CloudEdgeBilling.BAL.Data;
 using CloudEdgeBilling.BL.Models.Application;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
@@ -19,13 +20,13 @@ partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
 
     protected override Task OnInitializedAsync()
     {
-        Validator = new PayMonthlyPlanFluentValidator(DbContext);
+        Validator = new PayMonthlyPlanFluentValidator();
         return base.OnInitializedAsync();
     }
 
-    protected override IQueryable<PayMonthlyPlan> BuildFullQuery()
+    protected override IQueryable<PayMonthlyPlan> BuildFullQuery(ApplicationDbContext dbContext)
     {
-        return DbContext.PayMonthlyPlans;
+        return dbContext.PayMonthlyPlans;
     }
 
     protected override IQueryable<PayMonthlyPlan> FilterFullQuery(
@@ -176,9 +177,10 @@ partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
 
     protected override async Task RemoveRows()
     {
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
         foreach (var plan in DataGrid!.SelectedItems)
         {
-            foreach (var customer in DbContext.Customers.Include(customer => customer.PayMonthlyPlan).ToImmutableList())
+            foreach (var customer in dbContext.Customers.Include(customer => customer.PayMonthlyPlan).ToImmutableList())
             {
                 if (customer.PayMonthlyPlan?.Equals(plan) ?? false)
                 {

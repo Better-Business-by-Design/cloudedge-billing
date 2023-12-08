@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using CloudEdgeBilling.API.Shared;
 using CloudEdgeBilling.API.Shared.FluidValidation;
 using CloudEdgeBilling.API.Shared.NewDataRowForm;
+using CloudEdgeBilling.BAL.Data;
 using CloudEdgeBilling.BL.Models.Application;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,7 @@ namespace CloudEdgeBilling.API.Pages;
 
 partial class Customers : EditableDataGridPage<Customer>
 {
-    private List<PayMonthlyPlan> _payMonthlyPlans = new();
+    private ImmutableList<PayMonthlyPlan> _payMonthlyPlans;
     [Parameter] public override bool Removable { get; set; }
 
     [Parameter] public bool ShowIsActive { get; set; } = true;
@@ -23,16 +24,17 @@ partial class Customers : EditableDataGridPage<Customer>
         new BreadcrumbItem("Customers", null, true)
     };
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        Validator = new CustomerFluentValidator(DbContext);
-        return base.OnInitializedAsync();
+        Validator = new CustomerFluentValidator();
+        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        _payMonthlyPlans = dbContext.PayMonthlyPlans.ToImmutableList();
+        await base.OnInitializedAsync();
     }
 
-    protected override IQueryable<Customer> BuildFullQuery()
+    protected override IQueryable<Customer> BuildFullQuery(ApplicationDbContext dbContext)
     {
-        _payMonthlyPlans = DbContext.PayMonthlyPlans.ToList();
-        return DbContext.Customers
+        return dbContext.Customers
             .Include(customer => customer.PayMonthlyPlan);
     }
 
@@ -172,7 +174,7 @@ partial class Customers : EditableDataGridPage<Customer>
         {
             { dialog => dialog.Validator, Validator },
             { dialog => dialog.NewDataRow, newDefaultCustomer },
-            { dialog => dialog.PayMonthlyPlans, DbContext.PayMonthlyPlans.ToImmutableList() }
+            { dialog => dialog.PayMonthlyPlans, _payMonthlyPlans }
         };
 
         var options = new DialogOptions
