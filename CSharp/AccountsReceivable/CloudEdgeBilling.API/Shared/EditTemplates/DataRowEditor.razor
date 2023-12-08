@@ -1,10 +1,2 @@
 @typeparam TGrid where TGrid : IDataRow
-@typeparam TValue where TValue : IDataRow
-
-
-<MudSelect T="TValue?" Value="Value" ValueChanged="HandleValueChanged" Dense="true" Clearable="Clearable">
-    @foreach (var value in Values)
-    {
-        <MudSelectItem Value="@value">@(GetPrintValue(value))</MudSelectItem>
-    }
-</MudSelect>
+@typeparam TValue

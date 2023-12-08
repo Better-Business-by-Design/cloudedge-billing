@@ -1,0 +1,6 @@
+@typeparam TGrid where TGrid : IDataRow
+@inherits DataRowEditor<TGrid, bool>
+
+<MudSwitch T="bool?" Checked="@Value" Color="Color.Primary" Size="Size.Small" CheckedChanged="HandleValueChanged">
+    @(Value ? "True" : "False")
+</MudSwitch>
