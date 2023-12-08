@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
-using Newtonsoft.Json;
 
 namespace CloudEdgeBilling.API.Shared;
 
@@ -21,9 +20,9 @@ namespace CloudEdgeBilling.API.Shared;
 /// </typeparam>
 public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
 {
-    private const string StateKey = "PageState";
+    protected abstract string StateKey { get; }
 
-    private DataGridPageState<T>? _pageState;
+    protected DataGridPageState<T>? PageState;
     
     protected MudDataGrid<T>? DataGrid;
 
@@ -84,17 +83,20 @@ public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
             var result = await ProtectedSessionStore.GetAsync<DataGridPageState<T>>(StateKey);
             if (result.Success)
             {
-                _pageState = result.Value;
-                Console.WriteLine($"Read page state {_pageState}");
-                await DataGrid!.ClearFiltersAsync();
-                foreach (var simplifiedFilterDefinition in _pageState!.SimplifiedFilterDefinitions)
+                PageState = result.Value;
+                Console.WriteLine($"Read page state {PageState}");
+                if (PageState!.SimplifiedFilterDefinitions.Any())
                 {
-                    Console.WriteLine($"Added Filter: {simplifiedFilterDefinition}");
-                    await DataGrid!.AddFilterAsync(simplifiedFilterDefinition.GetFullFilterDefinition(DataGrid));
+                    await DataGrid!.ClearFiltersAsync();
+                    foreach (var simplifiedFilterDefinition in PageState!.SimplifiedFilterDefinitions)
+                    {
+                        Console.WriteLine($"Added Filter: {simplifiedFilterDefinition}");
+                        await DataGrid!.AddFilterAsync(simplifiedFilterDefinition.GetFullFilterDefinition(DataGrid));
+                    }
+                    DataGrid!.ToggleFiltersMenu();
                 }
-                DataGrid!.ToggleFiltersMenu();
                 
-                foreach (var sortDefinition in _pageState!.SimplifiedSortDefinitions)
+                foreach (var sortDefinition in PageState!.SimplifiedSortDefinitions)
                 {
                     await DataGrid!.ExtendSortAsync(
                         sortDefinition.SortBy,
@@ -124,10 +126,10 @@ public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
             state.SortDefinitions.Select(SimplifiedSortDefinition<T>.Simplify),
             state.FilterDefinitions.Select(SimplifiedFilterDefinition<T>.Simplify)
         );
-        if (!pageState.IsEmpty() && !pageState.Equals(_pageState))
+        if (!pageState.IsEmpty() && !pageState.Equals(PageState))
         {
             Console.WriteLine($"Saving page state {pageState}");
-            _pageState = pageState;
+            PageState = pageState;
             await ProtectedSessionStore.SetAsync(StateKey, pageState);
         }
 

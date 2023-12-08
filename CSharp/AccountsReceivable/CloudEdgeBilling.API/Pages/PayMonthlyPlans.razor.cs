@@ -12,6 +12,7 @@ namespace CloudEdgeBilling.API.Pages;
 
 partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
 {
+    protected override string StateKey => "PayMonthlyPlansStateKey";
     protected override List<BreadcrumbItem> Breadcrumb { get; set; } = new()
     {
         new BreadcrumbItem("Home", ""),

@@ -8,6 +8,7 @@ namespace CloudEdgeBilling.API.Pages;
 
 public partial class Invoices : DataGridPage<Invoice>
 {
+    protected override string StateKey => "InvoicesStateKey";
     private readonly Dictionary<string, SortDefinition<Invoice>> _sortDefinitions =
         new()
         {

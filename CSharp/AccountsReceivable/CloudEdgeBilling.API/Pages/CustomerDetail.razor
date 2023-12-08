@@ -16,7 +16,7 @@
 
 <MudDataGrid
     @ref="DataGrid" T="LineItem" ServerData="@(new Func<GridState<LineItem>, Task<GridData<LineItem>>>(GridServerReload))"
-    SortMode="SortMode.Multiple" Filterable="true" FilterMode="DataGridFilterMode.ColumnFilterMenu"
+    SortMode="SortMode.Multiple" Filterable="true"
     RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc" SelectOnRowClick="false"
     ReadOnly="@ReadOnly" EditMode="DataGridEditMode.Cell"
     CommittedItemChanges="@CommittedRowChanges"
@@ -53,6 +53,8 @@
 
 
 @code {
+    
+    protected override string StateKey => "CustomerDetailStateKey" + Id;
 
     [Parameter]
     public string? Id { get; set; }

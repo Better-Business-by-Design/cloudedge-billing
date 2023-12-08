@@ -10,7 +10,7 @@
 
 <MudDataGrid
     @ref="DataGrid" T="Customer" ServerData="@(new Func<GridState<Customer>, Task<GridData<Customer>>>(GridServerReload))"
-    SortMode="SortMode.Multiple" Filterable="true" FilterMode="DataGridFilterMode.ColumnFilterMenu"
+    SortMode="SortMode.Multiple" Filterable="true"
     RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc" SelectOnRowClick="false"
     ReadOnly="@ReadOnly" EditMode="DataGridEditMode.Cell"
     CommittedItemChanges="@CommittedRowChanges"
