@@ -21,11 +21,11 @@
                 @bind-Value="NewDataRow.XeroContactName" For="@(() => NewDataRow.XeroContactName)"
                 Validation="@Validator.ValidateValue" Immediate="true"/>
             <MudSelect
-                @bind-Value="NewDataRow.PayMonthlyPlanId" For="@(() => NewDataRow.PayMonthlyPlanId)"
+                @bind-Value="NewDataRow.PayMonthlyPlan" For="@(() => NewDataRow.PayMonthlyPlan)"
                 Validation="Validator.ValidateValue" Immediate="true">
                 @foreach (var plan in PayMonthlyPlans)
                 {
-                    <MudSelectItem Value="@plan.PlanId">@plan.PlanName</MudSelectItem>
+                    <MudSelectItem Value="@plan">@plan.PlanName</MudSelectItem>
                 }
             </MudSelect>
             <MudSwitch

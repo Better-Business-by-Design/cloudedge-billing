@@ -1,5 +1,6 @@
 ﻿@page "/customers"
 @using CloudEdgeBilling.API.Shared.EditTemplates
+@using CloudEdgeBilling.API.Shared.EditTemplates.Toggle
 @inherits EditableDataGridPage<Customer>
 
 @{
@@ -31,9 +32,7 @@
         {
             <PropertyColumn Property="@(x => x.IsActive)" Title="Is Active" Required="false">
                 <EditTemplate>
-                    <MudSwitch @bind-Checked="@context.Item.IsActive" Color="Color.Primary" Size="Size.Small">
-                        @(context.Item.IsActive ? "True" : "False")
-                    </MudSwitch>
+                    <IsActiveEditor Context="@context" />
                 </EditTemplate>
             </PropertyColumn>
         }
