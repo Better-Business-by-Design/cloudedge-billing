@@ -4,7 +4,7 @@ namespace CloudEdgeBilling.API.Shared.DataRowChange;
 
 public interface IDataRowChange
 {
-    Task ApplyChange(ApplicationDbContext dbContext);
+    Task ApplyChange();
 
-    Task RevertChange(ApplicationDbContext dbContext);
+    Task RevertChange();
 }

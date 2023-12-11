@@ -5,20 +5,25 @@ namespace CloudEdgeBilling.API.Shared.DataRowChange;
 
 public class RemoveDataRowsChange : IDataRowChange
 {
-    public RemoveDataRowsChange(IEnumerable<IDataRow> dataRowChanges)
+
+    private ApplicationDbContext _context;
+    
+    public RemoveDataRowsChange(IEnumerable<IDataRow> dataRowChanges, ApplicationDbContext context)
     {
         DataRowChanges = dataRowChanges;
+        _context = context;
     }
 
     private IEnumerable<IDataRow> DataRowChanges { get; }
 
-    public async Task ApplyChange(ApplicationDbContext dbContext)
+    public async Task ApplyChange()
     {
-        await dbContext.RemoveValues(DataRowChanges);
+        await _context.RemoveValues(DataRowChanges);
     }
 
-    public async Task RevertChange(ApplicationDbContext dbContext)
+    public async Task RevertChange()
     {
-        await dbContext.AddValues(DataRowChanges, false);
+        await _context.AddValues(DataRowChanges, false);
+        await _context.DisposeAsync();
     }
 }

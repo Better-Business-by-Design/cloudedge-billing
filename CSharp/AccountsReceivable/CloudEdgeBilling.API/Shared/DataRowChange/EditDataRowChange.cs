@@ -5,22 +5,31 @@ namespace CloudEdgeBilling.API.Shared.DataRowChange;
 
 public class EditDataRowChange : IDataRowChange
 {
-    public IDataRow OriginalDataRow { get; init; } = null!;
-    public IDataRow DataRow { get; init; } = null!;
+    private readonly ApplicationDbContext _context;
+    
+    private readonly IDataRow _originalDataRow;
+    private readonly IDataRow _dataRow;
 
-
-    public async Task ApplyChange(ApplicationDbContext dbContext)
+    public EditDataRowChange(IDataRow originalDataRow, IDataRow dataRow, ApplicationDbContext context)
     {
-        await dbContext.SaveChangesAsync();
+        _originalDataRow = originalDataRow;
+        _dataRow = dataRow;
+        _context = context;
     }
 
-    public async Task RevertChange(ApplicationDbContext dbContext)
+    public async Task ApplyChange()
     {
-        await dbContext.EditValue(DataRow, OriginalDataRow);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task RevertChange()
+    {
+        await _context.EditValue(_dataRow, _originalDataRow);
+        await _context.DisposeAsync();
     }
 
     public override string ToString()
     {
-        return DataRow.ToString() ?? base.ToString() ?? string.Empty;
+        return _dataRow.ToString() ?? base.ToString() ?? string.Empty;
     }
 }

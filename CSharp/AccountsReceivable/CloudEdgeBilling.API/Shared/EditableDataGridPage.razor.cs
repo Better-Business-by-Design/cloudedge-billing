@@ -126,11 +126,11 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
     /// <param name="row">Optional row with prefilled values if the default values aren't sufficient.</param>
     protected virtual async Task AddRow(IDataRow? row)
     {
-        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
         row ??= BuildNewDefaultRow();
         Console.WriteLine($"Row added: {JsonSerializer.Serialize(row)}");
-        var change = new AddDataRowChange(row);
-        await change.ApplyChange(dbContext);
+        var change = new AddDataRowChange(row, dbContext);
+        await change.ApplyChange();
         CompletedChanges.Push(change);
         await DataGrid!.ReloadServerData();
     }
@@ -148,11 +148,11 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
     /// </summary>
     protected virtual async Task RemoveRows()
     {
-        await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        var dbContext = await DbContextFactory.CreateDbContextAsync();
         Console.WriteLine(
             $"Rows removed:\n {string.Join("\n", DataGrid!.SelectedItems.Select(row => JsonSerializer.Serialize(row)))}");
-        var change = new RemoveDataRowsChange(DataGrid.SelectedItems.ToImmutableList());
-        await change.ApplyChange(dbContext);
+        var change = new RemoveDataRowsChange(DataGrid.SelectedItems.ToImmutableList(), dbContext);
+        await change.ApplyChange();
         CompletedChanges.Push(change);
         DataGrid.SelectedItems.Clear();
         await DataGrid.ReloadServerData();
@@ -176,17 +176,18 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
         var result = await Validator.ValidateAsync(row);
         if (result.IsValid)
         {
-            await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+            var dbContext = await DbContextFactory.CreateDbContextAsync();
             Console.WriteLine($"Row edit committed: {JsonSerializer.Serialize(row)}");
             var entry = GetEntityEntry(row, dbContext);
             entry.State = EntityState.Modified;
 
             var change = new EditDataRowChange
-            {
-                OriginalDataRow = (IDataRow)entry.OriginalValues.Clone().ToObject(),
-                DataRow = row
-            };
-            await change.ApplyChange(dbContext);
+            (
+                (IDataRow)(await entry.GetDatabaseValuesAsync()).Clone().ToObject(),
+                row,
+                dbContext
+            );
+            await change.ApplyChange();
             CompletedChanges.Push(change);
             await DataGrid!.ReloadServerData();
         }
@@ -215,9 +216,8 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
 
         if (CompletedChanges.TryPop(out var result))
         {
-            await using var dbContext = await DbContextFactory.CreateDbContextAsync();
             Console.WriteLine($"Reverting last change: {result}");
-            await result.RevertChange(dbContext);
+            await result.RevertChange();
             await DataGrid!.ReloadServerData();
         }
     }
