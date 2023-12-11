@@ -84,13 +84,13 @@ public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
             if (result.Success)
             {
                 PageState = result.Value! with {HasLoaded = false};
-                Console.WriteLine($"Read page state:\n{PageState}");
+                //Console.WriteLine($"Read page state:\n{PageState}");
                 if (PageState.SimplifiedFilterDefinitions.Any())
                 {
                     await DataGrid!.ClearFiltersAsync();
                     foreach (var simplifiedFilterDefinition in PageState.SimplifiedFilterDefinitions)
                     {
-                        Console.WriteLine($"Added Filter: {simplifiedFilterDefinition}");
+                        //Console.WriteLine($"Added Filter: {simplifiedFilterDefinition}");
                         await DataGrid!.AddFilterAsync(simplifiedFilterDefinition.GetFullFilterDefinition(DataGrid));
                     }
                     DataGrid!.ToggleFiltersMenu();
@@ -108,10 +108,11 @@ public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
                 // // This is necessary but I don't understand why.. 
                 // await DataGrid!.ReloadServerData();
             }
+            PageState = PageState with { HasLoaded = true };
+            Console.WriteLine($"Saving loaded page state:\n{PageState}");
+            await DataGrid!.ReloadServerData();
         }
-        PageState = PageState with { HasLoaded = true };
-        Console.WriteLine($"Saving loaded page state:\n{PageState}");
-        await DataGrid!.ReloadServerData();
+
         await base.OnAfterRenderAsync(firstRender);
     }
 
@@ -142,7 +143,7 @@ public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
         }
         else
         {
-            Console.WriteLine(!pageState.HasLoaded ? "Skipping unloaded PageState" : "Skipping matching PageStates");
+            //Console.WriteLine(!pageState.HasLoaded ? "Skipping unloaded PageState" : "Skipping matching PageStates");
         }
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync(); 

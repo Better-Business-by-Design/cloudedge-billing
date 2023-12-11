@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Crayon" Version="2.0.69" />
         <PackageReference Include="FluentValidation" Version="11.8.0"/>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.*"/>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.*"/>

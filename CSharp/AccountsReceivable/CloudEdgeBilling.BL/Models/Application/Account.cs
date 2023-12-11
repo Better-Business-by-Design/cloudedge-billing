@@ -12,4 +12,9 @@ public class Account : IDataRow
     [Column("account_name")] public string Name { get; set; } = null!;
 
     public static string TypeName => "Account";
+
+    public override string ToString()
+    {
+        return Name;
+    }
 }

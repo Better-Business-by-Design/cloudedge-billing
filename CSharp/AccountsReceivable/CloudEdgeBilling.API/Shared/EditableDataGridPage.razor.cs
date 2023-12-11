@@ -2,9 +2,11 @@
 using System.Text.Json;
 using CloudEdgeBilling.API.Shared.DataRowChange;
 using CloudEdgeBilling.API.Shared.FluidValidation;
+using CloudEdgeBilling.BAL.Data;
 using CloudEdgeBilling.BL.Models.Application;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MudBlazor;
 
@@ -176,7 +178,8 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
         {
             await using var dbContext = await DbContextFactory.CreateDbContextAsync();
             Console.WriteLine($"Row edit committed: {JsonSerializer.Serialize(row)}");
-            var entry = GetEntityEntry(row);
+            var entry = GetEntityEntry(row, dbContext);
+            entry.State = EntityState.Modified;
 
             var change = new EditDataRowChange
             {
@@ -245,9 +248,8 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
     ///     Thrown when access fails without throwing the expected
     ///     InvalidOperationException.
     /// </exception>
-    private EntityEntry<T> GetEntityEntry(T row)
+    private EntityEntry<T> GetEntityEntry(T row, ApplicationDbContext dbContext)
     {
-        using var dbContext = DbContextFactory.CreateDbContext();
         EntityEntry<T>? entityEntry = null;
         InvalidOperationException? invalidOperationException = null;
         for (var i = 0; i < 2; i++)

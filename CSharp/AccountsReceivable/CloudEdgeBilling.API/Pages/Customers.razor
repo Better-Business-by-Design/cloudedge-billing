@@ -31,7 +31,7 @@
         </PropertyColumn>
         @if (ShowIsActive)
         {
-            <PropertyColumn Property="@(x => x.IsActive)" Title="Is Active" Required="false">
+            <PropertyColumn Property="@(x => x.IsActive)" Title="Is Active">
                 <EditTemplate>
                     <IsActiveEditor Context="@context" />
                 </EditTemplate>

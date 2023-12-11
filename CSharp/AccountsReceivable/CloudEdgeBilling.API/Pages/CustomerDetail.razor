@@ -8,6 +8,7 @@
 @using CloudEdgeBilling.API.Shared.EditTemplates.Select
 @using CloudEdgeBilling.BAL.Data
 @using AccountEditor = CloudEdgeBilling.API.Shared.EditTemplates.Select.AccountEditor
+@using static Crayon.Output
 @inherits EditableDataGridPage<LineItem>
 
 @{
@@ -68,6 +69,7 @@
     {
         if (Id is null)
         {
+            Console.WriteLine(Red("Received null value for Customer Detail Id!"));
             Navigation.NavigateTo("/customers");
         }
         else
