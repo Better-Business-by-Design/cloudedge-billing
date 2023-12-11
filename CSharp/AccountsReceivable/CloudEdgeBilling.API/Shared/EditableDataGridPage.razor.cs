@@ -76,7 +76,7 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
         if (firstRender)
         {
             var result = await ProtectedSessionStore.GetAsync<bool>(nameof(ReadOnly));
-            Console.WriteLine($"Retrieval of ReadOnly completed successfully? {result.Success}\nRetrieved {(result.Success ? result.Value.ToString(): string.Empty)}");
+            //Console.WriteLine($"Retrieval of ReadOnly completed successfully? {result.Success}\nRetrieved {(result.Success ? result.Value.ToString(): string.Empty)}");
             ReadOnly = result.Success ? result.Value : ReadOnly;
         }
         await base.OnAfterRenderAsync(firstRender);

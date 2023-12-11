@@ -22,7 +22,7 @@ public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
 {
     protected abstract string StateKey { get; }
 
-    protected DataGridPageState<T>? PageState;
+    protected DataGridPageState<T> PageState = new(false, new SimplifiedSortDefinition<T>[]{}, new SimplifiedFilterDefinition<T>[]{});
     
     protected MudDataGrid<T>? DataGrid;
 
@@ -83,12 +83,12 @@ public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
             var result = await ProtectedSessionStore.GetAsync<DataGridPageState<T>>(StateKey);
             if (result.Success)
             {
-                PageState = result.Value;
-                Console.WriteLine($"Read page state {PageState}");
-                if (PageState!.SimplifiedFilterDefinitions.Any())
+                PageState = result.Value! with {HasLoaded = false};
+                Console.WriteLine($"Read page state:\n{PageState}");
+                if (PageState.SimplifiedFilterDefinitions.Any())
                 {
                     await DataGrid!.ClearFiltersAsync();
-                    foreach (var simplifiedFilterDefinition in PageState!.SimplifiedFilterDefinitions)
+                    foreach (var simplifiedFilterDefinition in PageState.SimplifiedFilterDefinitions)
                     {
                         Console.WriteLine($"Added Filter: {simplifiedFilterDefinition}");
                         await DataGrid!.AddFilterAsync(simplifiedFilterDefinition.GetFullFilterDefinition(DataGrid));
@@ -96,15 +96,22 @@ public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
                     DataGrid!.ToggleFiltersMenu();
                 }
                 
-                foreach (var sortDefinition in PageState!.SimplifiedSortDefinitions)
+                foreach (var sortDefinition in PageState.SimplifiedSortDefinitions)
                 {
                     await DataGrid!.ExtendSortAsync(
                         sortDefinition.SortBy,
                         sortDefinition.Descending ? SortDirection.Descending : SortDirection.Ascending,
                         null);
                 }
+
+                // PageState = PageState with { HasLoaded = true };
+                // // This is necessary but I don't understand why.. 
+                // await DataGrid!.ReloadServerData();
             }
         }
+        PageState = PageState with { HasLoaded = true };
+        Console.WriteLine($"Saving loaded page state:\n{PageState}");
+        await DataGrid!.ReloadServerData();
         await base.OnAfterRenderAsync(firstRender);
     }
 
@@ -123,14 +130,19 @@ public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
     protected async Task<GridData<T>> GridServerReload(GridState<T> state)
     {
         var pageState = new DataGridPageState<T>(
-            state.SortDefinitions.Select(SimplifiedSortDefinition<T>.Simplify),
-            state.FilterDefinitions.Select(SimplifiedFilterDefinition<T>.Simplify)
+            PageState.HasLoaded,
+            state.SortDefinitions.Select(SimplifiedSortDefinition<T>.Simplify).ToArray(),
+            state.FilterDefinitions.Where(f => f.Value is not null).Select(SimplifiedFilterDefinition<T>.Simplify).ToArray()
         );
-        if (!pageState.IsEmpty() && !pageState.Equals(PageState))
+        if (pageState.HasLoaded && !pageState.Equals(PageState))
         {
-            Console.WriteLine($"Saving page state {pageState}");
+            Console.WriteLine($"Saving page state:\n{pageState}");
             PageState = pageState;
             await ProtectedSessionStore.SetAsync(StateKey, pageState);
+        }
+        else
+        {
+            Console.WriteLine(!pageState.HasLoaded ? "Skipping unloaded PageState" : "Skipping matching PageStates");
         }
 
         await using var dbContext = await DbContextFactory.CreateDbContextAsync(); 
@@ -372,38 +384,41 @@ public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
 }
 
 public record DataGridPageState<T>(
+    bool HasLoaded,
     IEnumerable<SimplifiedSortDefinition<T>> SimplifiedSortDefinitions,
     IEnumerable<SimplifiedFilterDefinition<T>> SimplifiedFilterDefinitions) where T : IDataRow
 {
-    public bool IsEmpty()
-    {
-        return !SimplifiedSortDefinitions.Any() && !SimplifiedFilterDefinitions.Any();
-    }
-
     public override string ToString()
     {
-        return $"SimplifiedSortDefinitions: {string.Join(", ", SimplifiedSortDefinitions)} SimplifiedFilterDefinitions: {string.Join(",", SimplifiedFilterDefinitions)}";
+        return $"""
+                 - HasLoaded: {HasLoaded}
+                 - SimplifiedSortDefinitions: {string.Join(", ", SimplifiedSortDefinitions)}
+                 - SimplifiedFilterDefinitions: {string.Join(",", SimplifiedFilterDefinitions)}
+                """;
     }
 
     public virtual bool Equals(DataGridPageState<T>? other)
     {
         if (other is null) return false;
+        if (HasLoaded != other.HasLoaded) return false;
+
         if (SimplifiedSortDefinitions.Count() != other.SimplifiedSortDefinitions.Count()) return false;
         if (SimplifiedFilterDefinitions.Count() != other.SimplifiedFilterDefinitions.Count()) return false;
-        if (SimplifiedSortDefinitions.Zip(other.SimplifiedSortDefinitions, (a, b) => new { a, b }).Any(item => item.a != item.b))
-        {
-            return false;
-        }
-        if (SimplifiedFilterDefinitions.Zip(other.SimplifiedFilterDefinitions, (a, b) => new { a, b }).Any(item => item.a != item.b))
-        {
-            return false;
-        }
-
+        
+        if (SimplifiedSortDefinitions.Zip(other.SimplifiedSortDefinitions)
+            .Any(tuple => tuple.First != tuple.Second)) return false;
+        if (SimplifiedFilterDefinitions.Zip(other.SimplifiedFilterDefinitions)
+            .Any(tuple => tuple.First != tuple.Second)) return false;
         return true;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(HasLoaded, SimplifiedSortDefinitions, SimplifiedFilterDefinitions);
     }
 }
 
-public record SimplifiedSortDefinition<T> (
+public readonly record struct SimplifiedSortDefinition<T> (
     string SortBy,
     bool Descending
     ) where T : IDataRow
@@ -414,44 +429,78 @@ public record SimplifiedSortDefinition<T> (
     );
 }
 
-public record SimplifiedFilterDefinition<T> (
+public readonly record struct SimplifiedFilterDefinition<T> (
     string Title,
     SimplifiedFieldType SimplifiedFieldType,
     string Operator,
-    object? Value
+    string Value
     ) where T : IDataRow
 {
-    public static SimplifiedFilterDefinition<T> Simplify(IFilterDefinition<T> filterDefinition) => new(
-        filterDefinition.Title ?? throw new ArgumentNullException(nameof(filterDefinition), "Unable to save filter definition with no title."),
-        SimplifiedFieldType.Simplify(filterDefinition.FieldType), 
-        filterDefinition.Operator ?? throw new ArgumentNullException(nameof(filterDefinition), "Unable to save filter definition with no operator."),
-        filterDefinition.Value
-    );
-
-    public IFilterDefinition<T> GetFullFilterDefinition(MudDataGrid<T> dataGrid)
+    public static SimplifiedFilterDefinition<T> Simplify(IFilterDefinition<T> filterDefinition)
     {
+        var title = filterDefinition.Title ?? throw new ArgumentNullException(nameof(filterDefinition),
+            "Unable to save filter definition with no title.");
+        var fieldType = Shared.SimplifiedFieldType.Simplify(filterDefinition.FieldType);
+        var newOperator = filterDefinition.Operator ?? throw new ArgumentNullException(nameof(filterDefinition),
+            "Unable to save filter definition with no operator.");
+        
+        if (filterDefinition.Value is null) throw new ArgumentNullException(nameof(filterDefinition));
+        var value = filterDefinition.Value.ToString()!;
 
-        return new FilterDefinition<T>()
-        {
-            Id = new Guid(),
-            Title = Title,
-            Column = dataGrid.RenderedColumns.Find(c => c.Title?.Equals(Title) ?? false),
-            Operator = Operator,
-            Value = Value
-        };
+        return new SimplifiedFilterDefinition<T>(title, fieldType, newOperator, value);
     }
 }
 
-public record SimplifiedFieldType (
-    string TypeName)
+public readonly record struct SimplifiedFieldType (
+    string TypeName,
+    bool IsString,
+    bool IsNumber,
+    bool IsBoolean,
+    bool IsDateTime,
+    bool IsEnum,
+    bool IsGuid
+    )
 {
     public static SimplifiedFieldType Simplify(FieldType fieldType)
     {
-        return new SimplifiedFieldType(fieldType.InnerType!.FullName!);
+        return new SimplifiedFieldType(
+            fieldType.InnerType!.FullName!,
+            fieldType.IsString,
+            fieldType.IsNumber,
+            fieldType.IsBoolean,
+            fieldType.IsDateTime,
+            fieldType.IsEnum,
+            fieldType.IsGuid);
+    }
+
+    public object ToType(string value)
+    {
+        if (IsString) return value;
+        if (IsBoolean) return bool.Parse(value);
+        if (IsNumber) return decimal.Parse(value);
+        if (IsEnum) return Enum.Parse(Type.GetType(TypeName)!, value);
+        if (IsGuid) return Guid.Parse(value);
+        if (IsDateTime) return DateTime.Parse(value);
+        throw new ApplicationException($"At least one IsType value must be true in field type {this}");
     }
 
     public FieldType GetFieldType()
     {
         return FieldType.Identify(Type.GetType(TypeName));
+    }
+}
+
+public static class Extensions
+{
+    public static IFilterDefinition<T> GetFullFilterDefinition<T>(this SimplifiedFilterDefinition<T> filterDefinition, MudDataGrid<T> dataGrid) where T : IDataRow
+    {
+        return new FilterDefinition<T>
+        {
+            Id = new Guid(),
+            Title = filterDefinition.Title,
+            Column = dataGrid.RenderedColumns.Find(c => c.Title?.Equals(filterDefinition.Title) ?? false),
+            Operator = filterDefinition.Operator,
+            Value = filterDefinition.SimplifiedFieldType.ToType(filterDefinition.Value)
+        };
     }
 }
