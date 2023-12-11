@@ -4,14 +4,15 @@
 @{
     base.BuildRenderTree(__builder);
 }
-
+<MudProgressLinear Color="Color.Info" Indeterminate="true" Size="Size.Large" Class="@(PageState.HasLoaded ? "d-none" : "d-block")"/>
 <MudDataGrid
     @ref="DataGrid" T="Invoice" ServerData="@(new Func<GridState<Invoice>, Task<GridData<Invoice>>>(GridServerReload))"
     SortDefinitions="_sortDefinitions"
     SortMode="SortMode.Multiple" Filterable="true"
     RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc"
     Dense="true" Hover="true" Striped="true" Bordered="true" ColumnResizeMode="ResizeMode.Column"
-    FixedHeader="true" Height="calc(100vh - 9.8rem)">
+    FixedHeader="true" Height="calc(100vh - 9.8rem)"
+    Class="@(PageState.HasLoaded ? "visible" : "invisible")">
     <Columns>
         <HierarchyColumn T="Invoice"/>
         <PropertyColumn Property="@(x => x.CustomerName)" Title="Customer"/>

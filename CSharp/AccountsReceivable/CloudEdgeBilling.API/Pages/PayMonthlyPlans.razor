@@ -4,7 +4,7 @@
 @{
     base.BuildRenderTree(__builder);
 }
-
+<MudProgressLinear Color="Color.Info" Indeterminate="true" Size="Size.Large" Class="@(PageState.HasLoaded ? "d-none" : "d-block")"/>
 <MudDataGrid
     @ref="DataGrid" T="PayMonthlyPlan" ServerData="@(new Func<GridState<PayMonthlyPlan>, Task<GridData<PayMonthlyPlan>>>(GridServerReload))"
     SortMode="SortMode.Multiple" Filterable="true"
@@ -13,7 +13,8 @@
     CommittedItemChanges="@CommittedRowChanges"
     MultiSelection="true" SelectedItemsChanged="@SelectedRowsChanged"
     Dense="false" Hover="true" Striped="true" Bordered="true" ColumnResizeMode="ResizeMode.Column"
-    FixedHeader="true" Height="calc(100vh - 13.2rem)">
+    FixedHeader="true" Height="calc(100vh - 13.2rem)"
+    Class="@(PageState.HasLoaded ? "visible" : "invisible")">
     <Columns>
         <SelectColumn T="PayMonthlyPlan" ShowInFooter="false"/>
         <PropertyColumn Property="@(x => x.PlanName)" Title="Name"/>

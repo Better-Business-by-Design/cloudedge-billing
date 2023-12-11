@@ -14,7 +14,7 @@
 @{
     base.BuildRenderTree(__builder);
 }
-
+<MudProgressLinear Color="Color.Info" Indeterminate="true" Size="Size.Large" Class="@(PageState.HasLoaded ? "d-none" : "d-block")"/>
 <MudDataGrid
     @ref="DataGrid" T="LineItem" ServerData="@(new Func<GridState<LineItem>, Task<GridData<LineItem>>>(GridServerReload))"
     SortMode="SortMode.Multiple" Filterable="true"
@@ -22,7 +22,8 @@
     ReadOnly="@ReadOnly" EditMode="DataGridEditMode.Cell"
     CommittedItemChanges="@CommittedRowChanges"
     MultiSelection="true" SelectedItemsChanged="@SelectedRowsChanged"
-    Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 13.2rem)" ColumnResizeMode="ResizeMode.Column">
+    Dense="true" Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 13.2rem)" ColumnResizeMode="ResizeMode.Column"
+    Class="@(PageState.HasLoaded ? "visible" : "invisible")">
     <Columns>
         <SelectColumn T="LineItem" ShowInFooter="false"/>
         <PropertyColumn Property="@(x => x.Id)" Title="ID" IsEditable="false"/>

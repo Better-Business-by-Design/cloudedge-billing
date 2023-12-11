@@ -111,6 +111,7 @@ public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
             PageState = PageState with { HasLoaded = true };
             Console.WriteLine($"Saving loaded page state:\n{PageState}");
             await DataGrid!.ReloadServerData();
+            StateHasChanged();
         }
 
         await base.OnAfterRenderAsync(firstRender);

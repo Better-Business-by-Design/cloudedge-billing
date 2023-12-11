@@ -7,45 +7,47 @@
 @{
     base.BuildRenderTree(__builder);
 }
-
+<MudProgressLinear Color="Color.Info" Indeterminate="true" Size="Size.Large" Class="@(PageState.HasLoaded ? "d-none" : "d-block")"/>
 <MudDataGrid
-    @ref="DataGrid" T="Customer" ServerData="@(new Func<GridState<Customer>, Task<GridData<Customer>>>(GridServerReload))"
-    SortMode="SortMode.Multiple" Filterable="true"
-    RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc" SelectOnRowClick="false"
-    ReadOnly="@ReadOnly" EditMode="DataGridEditMode.Cell"
-    CommittedItemChanges="@CommittedRowChanges"
-    MultiSelection="true" SelectedItemsChanged="@SelectedRowsChanged"
-    Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 13.2rem)" ColumnResizeMode="ResizeMode.Column">
-    <Columns>
-        @if (Removable)
-        {
-            <SelectColumn T="Customer" ShowInFooter="false"/>
-        }
-        <PropertyColumn Property="@(x => x.CustomerName)" Title="Customer Name" Required="false"/>
-        <PropertyColumn Property="@(x => x.DomainName)" Title="Domain Name" Required="false" IsEditable="false"/>
-        <PropertyColumn Property="@(x => x.XeroContactName)" Title="Xero Contact Name" Required="false" IsEditable="false"/>
-        <PropertyColumn Property="@(x => x.PayMonthlyPlan)" Title="Plan Name" Required="false">
-            <EditTemplate>
-                <PayMonthlyPlanEditor Context="@context" Values="_payMonthlyPlans"/>
-            </EditTemplate>
-        </PropertyColumn>
-        @if (ShowIsActive)
-        {
-            <PropertyColumn Property="@(x => x.IsActive)" Title="Is Active">
+        @ref="DataGrid" T="Customer" ServerData="@(new Func<GridState<Customer>, Task<GridData<Customer>>>(GridServerReload))"
+        SortMode="SortMode.Multiple" Filterable="true"
+        RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc" SelectOnRowClick="false"
+        ReadOnly="@ReadOnly" EditMode="DataGridEditMode.Cell"
+        CommittedItemChanges="@CommittedRowChanges"
+        MultiSelection="true" SelectedItemsChanged="@SelectedRowsChanged"
+        Hover="true" Striped="true" Bordered="true" Height="calc(100vh - 13.2rem)" ColumnResizeMode="ResizeMode.Column"
+        Class="@(PageState.HasLoaded ? "visible" : "invisible")">
+        <Columns>
+            @if (Removable)
+            {
+                <SelectColumn T="Customer" ShowInFooter="false"/>
+            }
+            <PropertyColumn Property="@(x => x.CustomerName)" Title="Customer Name" Required="false"/>
+            <PropertyColumn Property="@(x => x.DomainName)" Title="Domain Name" Required="false" IsEditable="false"/>
+            <PropertyColumn Property="@(x => x.XeroContactName)" Title="Xero Contact Name" Required="false" IsEditable="false"/>
+            <PropertyColumn Property="@(x => x.PayMonthlyPlan)" Title="Plan Name" Required="false">
                 <EditTemplate>
-                    <IsActiveEditor Context="@context" />
+                    <PayMonthlyPlanEditor Context="@context" Values="_payMonthlyPlans"/>
                 </EditTemplate>
             </PropertyColumn>
-        }
-        <PropertyColumn Property="@(x => x.Location)" Title="Location" Required="false"/>
-    </Columns>
-    <NoRecordsContent>
-        <MudText>No matching Customers found</MudText>
-    </NoRecordsContent>
-    <LoadingContent>
-        <MudText>Loading Customers...</MudText>
-    </LoadingContent>
-    <PagerContent>
-        <MudDataGridPager T="Customer" PageSizeOptions="new[] { 25, 50, 100 }"/>
-    </PagerContent>
-</MudDataGrid>
+            @if (ShowIsActive)
+            {
+                <PropertyColumn Property="@(x => x.IsActive)" Title="Is Active">
+                    <EditTemplate>
+                        <IsActiveEditor Context="@context"/>
+                    </EditTemplate>
+                </PropertyColumn>
+            }
+            <PropertyColumn Property="@(x => x.Location)" Title="Location" Required="false"/>
+        </Columns>
+        <NoRecordsContent>
+            <MudText>No matching Customers found</MudText>
+        </NoRecordsContent>
+        <LoadingContent>
+            <MudText>Loading Customers...</MudText>
+        </LoadingContent>
+        <PagerContent>
+            <MudDataGridPager T="Customer" PageSizeOptions="new[] { 25, 50, 100 }"/>
+        </PagerContent>
+    </MudDataGrid>
+}
