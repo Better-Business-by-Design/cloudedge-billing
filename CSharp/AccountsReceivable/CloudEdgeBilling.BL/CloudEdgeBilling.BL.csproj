@@ -10,9 +10,9 @@
     <ItemGroup>
         <PackageReference Include="Crayon" Version="2.0.69" />
         <PackageReference Include="MudBlazor" Version="6.11.0"/>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.*"/>
-        <PackageReference Include="RestSharp" Version="110.2.*" />
-        <PackageReference Include="RestSharp.Serializers.NewtonsoftJson" Version="110.2.*"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+        <PackageReference Include="RestSharp" Version="110.2.1-alpha.0.16" />
+        <PackageReference Include="RestSharp.Serializers.NewtonsoftJson" Version="110.2.1-alpha.0.16" />
         <PackageReference Include="UiPathApi.Swagger" Version="1.1.0"/>
     </ItemGroup>
 
