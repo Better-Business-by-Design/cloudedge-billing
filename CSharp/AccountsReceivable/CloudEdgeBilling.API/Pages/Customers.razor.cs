@@ -153,13 +153,11 @@ partial class Customers : EditableDataGridPage<Customer>
                 "DomainName" => customer => customer.DomainName ?? string.Empty,
                 "DomainUuid" => customer => customer.DomainUuid ?? Guid.Empty,
                 "XeroContactName" => customer => customer.XeroContactName,
-                "PayMonthlyPlan" => customer =>
-                    customer.PayMonthlyPlan != null ? customer.PayMonthlyPlan.PlanName : string.Empty,
                 "IsActive" => customer => customer.IsActive,
                 "Location" => customer => customer.Location ?? string.Empty,
-                _ => throw new NotImplementedException(
-                    $"Sorting not implemented for {sortDefinition.SortBy} column in Customers table.")
+                _ => customer => customer.PayMonthlyPlan != null ? customer.PayMonthlyPlan.PlanName : string.Empty
             };
+            // So cursed lol
 
             orderedQuery = sortDefinition.Descending
                 ? orderedQuery.ThenByDescending(keySelector)
