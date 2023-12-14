@@ -153,9 +153,10 @@ partial class Customers : EditableDataGridPage<Customer>
                 "DomainName" => customer => customer.DomainName ?? string.Empty,
                 "DomainUuid" => customer => customer.DomainUuid ?? Guid.Empty,
                 "XeroContactName" => customer => customer.XeroContactName,
+                "PlanName" => customer => customer.PlanName,
                 "IsActive" => customer => customer.IsActive,
                 "Location" => customer => customer.Location ?? string.Empty,
-                _ => customer => customer.PayMonthlyPlan != null ? customer.PayMonthlyPlan.PlanName : string.Empty
+                _ => throw new NotImplementedException($"Column {sortDefinition.SortBy} not implemented in Customers OrderFilteredQuery.")
             };
             // So cursed lol
 

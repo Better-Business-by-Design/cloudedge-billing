@@ -25,7 +25,7 @@
             <PropertyColumn Property="@(x => x.CustomerName)" Title="Customer Name" Required="false"/>
             <PropertyColumn Property="@(x => x.DomainName)" Title="Domain Name" Required="false" IsEditable="false"/>
             <PropertyColumn Property="@(x => x.XeroContactName)" Title="Xero Contact Name" Required="false" IsEditable="false"/>
-            <PropertyColumn Property="@(x => x.PayMonthlyPlan != null ? x.PayMonthlyPlan.PlanName : string.Empty)" Title="Plan Name" Required="false">
+            <PropertyColumn Property="@(x => x.PlanName)" Title="Plan Name" Required="false">
                 <EditTemplate>
                     <PayMonthlyPlanEditor Context="@context" Values="_payMonthlyPlans"/>
                 </EditTemplate>
@@ -50,4 +50,3 @@
             <MudDataGridPager T="Customer" PageSizeOptions="new[] { 25, 50, 100 }"/>
         </PagerContent>
     </MudDataGrid>
-}

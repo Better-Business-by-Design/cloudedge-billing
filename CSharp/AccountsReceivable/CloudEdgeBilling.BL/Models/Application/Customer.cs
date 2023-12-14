@@ -24,6 +24,8 @@ public class Customer : IDataRow
 
     public PayMonthlyPlan? PayMonthlyPlan { get; set; }
 
+    [NotMapped] public string PlanName => PayMonthlyPlan?.PlanName ?? string.Empty;
+
     [Column("is_active")] public bool IsActive { get; set; }
 
     [Column("location")] public string? Location { get; set; }
