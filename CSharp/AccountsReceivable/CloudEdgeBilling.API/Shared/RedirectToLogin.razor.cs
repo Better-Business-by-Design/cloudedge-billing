@@ -4,12 +4,12 @@ namespace CloudEdgeBilling.API.Shared;
 
 partial class RedirectToLogin
 {
-    protected readonly string BaseURL = "MicrosoftIdentity/Account";
+    private const string BaseUrl = "MicrosoftIdentity/Account";
 
     [Inject] protected virtual NavigationManager Navigation { get; set; } = default!;
 
     protected override void OnInitialized()
     {
-        Navigation.NavigateTo($"{BaseURL}/SignIn");
+        Navigation.NavigateTo($"{BaseUrl}/SignIn");
     }
 }

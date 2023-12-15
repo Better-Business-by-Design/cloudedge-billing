@@ -11,7 +11,9 @@
         <MudLink Class="mx-4" Color="Color.Inherit" Href="invoices">All Invoices</MudLink>
         <MudLink Class="mx-4" Color="Color.Inherit" Href="robot">Robot</MudLink>
         <MudSpacer/>
-        <MudText>@(_user.Claims.FirstOrDefault(c => c.Type.Equals("name"))?.Value ?? string.Empty)</MudText>
+        <MudButton OnClick="@Logout" Variant="Variant.Text" Color="Color.Inherit" Size="Size.Large"> 
+            @(_user.Claims.FirstOrDefault(c => c.Type.Equals("name"))?.Value ?? string.Empty)
+        </MudButton>
     </MudAppBar>
 
     <MudMainContent Style="height: 100vh">
