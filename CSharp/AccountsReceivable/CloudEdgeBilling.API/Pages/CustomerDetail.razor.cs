@@ -195,7 +195,7 @@ public partial class CustomerDetail : EditableDataGridPage<LineItem>
             CustomerId = customer.Id,
             Quantity = 1,
             AccountId = Guid.Parse("29592A50-15B1-4F5C-A0FC-87AB8FAA11FF"),
-            BusinessId = BusinessId.None
+            BusinessId = BusinessId.CloudEdge
         };
     }
 

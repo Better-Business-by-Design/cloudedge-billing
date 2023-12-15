@@ -18,7 +18,6 @@
     Class="@(PageState.HasLoaded ? "visible" : "invisible")">
     <Columns>
         <SelectColumn T="LineItem" ShowInFooter="false"/>
-        <PropertyColumn Property="@(x => x.Id)" Title="ID" IsEditable="false"/>
         <PropertyColumn Property="@(x => x.Description)" Title="Description"/>
         <PropertyColumn Property="@(x => x.Quantity)" Title="Quantity" Required="false"/>
         <PropertyColumn Property="@(x => x.UnitPrice)" Title="Unit Price" Required="false"/>

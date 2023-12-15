@@ -128,7 +128,7 @@ public abstract partial class EditableDataGridPage<T> : DataGridPage<T> where T 
     {
         var dbContext = await DbContextFactory.CreateDbContextAsync();
         row ??= BuildNewDefaultRow();
-        Console.WriteLine($"Row added: {JsonSerializer.Serialize(row)}");
+        Console.WriteLine($"Row added: {row}");
         var change = new AddDataRowChange(row, dbContext);
         await change.ApplyChange();
         CompletedChanges.Push(change);

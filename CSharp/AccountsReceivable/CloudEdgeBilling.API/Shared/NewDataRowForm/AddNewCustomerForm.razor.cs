@@ -10,5 +10,5 @@ public partial class AddNewCustomerForm : AddNewDataRowForm<Customer>
 {
     [Parameter] public required ImmutableList<PayMonthlyPlan> PayMonthlyPlans { get; set; }
 
-    private PatternMask _guidMask = new PatternMask("********-****-****-****-************");
+    private readonly PatternMask _guidMask = new("********-****-****-****-************");
 }
