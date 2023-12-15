@@ -13,7 +13,11 @@ public class CustomerFluentValidator : DataRowFluentValidator<Customer>
             .Length(1, 100);
 
         RuleFor(c => c.DomainName)
+            .NotEmpty()
             .Length(0, 100);
+
+        RuleFor(c => c.DomainUuid)
+            .NotEmpty();
 
         RuleFor(c => c.XeroContactName)
             .NotEmpty()

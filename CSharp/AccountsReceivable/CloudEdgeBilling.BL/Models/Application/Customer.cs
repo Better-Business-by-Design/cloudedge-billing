@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MudBlazor;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable PropertyCanBeMadeInitOnly.Global
@@ -10,25 +11,26 @@ public class Customer : IDataRow
 {
     [Key] [Column("customer_id")] public int Id { get; set; }
 
-    [Column("customer_name")] public string CustomerName { get; set; } = null!;
+    [Column("customer_name")] [Label("Customer Name")] public string CustomerName { get; set; } = null!;
 
-    [Column("domain_name")] public string? DomainName { get; set; }
+    [Column("domain_name")] [Label("Domain Name")] public string? DomainName { get; set; }
 
-    [Column("domain_uuid")] public Guid? DomainUuid { get; set; }
+    [Column("domain_uuid")] [Label("Domain UUID")] public Guid? DomainUuid { get; set; }
 
-    [Column("xero_contact_name")] public string XeroContactName { get; set; } = null!;
+    [Column("xero_contact_name")] [Label("Xero Contact Name")] public string XeroContactName { get; set; } = null!;
 
     [ForeignKey(nameof(PayMonthlyPlan))]
     [Column("pay_monthly_plan_id")]
     public int? PayMonthlyPlanId { get; set; }
 
+    [Label("Pay Monthly Plan")]
     public PayMonthlyPlan? PayMonthlyPlan { get; set; }
 
     [NotMapped] public string PlanName => PayMonthlyPlan?.PlanName ?? string.Empty;
 
-    [Column("is_active")] public bool IsActive { get; set; }
+    [Column("is_active")] [Label("Is Active")] public bool IsActive { get; set; }
 
-    [Column("location")] public string? Location { get; set; }
+    [Column("location")] [Label("Location")] public string? Location { get; set; }
 
     public static string TypeName => "Customer";
 

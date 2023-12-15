@@ -196,6 +196,6 @@ partial class Customers : EditableDataGridPage<Customer>
 
     protected override Customer BuildNewDefaultRow()
     {
-        return new Customer();
+        return new Customer {IsActive = true};
     }
 }

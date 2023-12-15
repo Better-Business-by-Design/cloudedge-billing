@@ -10,7 +10,7 @@
         <MudForm Model="@NewDataRow" @ref="Form" Validation="@(Validator.ValidateValue)" ValidationDelay="0">
             <MudTextField
                 @bind-Value="NewDataRow.CustomerName" For="@(() => NewDataRow.CustomerName)"
-                Validation="@Validator.ValidateValue" Immediate="true"/>
+                Validation="@Validator.ValidateValue" Immediate="true" Clearable="true"/>
             <MudTextField
                 @bind-Value="NewDataRow.DomainName" For="@(() => NewDataRow.DomainName)"
                 Validation="@Validator.ValidateValue" Immediate="true" Clearable="true"/>
@@ -19,21 +19,23 @@
                 Validation="@Validator.ValidateValue" Immediate="true" Clearable="true"/>
             <MudTextField
                 @bind-Value="NewDataRow.XeroContactName" For="@(() => NewDataRow.XeroContactName)"
-                Validation="@Validator.ValidateValue" Immediate="true"/>
+                Validation="@Validator.ValidateValue" Immediate="true" Clearable="true"/>
             <MudSelect
                 @bind-Value="NewDataRow.PayMonthlyPlan" For="@(() => NewDataRow.PayMonthlyPlan)"
-                Validation="Validator.ValidateValue" Immediate="true">
+                Validation="Validator.ValidateValue" Immediate="true" Clearable="true">
                 @foreach (var plan in PayMonthlyPlans)
                 {
                     <MudSelectItem Value="@plan">@plan.PlanName</MudSelectItem>
                 }
             </MudSelect>
-            <MudSwitch
-                @bind-Checked="NewDataRow.IsActive" For="@(() => NewDataRow.IsActive)"
-                Validation="Validator.ValidateValue"/>
             <MudTextField
                 @bind-Value="NewDataRow.Location" For="@(() => NewDataRow.Location)"
-                Validation="@Validator.ValidateValue" Immediate="true"/>
+                Validation="@Validator.ValidateValue" Immediate="true" Clearable="true"/>
+            <MudSwitch Color="Color.Primary" UnCheckedColor="Color.Error" Class="pt-1"
+                       @bind-Checked="NewDataRow.IsActive" For="@(() => NewDataRow.IsActive)"
+                       Validation="Validator.ValidateValue" LabelPosition="LabelPosition.End">
+                : @(NewDataRow.IsActive ? "True" : "False")
+            </MudSwitch>
 
         </MudForm>
     </DialogContent>
@@ -45,7 +47,7 @@
         </MudButton>
         <MudButton
             Color="Color.Primary"
-            OnClick="@(async () => await OnSubmit())">
+            OnClick="@OnSubmit">
             Confirm
         </MudButton>
     </DialogActions>
