@@ -65,8 +65,7 @@ partial class Customers : EditableDataGridPage<Customer>
                     "Customer Name" => customer => customer.CustomerName,
                     "Domain Name" => customer => customer.DomainName ?? string.Empty,
                     "Xero Contact Name" => customer => customer.XeroContactName,
-                    "Plan Name" => customer =>
-                        customer.PayMonthlyPlan != null ? customer.PayMonthlyPlan.PlanName : string.Empty,
+                    "Plan Name" => customer => customer.PayMonthlyPlan != null ? customer.PayMonthlyPlan.PlanName : string.Empty,
                     "Location" => customer => customer.Location ?? string.Empty,
                     _ => throw new NotImplementedException(
                         $"Column {filterDefinition.Title} not implemented in string filters.")

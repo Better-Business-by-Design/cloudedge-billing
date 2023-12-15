@@ -11,27 +11,27 @@
             <MudTextField
                 @bind-Value="NewDataRow.PlanName" For="@(() => NewDataRow.PlanName)"
                 Validation="@Validator.ValidateValue" Immediate="true"/>
-            <MudNumericField Step="1"
+            <MudNumericField Step="1" T="int?"
                              @bind-Value="NewDataRow.NationalSize" For="@(() => NewDataRow.NationalSize)"
                              Validation="@Validator.ValidateValue" Immediate="true" Min="0"
                              Adornment="Adornment.End" AdornmentText="Minutes"
                              HideSpinButtons="true" Clearable="true"/>
-            <MudNumericField Step="1"
+            <MudNumericField Step="1" T="int?"
                              @bind-Value="NewDataRow.InternationalSize" For="@(() => NewDataRow.InternationalSize)"
                              Validation="@Validator.ValidateValue" Immediate="true" Min="0"
                              Adornment="Adornment.End" AdornmentText="Minutes"
                              HideSpinButtons="true" Clearable="true"/>
-            <MudNumericField Step="1"
+            <MudNumericField Step="1" T="int?"
                              @bind-Value="NewDataRow.MobileSize" For="@(() => NewDataRow.MobileSize)"
                              Validation="@Validator.ValidateValue" Immediate="true" Min="0"
                              Adornment="Adornment.End" AdornmentText="Minutes"
                              HideSpinButtons="true" Clearable="true"/>
-            <MudNumericField Step="1"
+            <MudNumericField Step="1" T="int?"
                              @bind-Value="NewDataRow.TollFreeLandlineSize" For="@(() => NewDataRow.TollFreeLandlineSize)"
                              Validation="@Validator.ValidateValue" Immediate="true" Min="0"
                              Adornment="Adornment.End" AdornmentText="Minutes"
                              HideSpinButtons="true" Clearable="true"/>
-            <MudNumericField Step="1"
+            <MudNumericField Step="1" T="int?"
                              @bind-Value="NewDataRow.TollFreeMobileSize" For="@(() => NewDataRow.TollFreeMobileSize)"
                              Validation="@Validator.ValidateValue" Immediate="true" Min="0"
                              Adornment="Adornment.End" AdornmentText="Minutes"
@@ -40,7 +40,7 @@
                              @bind-Value="NewDataRow.Price" For="@(() => NewDataRow.Price)"
                              Validation="Validator.ValidateValue" Immediate="true" Min="0M" Format="N2"
                              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney"/>
-            <MudNumericField Step="0.1M"
+            <MudNumericField Step="0.1M" T="decimal?"
                              @bind-Value="NewDataRow.MinPrice" For="@(() => NewDataRow.MinPrice)"
                              Validation="Validator.ValidateValue" Immediate="true" Min="0M" Format="N2"
                              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney"
@@ -55,7 +55,7 @@
         </MudButton>
         <MudButton
             Color="Color.Primary"
-            OnClick="@(async () => await OnSubmit())">
+            OnClick="@OnSubmit">
             Confirm
         </MudButton>
     </DialogActions>

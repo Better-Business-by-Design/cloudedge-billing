@@ -14,14 +14,19 @@ public class AddDataRowChange : IDataRowChange
     private readonly IDataRow _dataRow;
     private readonly ApplicationDbContext _context;
 
-    public async Task ApplyChange()
+    public Task ApplyChange()
     {
-        await _context.AddValue(_dataRow);
+        return _context.AddValue(_dataRow);
     }
 
     public async Task RevertChange()
     {
         await _context.RemoveValue(_dataRow);
         await _context.DisposeAsync();
+    }
+
+    public override string ToString()
+    {
+        return $"Add Data Row Change: {_dataRow}";
     }
 }
