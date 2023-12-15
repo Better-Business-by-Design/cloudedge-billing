@@ -1,6 +1,7 @@
 using System.Collections.Immutable;
 using CloudEdgeBilling.BL.Models.Application;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 
 namespace CloudEdgeBilling.API.Shared.NewDataRowForm;
 
@@ -8,4 +9,6 @@ namespace CloudEdgeBilling.API.Shared.NewDataRowForm;
 public partial class AddNewCustomerForm : AddNewDataRowForm<Customer>
 {
     [Parameter] public required ImmutableList<PayMonthlyPlan> PayMonthlyPlans { get; set; }
+
+    private PatternMask _guidMask = new PatternMask("********-****-****-****-************");
 }

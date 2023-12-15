@@ -15,7 +15,7 @@
                 @bind-Value="NewDataRow.DomainName" For="@(() => NewDataRow.DomainName)"
                 Validation="@Validator.ValidateValue" Immediate="true" Clearable="true"/>
             <MudTextField
-                @bind-Value="NewDataRow.DomainUuid" For="@(() => NewDataRow.DomainUuid)"
+                @bind-Value="NewDataRow.DomainUuid" For="@(() => NewDataRow.DomainUuid)" Mask="@_guidMask"
                 Validation="@Validator.ValidateValue" Immediate="true" Clearable="true"/>
             <MudTextField
                 @bind-Value="NewDataRow.XeroContactName" For="@(() => NewDataRow.XeroContactName)"
