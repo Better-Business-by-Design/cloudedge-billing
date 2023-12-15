@@ -2,13 +2,15 @@ using System.Linq.Expressions;
 using CloudEdgeBilling.API.Shared;
 using CloudEdgeBilling.BAL.Data;
 using CloudEdgeBilling.BL.Models.Application;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
 namespace CloudEdgeBilling.API.Pages;
 
 public partial class Invoices : DataGridPage<Invoice>
 {
-    protected override string StateKey => "InvoicesStateKey";
+    [Parameter]
+    public override string StateKey { get; set; } = "InvoicesStateKey";
     private readonly Dictionary<string, SortDefinition<Invoice>> _sortDefinitions =
         new()
         {

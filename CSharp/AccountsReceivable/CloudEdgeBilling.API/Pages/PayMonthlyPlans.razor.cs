@@ -5,6 +5,7 @@ using CloudEdgeBilling.API.Shared.FluidValidation;
 using CloudEdgeBilling.API.Shared.NewDataRowForm;
 using CloudEdgeBilling.BAL.Data;
 using CloudEdgeBilling.BL.Models.Application;
+using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 
@@ -12,7 +13,8 @@ namespace CloudEdgeBilling.API.Pages;
 
 partial class PayMonthlyPlans : EditableDataGridPage<PayMonthlyPlan>
 {
-    protected override string StateKey => "PayMonthlyPlansStateKey";
+    [Parameter]
+    public override string StateKey { get; set; } = "PayMonthlyPlansStateKey";
     protected override List<BreadcrumbItem> Breadcrumb { get; set; } = new()
     {
         new BreadcrumbItem("Home", ""),

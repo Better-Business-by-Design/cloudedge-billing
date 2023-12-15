@@ -13,7 +13,7 @@ namespace CloudEdgeBilling.API.Pages;
 
 partial class Customers : EditableDataGridPage<Customer>
 {
-    protected override string StateKey => "CustomersStateKey";
+    [Parameter] public override string StateKey { get; set; } = "CustomersStateKey";
 
     private ImmutableList<PayMonthlyPlan> _payMonthlyPlans = null!;
     [Parameter] public override bool Removable { get; set; }

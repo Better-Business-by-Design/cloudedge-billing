@@ -20,7 +20,7 @@ namespace CloudEdgeBilling.API.Shared;
 /// </typeparam>
 public abstract partial class DataGridPage<T> : ComponentBase where T : IDataRow
 {
-    protected abstract string StateKey { get; }
+    [Parameter] public virtual string StateKey { get; set; } = null!;
 
     protected DataGridPageState<T> PageState = new(false, new SimplifiedSortDefinition<T>[]{}, new SimplifiedFilterDefinition<T>[]{});
     
