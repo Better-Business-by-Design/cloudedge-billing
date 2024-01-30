@@ -1,8 +1,11 @@
+using System.Data;
+using System.Globalization;
 using CloudEdgeBilling.API.Shared.FluidValidation;
 using CloudEdgeBilling.BAL.Data;
 using CloudEdgeBilling.BL.Models.Application;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using MudBlazor.Extensions;
 using Newtonsoft.Json;
 using UiPathApi.Swagger.Api;
 using UiPathApi.Swagger.Model;
@@ -26,10 +29,30 @@ public partial class Robot : ComponentBase
     [Inject] private ReleasesApi ReleasesApi { get; set; } = null!;
     [Inject] private JobsApi JobsApi { get; set; } = null!;
 
+
+    public List<ChartSeries> Series = new();
+
+    public string[] XAxisLabels = { "Aug", "Sept", "Oct", "Nov" };
+
+    private bool HasChartDataLoaded = false;
+
     protected override async Task OnInitializedAsync()
     {
         _validator = new CloudEdgeBillingJobArgumentsFluidValidator();
         _releaseDto = await ReleasesApi.ReleasesGetByIdAsync(ProcessId);
+        
+        Series.Add(new ChartSeries() {Name = "Invoices", Data = new double[4]});
+        
+        for (var i = 3; i >= 0; i--)
+        {
+            var specificMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-(i+1));
+            Series[0].Data[3 - i] = Convert.ToDouble(DbContext.Invoices
+                .Where(inv => inv.DateTime.Equals(specificMonth))
+                .Sum(inv => inv.TotalCost));
+        }
+
+        HasChartDataLoaded = true;
+        
         await base.OnInitializedAsync();
     }
 

@@ -12,7 +12,8 @@
     RowClick="@RowClicked" RowStyleFunc="@RowStyleFunc"
     Dense="true" Hover="true" Striped="true" Bordered="true" ColumnResizeMode="ResizeMode.Column"
     FixedHeader="true" Height="calc(100vh - 9.8rem)"
-    Class="@(PageState.HasLoaded ? "visible" : "invisible")">
+    Class="@(PageState.HasLoaded ? "visible" : "invisible")"
+    >
     <Columns>
         <HierarchyColumn T="Invoice"/>
         <PropertyColumn Property="@(x => x.CustomerName)" Title="Customer"/>

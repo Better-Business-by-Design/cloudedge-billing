@@ -1,6 +1,6 @@
 @page "/robot"
 
-
+ <MudChart ChartType="ChartType.Line" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px" Class="@(HasChartDataLoaded ? "visible" : "invisible")"/>
 <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Stretch" Class="mud-height-full" Spacing="0">
     <MudCard Class="ma-10 pa-5 flex-grow-1 overflow-hidden" Style="width: 40vw">
         <MudCardHeader>
